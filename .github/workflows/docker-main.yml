@@ -24,4 +24,4 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: onomy/denom-main:latest
+          tags: onomy/reserve-main:latest

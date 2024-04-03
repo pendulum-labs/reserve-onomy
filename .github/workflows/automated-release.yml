@@ -31,34 +31,34 @@ jobs:
           draft: false
           prerelease: true
 
-      # build & upload denomd
+      # build & upload reserved
 
-      - name: Build denomd
+      - name: Build reserved
         run: make build
 
-      - name: Upload denomd
-        id: upload-denomd-release-asset
+      - name: Upload reserved
+        id: upload-reserved-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: denomd
-          asset_name: denomd
+          asset_path: reserved
+          asset_name: reserved
           asset_content_type: application/bin
 
-      # build & upload denomd arm64
+      # build & upload reserved arm64
 
-      - name: Build denomd arm64
+      - name: Build reserved arm64
         run: GOARCH=arm64 make build
 
-      - name: Upload denomd arm64
-        id: upload-denomd-release-asset-arm
+      - name: Upload reserved arm64
+        id: upload-reserved-release-asset-arm
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: denomd
-          asset_name: denomd-arm
+          asset_path: reserved
+          asset_name: reserved-arm
           asset_content_type: application/bin
