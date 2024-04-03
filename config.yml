@@ -1,0 +1,15 @@
+accounts:
+  - name: dealer
+    coins: ["2000000000000000000000000anom", "2000000000000000000000abtc", "20000000000000000000000wei", "20000000000000000000000stake"]
+    address: onomy1mczcy7z92fkyhrsctlv0ge690mzvmd9ye67mjy
+  - name: validator
+    coins: ["20000000000000000000stake"]
+validator:
+  name: validator
+  staked: "10000000000000000000stake"
+client:
+  openapi:
+    path: "docs/static/openapi.yml"
+  vuex:
+    path: "vue/src/store"
+
