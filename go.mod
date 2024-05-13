@@ -5,20 +5,20 @@ go 1.19
 require (
 	github.com/cosmos/cosmos-sdk v0.45.16-ics
 	github.com/cosmos/ibc-go/v4 v4.4.2
-	github.com/gogo/protobuf v1.3.3 // indirect
-	github.com/golang/protobuf v1.5.4 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
+	github.com/gogo/protobuf v1.3.3
+	github.com/golang/protobuf v1.5.4
+	github.com/gorilla/mux v1.8.0
+	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/pendulum-labs/market v1.1.0 // NOTE: change the version in the replace line
 	github.com/spf13/cast v1.5.1
-	github.com/spf13/cobra v1.7.0 // indirect
+	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.3
 	github.com/tendermint/starport v0.19.2
 	github.com/tendermint/tendermint v0.34.27
 	github.com/tendermint/tm-db v0.6.7
-	google.golang.org/genproto/googleapis/api v0.0.0-20240125205218-1f4bbc51befe // indirect
-	google.golang.org/grpc v1.61.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240125205218-1f4bbc51befe
+	google.golang.org/grpc v1.61.0
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
