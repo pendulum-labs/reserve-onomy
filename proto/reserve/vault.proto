@@ -1,0 +1,14 @@
+syntax = "proto3";
+package denom.reserve;
+
+option go_package = "denom/x/reserve/types";
+import "gogoproto/gogo.proto"; 
+import "cosmos/base/v1beta1/coin.proto"; 
+
+message Vault {
+  
+  uint64 uid = 1; 
+  string status = 2; 
+  cosmos.base.v1beta1.Coin collateral = 3 [(gogoproto.nullable) = false]; 
+  cosmos.base.v1beta1.Coin denom = 4 [(gogoproto.nullable) = false]; 
+}
