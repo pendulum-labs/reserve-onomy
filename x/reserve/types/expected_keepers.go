@@ -2,12 +2,13 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	markettypes "github.com/pendulum-labs/market/x/market/types"
 )
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
 type AccountKeeper interface {
-	GetAccount(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
+	GetAccount(ctx sdk.Context, addr sdk.AccAddress) authtypes.AccountI
 	// Methods imported from account should be defined here
 }
 
@@ -15,4 +16,10 @@ type AccountKeeper interface {
 type BankKeeper interface {
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
 	// Methods imported from bank should be defined here
+}
+
+// MarketKeeper defines the expected interface needed to retrieve market data.
+type MarketKeeper interface {
+	// GetMember returns a member from its index
+	GetMember(ctx sdk.Context, denomA string, denomB string) (val markettypes.Member, found bool)
 }
