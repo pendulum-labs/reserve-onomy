@@ -3,7 +3,8 @@ package cli
 import (
 	"context"
 
-	"denom/x/reserve/types"
+	"reserve/x/reserve/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"

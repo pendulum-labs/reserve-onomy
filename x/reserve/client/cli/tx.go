@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"denom/x/reserve/types"
+	"reserve/x/reserve/types"
 )
 
 var (

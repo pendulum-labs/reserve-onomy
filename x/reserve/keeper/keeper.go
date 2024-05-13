@@ -5,7 +5,8 @@ import (
 
 	"github.com/tendermint/tendermint/libs/log"
 
-	"denom/x/reserve/types"
+	"reserve/x/reserve/types"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"

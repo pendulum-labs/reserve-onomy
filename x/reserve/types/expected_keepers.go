@@ -22,4 +22,5 @@ type BankKeeper interface {
 type MarketKeeper interface {
 	// GetMember returns a member from its index
 	GetMember(ctx sdk.Context, denomA string, denomB string) (val markettypes.Member, found bool)
+	GetPool(ctx sdk.Context, pair string) (val markettypes.Pool, found bool)
 }

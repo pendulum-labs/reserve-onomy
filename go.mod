@@ -1,4 +1,4 @@
-module denom
+module reserve
 
 go 1.19
 

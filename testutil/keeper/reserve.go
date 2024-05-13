@@ -3,8 +3,9 @@ package keeper
 import (
 	"testing"
 
-	"denom/x/reserve/keeper"
-	"denom/x/reserve/types"
+	"reserve/x/reserve/keeper"
+	"reserve/x/reserve/types"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"

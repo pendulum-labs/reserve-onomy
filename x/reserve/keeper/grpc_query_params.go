@@ -3,7 +3,8 @@ package keeper
 import (
 	"context"
 
-	"denom/x/reserve/types"
+	"reserve/x/reserve/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

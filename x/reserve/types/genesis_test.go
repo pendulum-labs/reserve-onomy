@@ -3,7 +3,8 @@ package types_test
 import (
 	"testing"
 
-	"denom/x/reserve/types"
+	"reserve/x/reserve/types"
+
 	"github.com/stretchr/testify/require"
 )
 

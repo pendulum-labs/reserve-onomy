@@ -1,5 +1,5 @@
 syntax = "proto3";
-package denom.reserve;
+package reserve;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
@@ -7,7 +7,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "reserve/params.proto";
 // this line is used by starport scaffolding # 1
 
-option go_package = "denom/x/reserve/types";
+option go_package = "reserve/x/reserve/types";
 
 // Query defines the gRPC querier service.
 service Query {

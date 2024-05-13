@@ -4,9 +4,10 @@ import (
 	"context"
 	"testing"
 
-	keepertest "denom/testutil/keeper"
-	"denom/x/reserve/keeper"
-	"denom/x/reserve/types"
+	keepertest "reserve/testutil/keeper"
+	"reserve/x/reserve/keeper"
+	"reserve/x/reserve/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

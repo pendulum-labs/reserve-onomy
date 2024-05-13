@@ -3,9 +3,10 @@ package reserve
 import (
 	"math/rand"
 
-	"denom/testutil/sample"
-	reservesimulation "denom/x/reserve/simulation"
-	"denom/x/reserve/types"
+	"reserve/testutil/sample"
+	reservesimulation "reserve/x/reserve/simulation"
+	"reserve/x/reserve/types"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"

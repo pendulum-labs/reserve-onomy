@@ -3,10 +3,11 @@ package reserve_test
 import (
 	"testing"
 
-	keepertest "denom/testutil/keeper"
-	"denom/testutil/nullify"
-	"denom/x/reserve"
-	"denom/x/reserve/types"
+	keepertest "reserve/testutil/keeper"
+	"reserve/testutil/nullify"
+	"reserve/x/reserve"
+	"reserve/x/reserve/types"
+
 	"github.com/stretchr/testify/require"
 )
 

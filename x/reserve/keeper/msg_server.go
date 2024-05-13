@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"denom/x/reserve/types"
+	"reserve/x/reserve/types"
 )
 
 type msgServer struct {

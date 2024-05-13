@@ -1,11 +1,11 @@
 package app
 
 import (
-	"denom/docs"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"reserve/docs"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"

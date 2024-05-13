@@ -1,8 +1,9 @@
 package reserve
 
 import (
-	"denom/x/reserve/keeper"
-	"denom/x/reserve/types"
+	"reserve/x/reserve/keeper"
+	"reserve/x/reserve/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

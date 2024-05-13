@@ -3,8 +3,9 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "denom/testutil/keeper"
-	"denom/x/reserve/types"
+	testkeeper "reserve/testutil/keeper"
+	"reserve/x/reserve/types"
+
 	"github.com/stretchr/testify/require"
 )
 
