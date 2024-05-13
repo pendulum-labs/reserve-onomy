@@ -89,6 +89,10 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	market "github.com/pendulum-labs/market/x/market"
+	marketkeeper "github.com/pendulum-labs/market/x/market/keeper"
+	markettypes "github.com/pendulum-labs/market/x/market/types"
+
 	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
@@ -143,6 +147,7 @@ var (
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		market.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -155,6 +160,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		markettypes.ModuleName:         {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -218,6 +224,7 @@ type App struct {
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
+	MarketKeeper marketkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -253,7 +260,7 @@ func New(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey,
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
-		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
+		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, markettypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -359,6 +366,16 @@ func New(
 		&stakingKeeper, govRouter,
 	)
 
+	app.MarketKeeper = *marketkeeper.NewKeeper(
+		appCodec,
+		keys[markettypes.StoreKey],
+		keys[markettypes.MemStoreKey],
+		app.GetSubspace(markettypes.ModuleName),
+
+		app.BankKeeper,
+	)
+	market := market.NewAppModule(appCodec, app.MarketKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -397,6 +414,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
+		market,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -422,6 +440,7 @@ func New(
 		evidencetypes.ModuleName,
 		genutiltypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		markettypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -442,6 +461,7 @@ func New(
 		evidencetypes.ModuleName,
 		genutiltypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		markettypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -467,6 +487,7 @@ func New(
 		evidencetypes.ModuleName,
 		genutiltypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		markettypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -489,6 +510,7 @@ func New(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
+		market,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -676,6 +698,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
+	paramsKeeper.Subspace(markettypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
