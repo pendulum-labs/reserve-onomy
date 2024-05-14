@@ -29419,7 +29419,7 @@ paths:
           type: string
       tags:
         - Query
-  '/pendulum-labs/market/market/drop/coins/{denom1}/{denom2}/{drops}':
+  '/pendulum-labs/market/market/drop/coins/{pair}/{drops}':
     get:
       summary: Converts drops to coin amounts
       operationId: PendulumlabsMarketMarketDropsToCoins
@@ -29431,9 +29431,9 @@ paths:
             properties:
               denom1:
                 type: string
-              amount1:
-                type: string
               denom2:
+                type: string
+              amount1:
                 type: string
               amount2:
                 type: string
@@ -29456,11 +29456,7 @@ paths:
                       type: string
                   additionalProperties: {}
       parameters:
-        - name: denom1
-          in: path
-          required: true
-          type: string
-        - name: denom2
+        - name: pair
           in: path
           required: true
           type: string
@@ -50784,17 +50780,6 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  pendulumlabs.market.market.QueryDropsToCoinsResponse:
-    type: object
-    properties:
-      denom1:
-        type: string
-      amount1:
-        type: string
-      denom2:
-        type: string
-      amount2:
-        type: string
   pendulumlabs.market.market.QueryGetBurningsResponse:
     type: object
     properties:
