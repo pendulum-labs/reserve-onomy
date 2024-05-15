@@ -15,18 +15,6 @@ ignite chain serve
 
 Your blockchain in development can be configured with `config.yml`. To learn more, see the [Starport docs](https://docs.starport.com).
 
-### Web Frontend
-
-Starport has scaffolded a Vue.js-based web app in the `vue` directory. Run the following commands to install dependencies and start the app:
-
-```
-cd vue
-npm install
-npm run serve
-```
-
-The frontend app is built using the `@starport/vue` and `@starport/vuex` packages. For details, see the [monorepo for Starport front-end development](https://github.com/tendermint/vue).
-
 ## Release
 To release a new version of your blockchain, create and push a new tag with `v` prefix. A new draft release with the configured targets will be created.
 
@@ -37,20 +25,17 @@ git push origin v0.1
 
 After a draft release is created, make your final changes from the release page and publish it.
 
-### Devnet Linux Install
+## Reserve Concepts
+`denom` is a minted representation of a real-world asset
+`collateral` is a coin that is deposited in a vault to mint denoms
+`vault` is storage of collateral that is being or will be used for minting of denoms
 
-First download binary
-```curl https://github.com/pendulum-labs/reserve/releases/download/v0.0.4dev/reserved```
-Second make the binary executable
-```chmod +x reserved```
-Third move to /usr/local/bin
-```cp reserved /usr/local/bin```
+## Reserve Parameters
+`minting ratio` is the minimum value collateralization ratio at which denoms may be minted
+`liquidation ratio` is the collateralization ratio at which the vault may be liquidated
 
-
-## Learn more
-
-- [Starport](https://starport.com)
-- [Tutorials](https://docs.starport.com/guide)
-- [Starport docs](https://docs.starport.com)
-- [Cosmos SDK docs](https://docs.cosmos.network)
-- [Developer Chat](https://discord.gg/H6wGTY8sxw)
+## Reserve Transactions
+`deposit` collateral into a vault
+`mint` denoms based on vault value and ratios
+`redeem` collateral from a vault by surrendering loaned denoms
+`reap` vaults whose collateral ratios drop below the liquidation ratio
