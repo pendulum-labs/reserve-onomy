@@ -13,9 +13,9 @@ The Onomy Reserve
 ## Reserve Parameters
 
 `vault ratio` is the collateralization ratio that of a vault at a given moment
-`minting ratio` is the minimum vault ratio at which denoms may be minted
-`liquidation ratio` is the vault at which the vault may be liquidated by a reaper
-`burn ratio` is the ratio of burned vs stored NOM at liquidation of a vault
+`minting ratio` is the minimum vault ratio at which a specific denom may be minted
+`liquidation ratio` is the vault ratio at which the vault for a specific denom may be liquidated by a reaper
+`burn ratio` is parameter that defines the ratio of burned vs stored NOM at liquidation of a vault
 
 ## Reserve Transactions
 
@@ -27,6 +27,8 @@ The Onomy Reserve
 ## Reserve Governance
 
 `create-denom` is a governance proposal that must be submitted to initialize a new denom
+`update-minting-ratio` is a governance proposal that updates the minting ratio for a denom
+`update-liquidation-ratio` is a governance proposal that updates the liquidation ratio for a denom
 
 ## Development
 
