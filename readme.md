@@ -8,13 +8,13 @@ The Onomy Reserve
 `collateral` is a coin that is deposited in a vault to mint denoms
 `vault` is storage of collateral that is being or will be used for minting of denoms
 `collateralization ratio` is the ratio of value of denoms minted to the collateral stored within a vault
-`reaper` is a user that liquidates a vault that is in default because of too low of collateralization ratio
+`liquidator` is a user that liquidates a vault that is in default because of too low of collateralization ratio
 
 ## Reserve Parameters
 
 `vault ratio` is the collateralization ratio that of a vault at a given moment
 `minting ratio` is the minimum vault ratio at which a specific denom may be minted
-`liquidation ratio` is the vault ratio at which the vault for a specific denom may be liquidated by a reaper
+`liquidation ratio` is the vault ratio at which the vault for a specific denom may be liquidated by a liquidator
 `burn ratio` is parameter that defines the ratio of burned vs stored NOM at liquidation of a vault
 
 ## Reserve Transactions
@@ -22,7 +22,7 @@ The Onomy Reserve
 `deposit` collateral into a vault
 `mint` denoms based on vault value and ratios
 `redeem` collateral from a vault by surrendering loaned denoms
-`reap` vaults whose collateral ratios drop below the liquidation ratio
+`liquidate` vaults whose collateral ratios drop below the liquidation ratio
 
 ## Reserve Governance
 
