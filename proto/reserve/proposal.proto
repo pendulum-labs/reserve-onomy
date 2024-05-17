@@ -1,5 +1,5 @@
 syntax = "proto3";
-package onomyprotocol.dao.v1;
+package reserve;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
@@ -8,7 +8,7 @@ import "cosmos/bank/v1beta1/bank.proto";
 option go_package = "reserve/x/reserve/types";
 option (gogoproto.equal_all) = true;
 
-// FundTreasuryProposal details a dao fund treasury proposal.
+// CreateDenomProposal details a create-denom proposal.
 message CreateDenomProposal {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
