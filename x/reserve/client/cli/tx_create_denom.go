@@ -25,9 +25,10 @@ import (
 )
 
 type proposalFlags struct {
-	Title       string
-	Description string
-	Deposit     string
+	Title        string
+	Description  string
+	Deposit      string
+	MetadataPath string
 }
 
 // CmdCreateDenomProposal implements the command to submit a create-denom proposal.
@@ -39,9 +40,8 @@ func CmdCreateDenomProposal() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom 1,1 --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aores" --from mykey
-
-Must have denom.json in directory containing the denom metadata`,
+$ %s tx gov submit-proposal create-denom rate --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex" --metadata-path "./metadata.json"
+Must have metadata.json in directory containing the denom metadata`,
 				version.AppName,
 			),
 		),
@@ -66,7 +66,14 @@ Must have denom.json in directory containing the denom metadata`,
 
 			rate := []sdk.Uint{rateNumerator, rateDenominator}
 
-			metadataFile, err := os.Open("metadata.json")
+			proposalFlags, err := parseSubmitCreateDenomProposalFlags(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			path := proposalFlags.MetadataPath
+
+			metadataFile, err := os.Open(path)
 			if err != nil {
 				return err
 			}
@@ -83,18 +90,13 @@ Must have denom.json in directory containing the denom metadata`,
 				return err
 			}
 
-			proposalGeneric, err := parseSubmitProposalFlags(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			deposit, err := sdk.ParseCoinsNormalized(proposalGeneric.Deposit)
+			deposit, err := sdk.ParseCoinsNormalized(proposalFlags.Deposit)
 			if err != nil {
 				return err
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalGeneric.Title, proposalGeneric.Description, metadata, rate)
+			content := types.NewCreateDenomProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, rate)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
@@ -110,7 +112,7 @@ Must have denom.json in directory containing the denom metadata`,
 	return cmd
 }
 
-func parseSubmitProposalFlags(fs *pflag.FlagSet) (*proposalFlags, error) {
+func parseSubmitCreateDenomProposalFlags(fs *pflag.FlagSet) (*proposalFlags, error) {
 	title, err := fs.GetString(govcli.FlagTitle)
 	if err != nil {
 		return nil, err
@@ -125,10 +127,16 @@ func parseSubmitProposalFlags(fs *pflag.FlagSet) (*proposalFlags, error) {
 		return nil, err
 	}
 
+	path, err := fs.GetString("metadata-path")
+	if err != nil {
+		return nil, err
+	}
+
 	return &proposalFlags{
-		Title:       title,
-		Description: description,
-		Deposit:     deposit,
+		Title:        title,
+		Description:  description,
+		Deposit:      deposit,
+		MetadataPath: path,
 	}, nil
 }
 

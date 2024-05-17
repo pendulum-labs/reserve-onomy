@@ -8,5 +8,6 @@ import (
 
 // x/reserve module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	// ErrDenomExists - denom already exists
+	ErrDenomExists = sdkerrors.Register(ModuleName, 1, "denom already exists") // nolint: gomnd
 )

@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	types "github.com/cosmos/cosmos-sdk/x/bank/types"
 	markettypes "github.com/pendulum-labs/market/x/market/types"
 )
 
@@ -15,6 +16,8 @@ type AccountKeeper interface {
 // BankKeeper defines the expected interface needed to retrieve account balances.
 type BankKeeper interface {
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
+	GetDenomMetaData(ctx sdk.Context, denom string) (types.Metadata, bool)
+	SetDenomMetaData(ctx sdk.Context, denomMetaData types.Metadata)
 	// Methods imported from bank should be defined here
 }
 
