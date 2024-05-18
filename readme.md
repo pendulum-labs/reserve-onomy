@@ -16,6 +16,7 @@ The Onomy Reserve
 `minting ratio` is the minimum vault ratio at which a specific denom may be minted
 `liquidation ratio` is the vault ratio at which the vault for a specific denom may be liquidated by a liquidator
 `burn ratio` is parameter that defines the ratio of burned vs stored NOM at liquidation of a vault
+`liquidity deposit` is the minimum amount of liquidity for a specific collateral that must be provided to create a denom
 
 ## Reserve Transactions
 
@@ -26,6 +27,7 @@ The Onomy Reserve
 
 ## Reserve Governance
 
+`register-collateral` is a governance proposal that must be submitted to register a collateral for minting denoms
 `create-denom` is a governance proposal that must be submitted to initialize a new denom
 `update-minting-ratio` is a governance proposal that updates the minting ratio for a denom
 `update-liquidation-ratio` is a governance proposal that updates the liquidation ratio for a denom

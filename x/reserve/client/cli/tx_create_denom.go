@@ -40,8 +40,7 @@ func CmdCreateDenomProposal() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom rate --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex" --metadata-path "./metadata.json"
-Must have metadata.json in directory containing the denom metadata`,
+$ %s tx gov submit-proposal create-denom rate --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex" --metadata-path "./metadata.json"`,
 				version.AppName,
 			),
 		),
