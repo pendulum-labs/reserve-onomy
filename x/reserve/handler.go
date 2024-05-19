@@ -38,3 +38,15 @@ func NewCreateDenomProposalHandler(k keeper.Keeper) govtypes.Handler {
 		}
 	}
 }
+
+func NewRegisterCollateralProposalHandler(k keeper.Keeper) govtypes.Handler {
+	return func(ctx sdk.Context, content govtypes.Content) error {
+		switch c := content.(type) {
+		case *types.RegisterCollateralProposal:
+			return k.RegisterCollateralProposal(ctx, c)
+
+		default:
+			return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized market proposal content type: %T", c)
+		}
+	}
+}

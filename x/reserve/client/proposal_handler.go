@@ -15,6 +15,8 @@ import (
 var (
 	// CreateDenomProposalHandler is the cli handler used for the gov cli integration.
 	CreateDenomProposalHandler = govclient.NewProposalHandler(cli.CmdCreateDenomProposal, emptyRestHandler) // nolint:gochecknoglobals // cosmos-sdk style
+	// RegisterCollateralProposalHandler is the cli handler used for the gov cli integration.
+	RegisterCollateralProposalHandler = govclient.NewProposalHandler(cli.CmdRegisterCollateralProposal, emptyRestHandler) // nolint:gochecknoglobals // cosmos-sdk style
 )
 
 func emptyRestHandler(client.Context) govrest.ProposalRESTHandler {
