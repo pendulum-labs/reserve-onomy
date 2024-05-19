@@ -22,41 +22,21 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 )
 
-// CmdCreateDenomProposal implements the command to submit a create-denom proposal.
-func CmdCreateDenomProposal() *cobra.Command {
+// CmdRegisterCollateralProposal implements the command to submit a register-collateral proposal.
+func CmdRegisterCollateralProposal() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-denom rate metadata-path",
+		Use:   "register-collateral metadata-path",
 		Args:  cobra.ExactArgs(2),
-		Short: "Submit a create denom proposal",
+		Short: "Submit a register collateral proposal",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Submit a create denom proposal.
+			fmt.Sprintf(`Submit a register collateral proposal.
 Example:
-$ %s tx gov submit-proposal create-denom rate --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal register-collateral metadata-path --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			rateString := args[0]
-			rateStringSplit := strings.Split(rateString, ",")
-
-			rateNumerator, err := sdk.ParseUint(rateStringSplit[0])
-			if err != nil {
-				return err
-			}
-
-			rateDenominator, err := sdk.ParseUint(rateStringSplit[1])
-			if err != nil {
-				return err
-			}
-
-			rate := []sdk.Uint{rateNumerator, rateDenominator}
-
-			proposalFlags, err := parseProposalFlags(cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -76,6 +56,11 @@ $ %s tx gov submit-proposal create-denom rate --title="Test Proposal" --descript
 			var metadata banktypes.Metadata
 
 			err = json.Unmarshal(byteMetadata, &metadata)
+			if err != nil {
+				return err
+			}
+
+			proposalFlags, err := parseProposalFlags(cmd.Flags())
 			if err != nil {
 				return err
 			}
