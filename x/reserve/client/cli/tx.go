@@ -9,6 +9,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	govcli "github.com/cosmos/cosmos-sdk/x/gov/client/cli"
+
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	"reserve/x/reserve/types"
 )
@@ -58,16 +59,10 @@ func parseProposalFlags(fs *pflag.FlagSet) (*proposalFlags, error) {
 		return nil, err
 	}
 
-	path, err := fs.GetString("metadata-path")
-	if err != nil {
-		return nil, err
-	}
-
 	return &proposalFlags{
-		Title:        title,
-		Description:  description,
-		Deposit:      deposit,
-		MetadataPath: path,
+		Title:       title,
+		Description: description,
+		Deposit:     deposit,
 	}, nil
 }
 

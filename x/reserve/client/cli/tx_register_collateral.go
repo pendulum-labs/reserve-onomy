@@ -71,7 +71,7 @@ $ %s tx gov submit-proposal register-collateral metadata-path --title="Test Prop
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, rate)
+			content := types.NewRegisterCollateralProposal(from, proposalFlags.Title, proposalFlags.Description, metadata)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
