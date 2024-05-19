@@ -31,7 +31,7 @@ func CmdCreateDenomProposal() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom rate --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
@@ -55,6 +55,11 @@ $ %s tx gov submit-proposal create-denom rate --title="Test Proposal" --descript
 			}
 
 			rate := []sdk.Uint{rateNumerator, rateDenominator}
+
+			collateralDeposit, err := sdk.ParseCoinNormalized(args[1])
+			if err != nil {
+				return err
+			}
 
 			proposalFlags, err := parseProposalFlags(cmd.Flags())
 			if err != nil {
@@ -86,7 +91,7 @@ $ %s tx gov submit-proposal create-denom rate --title="Test Proposal" --descript
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, rate)
+			content := types.NewCreateDenomProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, rate, collateralDeposit)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {

@@ -31,7 +31,7 @@ func CmdRegisterCollateralProposal() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a register collateral proposal.
 Example:
-$ %s tx gov submit-proposal register-collateral metadata-path --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral-deposit --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
@@ -40,6 +40,8 @@ $ %s tx gov submit-proposal register-collateral metadata-path --title="Test Prop
 			if err != nil {
 				return err
 			}
+
+			minCollateralDeposit := sdk.NewUintFromString(args[0])
 
 			path := args[1]
 
@@ -71,7 +73,7 @@ $ %s tx gov submit-proposal register-collateral metadata-path --title="Test Prop
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewRegisterCollateralProposal(from, proposalFlags.Title, proposalFlags.Description, metadata)
+			content := types.NewRegisterCollateralProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, minCollateralDeposit)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
