@@ -27,26 +27,28 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 	}
 }
 
-func NewCreateDenomProposalHandler(k keeper.Keeper) govtypes.Handler {
+// NewSoftwareUpgradeProposalHandler creates a governance handler to manage new proposal types.
+// It enables SoftwareUpgradeProposal to propose an Upgrade, and CancelSoftwareUpgradeProposal
+// to abort a previously voted upgrade.
+func NewReserveProposalHandler(k keeper.Keeper) govtypes.Handler {
 	return func(ctx sdk.Context, content govtypes.Content) error {
 		switch c := content.(type) {
+		case *types.RegisterCollateralProposal:
+			return handleRegisterCollateralProposal(ctx, k, c)
+
 		case *types.CreateDenomProposal:
-			return k.CreateDenomProposal(ctx, c)
+			return handleCreateDenomProposal(ctx, k, c)
 
 		default:
-			return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized market proposal content type: %T", c)
+			return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized reserve proposal content type: %T", c)
 		}
 	}
 }
 
-func NewRegisterCollateralProposalHandler(k keeper.Keeper) govtypes.Handler {
-	return func(ctx sdk.Context, content govtypes.Content) error {
-		switch c := content.(type) {
-		case *types.RegisterCollateralProposal:
-			return k.RegisterCollateralProposal(ctx, c)
+func handleRegisterCollateralProposal(ctx sdk.Context, k keeper.Keeper, c *types.RegisterCollateralProposal) error {
+	return k.RegisterCollateralProposal(ctx, c)
+}
 
-		default:
-			return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized market proposal content type: %T", c)
-		}
-	}
+func handleCreateDenomProposal(ctx sdk.Context, k keeper.Keeper, c *types.CreateDenomProposal) error {
+	return k.CreateDenomProposal(ctx, c)
 }
