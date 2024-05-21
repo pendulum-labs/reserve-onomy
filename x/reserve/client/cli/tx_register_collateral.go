@@ -26,12 +26,12 @@ import (
 func CmdRegisterCollateralProposal() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "register-collateral metadata-path",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(4),
 		Short: "Submit a register collateral proposal",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a register collateral proposal.
 Example:
-$ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral-deposit --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral-deposit minting-ratio liquidation-ratio --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
@@ -65,6 +65,28 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 				return err
 			}
 
+			mintingRatio, ok := sdk.NewIntFromString(args[2])
+			if !ok {
+				return fmt.Errorf("invalid string number format: %q", mintingRatio)
+			}
+			if mintingRatio.LTE(sdk.ZeroInt()) {
+				return fmt.Errorf("burn rate numerator must be positive and greater than zero: %d", mintingRatio)
+			}
+			if mintingRatio.GTE(sdk.NewInt(10000)) {
+				return fmt.Errorf("burn rate numerator must be less than 10000: %d", mintingRatio)
+			}
+
+			liquidationRatio, ok := sdk.NewIntFromString(args[3])
+			if !ok {
+				return fmt.Errorf("invalid string number format: %q", liquidationRatio)
+			}
+			if liquidationRatio.LTE(sdk.ZeroInt()) {
+				return fmt.Errorf("burn rate numerator must be positive and greater than zero: %d", liquidationRatio)
+			}
+			if liquidationRatio.GTE(sdk.NewInt(10000)) {
+				return fmt.Errorf("burn rate numerator must be less than 10000: %d", liquidationRatio)
+			}
+
 			proposalFlags, err := parseProposalFlags(cmd.Flags())
 			if err != nil {
 				return err
@@ -76,7 +98,15 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewRegisterCollateralProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, minCollateralDeposit)
+			content := types.NewRegisterCollateralProposal(
+				from,
+				proposalFlags.Title,
+				proposalFlags.Description,
+				metadata,
+				minCollateralDeposit,
+				sdk.NewUintFromBigInt(mintingRatio.BigInt()),
+				sdk.NewUintFromBigInt(liquidationRatio.BigInt()),
+			)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {

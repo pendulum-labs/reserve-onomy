@@ -16,7 +16,9 @@ export interface ProtobufAny {
 /**
  * Params defines the parameters for the module.
  */
-export type ReserveParams = object;
+export interface ReserveParams {
+  burn_rate?: string;
+}
 
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.

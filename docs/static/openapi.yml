@@ -31050,6 +31050,20 @@ paths:
               params:
                 description: params holds all the parameters of this module.
                 type: object
+                properties:
+                  burn_rate:
+                    type: string
+                    title: >-
+                      Upon vault liquidation event collateral is traded for
+                      market module
+
+                      burn coin. burn ratio is the ratio of market burn coin
+                      burned vs stored
+
+                      in community pool
+
+                      burn rate is (parameter / 10000), 9999 representing as
+                      99.99%
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -51132,6 +51146,18 @@ definitions:
         type: string
   reserve.Params:
     type: object
+    properties:
+      burn_rate:
+        type: string
+        title: >-
+          Upon vault liquidation event collateral is traded for market module
+
+          burn coin. burn ratio is the ratio of market burn coin burned vs
+          stored
+
+          in community pool
+
+          burn rate is (parameter / 10000), 9999 representing as 99.99%
     description: Params defines the parameters for the module.
   reserve.QueryParamsResponse:
     type: object
@@ -51139,4 +51165,17 @@ definitions:
       params:
         description: params holds all the parameters of this module.
         type: object
+        properties:
+          burn_rate:
+            type: string
+            title: >-
+              Upon vault liquidation event collateral is traded for market
+              module
+
+              burn coin. burn ratio is the ratio of market burn coin burned vs
+              stored
+
+              in community pool
+
+              burn rate is (parameter / 10000), 9999 representing as 99.99%
     description: QueryParamsResponse is response type for the Query/Params RPC method.

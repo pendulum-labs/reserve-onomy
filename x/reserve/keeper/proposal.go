@@ -36,15 +36,15 @@ func (k Keeper) RegisterCollateralProposal(ctx sdk.Context, request *types.Regis
 		return sdkerrors.Wrapf(types.ErrMetadataExists, "Metadata already exists for %s", request.Metadata.Base)
 	}
 
-	// Need to store initial amount of NOM or other collateral
-
 	k.bankKeeper.SetDenomMetaData(ctx, *request.Metadata)
 
 	k.SetCollateral(ctx, types.Collateral{
-		Base:           request.Metadata.Base,
-		Display:        request.Metadata.Display,
-		MinimumDeposit: request.MinimumDeposit,
-		InitTime:       ctx.BlockHeader().Time.Unix(),
+		Base:             request.Metadata.Base,
+		Display:          request.Metadata.Display,
+		MinimumDeposit:   request.MinimumDeposit,
+		MintingRatio:     request.MintingRatio,
+		LiquidationRatio: request.LiquidationRatio,
+		InitTime:         ctx.BlockHeader().Time.Unix(),
 	})
 
 	return nil

@@ -21,6 +21,8 @@ export interface RegisterCollateralProposal {
   description: string;
   metadata: Metadata | undefined;
   minimum_deposit: string;
+  minting_ratio: string;
+  liquidation_ratio: string;
 }
 
 const baseCreateDenomProposal: object = {
@@ -195,6 +197,8 @@ const baseRegisterCollateralProposal: object = {
   title: "",
   description: "",
   minimum_deposit: "",
+  minting_ratio: "",
+  liquidation_ratio: "",
 };
 
 export const RegisterCollateralProposal = {
@@ -216,6 +220,12 @@ export const RegisterCollateralProposal = {
     }
     if (message.minimum_deposit !== "") {
       writer.uint32(42).string(message.minimum_deposit);
+    }
+    if (message.minting_ratio !== "") {
+      writer.uint32(50).string(message.minting_ratio);
+    }
+    if (message.liquidation_ratio !== "") {
+      writer.uint32(58).string(message.liquidation_ratio);
     }
     return writer;
   },
@@ -246,6 +256,12 @@ export const RegisterCollateralProposal = {
           break;
         case 5:
           message.minimum_deposit = reader.string();
+          break;
+        case 6:
+          message.minting_ratio = reader.string();
+          break;
+        case 7:
+          message.liquidation_ratio = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -287,6 +303,19 @@ export const RegisterCollateralProposal = {
     } else {
       message.minimum_deposit = "";
     }
+    if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
+      message.minting_ratio = String(object.minting_ratio);
+    } else {
+      message.minting_ratio = "";
+    }
+    if (
+      object.liquidation_ratio !== undefined &&
+      object.liquidation_ratio !== null
+    ) {
+      message.liquidation_ratio = String(object.liquidation_ratio);
+    } else {
+      message.liquidation_ratio = "";
+    }
     return message;
   },
 
@@ -302,6 +331,10 @@ export const RegisterCollateralProposal = {
         : undefined);
     message.minimum_deposit !== undefined &&
       (obj.minimum_deposit = message.minimum_deposit);
+    message.minting_ratio !== undefined &&
+      (obj.minting_ratio = message.minting_ratio);
+    message.liquidation_ratio !== undefined &&
+      (obj.liquidation_ratio = message.liquidation_ratio);
     return obj;
   },
 
@@ -338,6 +371,19 @@ export const RegisterCollateralProposal = {
       message.minimum_deposit = object.minimum_deposit;
     } else {
       message.minimum_deposit = "";
+    }
+    if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
+      message.minting_ratio = object.minting_ratio;
+    } else {
+      message.minting_ratio = "";
+    }
+    if (
+      object.liquidation_ratio !== undefined &&
+      object.liquidation_ratio !== null
+    ) {
+      message.liquidation_ratio = object.liquidation_ratio;
+    } else {
+      message.liquidation_ratio = "";
     }
     return message;
   },
