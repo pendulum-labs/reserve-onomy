@@ -20,18 +20,18 @@ func (k Keeper) SetDenom(ctx sdk.Context, denom types.Denom) {
 func (k Keeper) GetDenom(
 	ctx sdk.Context,
 	uid uint64,
-) (val types.Denom, found bool) {
+) (denom types.Denom, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DenomKeyPrefix))
 
 	b := store.Get(types.DenomKey(
-		val.Base,
+		denom.Base,
 	))
 	if b == nil {
-		return val, false
+		return denom, false
 	}
 
-	k.cdc.MustUnmarshal(b, &val)
-	return val, true
+	k.cdc.MustUnmarshal(b, &denom)
+	return denom, true
 }
 
 // RemoveDenom removes a denom from the store

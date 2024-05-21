@@ -64,7 +64,7 @@ func (m *CreateDenomProposal) ValidateBasic() error {
 }
 
 // NewRegisterCollateralProposal creates a new create-denom proposal.
-func NewRegisterCollateralProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, minCollateralDeposit sdk.Uint) *RegisterCollateralProposal {
+func NewRegisterCollateralProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, minCollateralDeposit sdk.Coin) *RegisterCollateralProposal {
 	return &RegisterCollateralProposal{sender.String(), title, description, &metadata, minCollateralDeposit}
 }
 

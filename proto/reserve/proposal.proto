@@ -39,7 +39,7 @@ message RegisterCollateralProposal {
   string description = 3;
   cosmos.bank.v1beta1.Metadata metadata = 4;
   string minimum_deposit = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable) = false
   ];
 }

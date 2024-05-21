@@ -19,6 +19,12 @@ func (k Keeper) CreateDenomProposal(ctx sdk.Context, request *types.CreateDenomP
 
 	k.bankKeeper.SetDenomMetaData(ctx, *request.Metadata)
 
+	k.SetDenom(ctx, types.Denom{
+		Base:     request.Metadata.Base,
+		Display:  request.Metadata.Display,
+		InitTime: ctx.BlockHeader().Time.Unix(),
+	})
+
 	return nil
 }
 
@@ -33,6 +39,13 @@ func (k Keeper) RegisterCollateralProposal(ctx sdk.Context, request *types.Regis
 	// Need to store initial amount of NOM or other collateral
 
 	k.bankKeeper.SetDenomMetaData(ctx, *request.Metadata)
+
+	k.SetCollateral(ctx, types.Collateral{
+		Base:           request.Metadata.Base,
+		Display:        request.Metadata.Display,
+		MinimumDeposit: request.MinimumDeposit,
+		InitTime:       ctx.BlockHeader().Time.Unix(),
+	})
 
 	return nil
 }

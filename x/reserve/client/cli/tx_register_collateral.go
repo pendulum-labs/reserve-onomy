@@ -41,9 +41,7 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 				return err
 			}
 
-			minCollateralDeposit := sdk.NewUintFromString(args[0])
-
-			path := args[1]
+			path := args[0]
 
 			metadataFile, err := os.Open(path)
 			if err != nil {
@@ -58,6 +56,11 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 			var metadata banktypes.Metadata
 
 			err = json.Unmarshal(byteMetadata, &metadata)
+			if err != nil {
+				return err
+			}
+
+			minCollateralDeposit, err := sdk.ParseCoinNormalized(args[1])
 			if err != nil {
 				return err
 			}
