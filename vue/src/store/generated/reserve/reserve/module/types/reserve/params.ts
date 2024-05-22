@@ -12,14 +12,23 @@ export interface Params {
    * burn rate is (parameter / 10000), 9999 representing as 99.99%
    */
   burn_rate: string;
+  /**
+   * Vault limit is a limit to number of vaults a single user may create
+   * There is a potential to slow down the system if a single user has
+   * too many vaults.  The type is string numeric.
+   */
+  vault_limit: string;
 }
 
-const baseParams: object = { burn_rate: "" };
+const baseParams: object = { burn_rate: "", vault_limit: "" };
 
 export const Params = {
   encode(message: Params, writer: Writer = Writer.create()): Writer {
     if (message.burn_rate !== "") {
-      writer.uint32(34).string(message.burn_rate);
+      writer.uint32(10).string(message.burn_rate);
+    }
+    if (message.vault_limit !== "") {
+      writer.uint32(18).string(message.vault_limit);
     }
     return writer;
   },
@@ -31,8 +40,11 @@ export const Params = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 4:
+        case 1:
           message.burn_rate = reader.string();
+          break;
+        case 2:
+          message.vault_limit = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -49,12 +61,19 @@ export const Params = {
     } else {
       message.burn_rate = "";
     }
+    if (object.vault_limit !== undefined && object.vault_limit !== null) {
+      message.vault_limit = String(object.vault_limit);
+    } else {
+      message.vault_limit = "";
+    }
     return message;
   },
 
   toJSON(message: Params): unknown {
     const obj: any = {};
     message.burn_rate !== undefined && (obj.burn_rate = message.burn_rate);
+    message.vault_limit !== undefined &&
+      (obj.vault_limit = message.vault_limit);
     return obj;
   },
 
@@ -64,6 +83,11 @@ export const Params = {
       message.burn_rate = object.burn_rate;
     } else {
       message.burn_rate = "";
+    }
+    if (object.vault_limit !== undefined && object.vault_limit !== null) {
+      message.vault_limit = object.vault_limit;
+    } else {
+      message.vault_limit = "";
     }
     return message;
   },

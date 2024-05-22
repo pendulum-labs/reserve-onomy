@@ -7,8 +7,16 @@ import "cosmos/base/v1beta1/coin.proto";
 
 message Vault {
   
-  uint64 uid = 1; 
-  string status = 2; 
-  cosmos.base.v1beta1.Coin collateral = 3 [(gogoproto.nullable) = false]; 
-  cosmos.base.v1beta1.Coin denom = 4 [(gogoproto.nullable) = false]; 
+  uint64 uid = 1;
+  string owner = 2;
+  string name = 3;
+  string status = 4;
+  cosmos.base.v1beta1.Coin collateral = 5 [(gogoproto.nullable) = false]; 
+  cosmos.base.v1beta1.Coin denom = 6 [(gogoproto.nullable) = false]; 
+}
+
+message Vaults {
+  
+  string owner = 1;
+  repeated uint64 uids = 2;
 }

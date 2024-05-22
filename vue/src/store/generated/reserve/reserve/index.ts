@@ -6,9 +6,10 @@ import { Params } from "./module/types/reserve/params"
 import { CreateDenomProposal } from "./module/types/reserve/proposal"
 import { RegisterCollateralProposal } from "./module/types/reserve/proposal"
 import { Vault } from "./module/types/reserve/vault"
+import { Vaults } from "./module/types/reserve/vault"
 
 
-export { Collateral, Denom, Params, CreateDenomProposal, RegisterCollateralProposal, Vault };
+export { Collateral, Denom, Params, CreateDenomProposal, RegisterCollateralProposal, Vault, Vaults };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -55,6 +56,7 @@ const getDefaultState = () => {
 						CreateDenomProposal: getStructure(CreateDenomProposal.fromPartial({})),
 						RegisterCollateralProposal: getStructure(RegisterCollateralProposal.fromPartial({})),
 						Vault: getStructure(Vault.fromPartial({})),
+						Vaults: getStructure(Vaults.fromPartial({})),
 						
 		},
 		_Registry: registry,
