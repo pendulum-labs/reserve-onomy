@@ -51144,6 +51144,8 @@ definitions:
         type: string
       amount:
         type: string
+  reserve.MsgCreateVaultResponse:
+    type: object
   reserve.Params:
     type: object
     properties:
