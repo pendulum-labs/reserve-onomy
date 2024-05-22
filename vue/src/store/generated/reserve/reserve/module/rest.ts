@@ -13,7 +13,9 @@ export interface ProtobufAny {
   "@type"?: string;
 }
 
-export type ReserveMsgCreateVaultResponse = object;
+export interface ReserveMsgCreateVaultResponse {
+  success?: boolean;
+}
 
 /**
  * Params defines the parameters for the module.

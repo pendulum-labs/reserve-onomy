@@ -51146,6 +51146,9 @@ definitions:
         type: string
   reserve.MsgCreateVaultResponse:
     type: object
+    properties:
+      success:
+        type: boolean
   reserve.Params:
     type: object
     properties:

@@ -9,7 +9,9 @@ export interface MsgCreateVault {
   name: string;
 }
 
-export interface MsgCreateVaultResponse {}
+export interface MsgCreateVaultResponse {
+  success: boolean;
+}
 
 const baseMsgCreateVault: object = { creator: "", collateral: "", name: "" };
 
@@ -100,10 +102,16 @@ export const MsgCreateVault = {
   },
 };
 
-const baseMsgCreateVaultResponse: object = {};
+const baseMsgCreateVaultResponse: object = { success: false };
 
 export const MsgCreateVaultResponse = {
-  encode(_: MsgCreateVaultResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: MsgCreateVaultResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.success === true) {
+      writer.uint32(8).bool(message.success);
+    }
     return writer;
   },
 
@@ -114,6 +122,9 @@ export const MsgCreateVaultResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.success = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -122,18 +133,31 @@ export const MsgCreateVaultResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgCreateVaultResponse {
+  fromJSON(object: any): MsgCreateVaultResponse {
     const message = { ...baseMsgCreateVaultResponse } as MsgCreateVaultResponse;
+    if (object.success !== undefined && object.success !== null) {
+      message.success = Boolean(object.success);
+    } else {
+      message.success = false;
+    }
     return message;
   },
 
-  toJSON(_: MsgCreateVaultResponse): unknown {
+  toJSON(message: MsgCreateVaultResponse): unknown {
     const obj: any = {};
+    message.success !== undefined && (obj.success = message.success);
     return obj;
   },
 
-  fromPartial(_: DeepPartial<MsgCreateVaultResponse>): MsgCreateVaultResponse {
+  fromPartial(
+    object: DeepPartial<MsgCreateVaultResponse>
+  ): MsgCreateVaultResponse {
     const message = { ...baseMsgCreateVaultResponse } as MsgCreateVaultResponse;
+    if (object.success !== undefined && object.success !== null) {
+      message.success = object.success;
+    } else {
+      message.success = false;
+    }
     return message;
   },
 };

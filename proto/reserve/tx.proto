@@ -18,6 +18,7 @@ message MsgCreateVault {
 }
 
 message MsgCreateVaultResponse {
+  bool success = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message

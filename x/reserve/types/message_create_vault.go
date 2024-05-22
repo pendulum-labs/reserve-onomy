@@ -43,5 +43,11 @@ func (msg *MsgCreateVault) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	collateral, _ := sdk.ParseCoinNormalized(msg.Collateral)
+	if !collateral.IsValid() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "amount is not a valid Coin object")
+	}
+
 	return nil
 }
