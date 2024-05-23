@@ -41,7 +41,6 @@ func (k msgServer) CreateVault(goCtx context.Context, msg *types.MsgCreateVault)
 		Name:       msg.Name,
 		Status:     "ready",
 		Collateral: collateral,
-		Denom:      nil,
 	}
 
 	k.SetVault(ctx, vault)

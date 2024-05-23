@@ -13,6 +13,9 @@ import (
 
 	marketkeeper "github.com/pendulum-labs/market/x/market/keeper"
 	markettypes "github.com/pendulum-labs/market/x/market/types"
+
+	"reserve/x/reserve/keeper"
+	"reserve/x/reserve/types"
 )
 
 type testData struct {
@@ -20,58 +23,47 @@ type testData struct {
 	coinBStr      string
 	RateAstrArray []string
 	RateBstrArray []string
+	name          string
 }
 
 var addr string = sample.AccAddress()
-var addr2 string = sample.AccAddress()
-var addr3 string = sample.AccAddress()
 
-func TestCreatePool(t *testing.T) {
+func TestCreateVault(t *testing.T) {
 	testInput := keepertest.CreateTestEnvironment(t)
-	//TestData
-	testdata := testData{coinAStr: "20CoinA", coinBStr: "20CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}}
-	coinPair, _ := sample.SampleCoins(testdata.coinAStr, testdata.coinBStr)
-	denomA, denomB := sample.SampleDenoms(coinPair)
-	pair := strings.Join([]string{denomA, denomB}, ",")
 
-	//MintCoins
+	// TestData
+	testdata := testData{coinAStr: "20CoinA", coinBStr: "20CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}, name: "testvault"}
+	coinPair, _ := sample.SampleCoins(testdata.coinAStr, testdata.coinBStr)
+
+	// MintCoins
 	require.NoError(t, testInput.BankKeeper.MintCoins(testInput.Context, markettypes.ModuleName, coinPair))
-	//SendCoinsFromModuleToAccount
+
+	// SendCoinsFromModuleToAccount
 	requestAddress, err := sdk.AccAddressFromBech32(addr)
 	require.NoError(t, err)
 	require.NoError(t, testInput.BankKeeper.SendCoinsFromModuleToAccount(testInput.Context, markettypes.ModuleName, requestAddress, coinPair))
+
 	// GetUidCount before CreatePool
 	beforecount := testInput.MarketKeeper.GetUidCount(testInput.Context)
-	//Create Pool
-	var p = markettypes.MsgCreatePool{CoinA: testdata.coinAStr, CoinB: testdata.coinBStr, Creator: addr}
-	response, err := marketkeeper.NewMsgServerImpl(testInput.MarketKeeper).CreatePool(sdk.WrapSDKContext(testInput.Context), &p)
-	//validate CreatePool
+
+	// Create Vault
+	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr, Name: testdata.name}
+	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
+
+	// Validate CreateVault
 	require.NoError(t, err)
-	require.Contains(t, p.GetCreator(), response.String())
-	require.Contains(t, p.GetCoinA(), response.String())
-	require.Contains(t, p.GetCoinB(), response.String())
-	//validate SetUidCount function.
+	require.Equal(t, beforecount, response.Uid)
+
+	// Validate SetUidCount function.
 	aftercount := testInput.MarketKeeper.GetUidCount(testInput.Context)
 	require.Equal(t, beforecount+1, aftercount)
-	//validate GetPool
 
-	rst, found := testInput.MarketKeeper.GetPool(testInput.Context, pair)
+	// Validate GetVault
+	rst, found := testInput.ReserveKeeper.GetVault(testInput.Context, beforecount)
 	require.True(t, found)
-	require.Equal(t, rst.Pair, pair)
-	//validate GetMember
-	members, memberfound := testInput.MarketKeeper.GetMember(testInput.Context, denomB, denomA)
-	members1, memberfound1 := testInput.MarketKeeper.GetMember(testInput.Context, denomA, denomB)
-	require.True(t, memberfound)
-	require.Equal(t, members.DenomA, denomB)
-	require.Equal(t, members.DenomB, denomA)
-	require.True(t, memberfound1)
-	require.Equal(t, members1.DenomA, denomA)
-	require.Equal(t, members1.DenomB, denomB)
-	//validate GetDrop
-	drops, dropFound := testInput.MarketKeeper.GetDrop(testInput.Context, beforecount)
-	require.True(t, dropFound)
-	require.Equal(t, drops.Pair, pair)
-
+	require.Equal(t, rst.Uid, beforecount)
+	require.Equal(t, rst.Name, testdata.name)
+	require.Equal(t, rst.Collateral.String(), testdata.coinAStr)
 }
 
 func TestCreatePool_PoolAlreadyExist(t *testing.T) {
