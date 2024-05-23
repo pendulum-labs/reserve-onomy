@@ -14,7 +14,8 @@ export interface ProtobufAny {
 }
 
 export interface ReserveMsgCreateVaultResponse {
-  success?: boolean;
+  /** @format uint64 */
+  uid?: string;
 }
 
 /**

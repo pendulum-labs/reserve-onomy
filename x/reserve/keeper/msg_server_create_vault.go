@@ -20,8 +20,33 @@ func (k msgServer) CreateVault(goCtx context.Context, msg *types.MsgCreateVault)
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "amount is not a valid Coin object")
 	}
 
-	// TODO: Handling the message
-	_ = ctx
+	if k.VaultNameExists(ctx, msg.Creator, msg.Name) {
+		return nil, sdkerrors.Wrapf(types.ErrVaultNameExists, "Name %s already exists for owner", msg.Name)
+	}
 
-	return &types.MsgCreateVaultResponse{}, nil
+	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
+
+	// Use the module account as pool account
+	sdkError := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator, types.ModuleName, sdk.NewCoins(collateral))
+	if sdkError != nil {
+		return nil, sdkError
+	}
+
+	// Create the uid
+	uid := k.GetUidCount(ctx)
+
+	vault := types.Vault{
+		Uid:        uid,
+		Owner:      msg.Creator,
+		Name:       msg.Name,
+		Status:     "active",
+		Collateral: collateral,
+	}
+
+	k.SetVault(ctx, vault)
+
+	// Update drop uid count
+	k.SetUidCount(ctx, uid+1)
+
+	return &types.MsgCreateVaultResponse{Uid: uid}, nil
 }

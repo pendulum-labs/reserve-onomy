@@ -20,7 +20,7 @@ The Onomy Reserve
 
 ## Reserve Transactions
 
-`create-vault` by depositing collateral and naming
+`create-vault` by depositing collateral.  Each vault has a unique name per user as well as UID
 `deposit` collateral into a vault
 `mint` denoms based on vault value and ratios
 `redeem` collateral from a vault by surrendering loaned denoms

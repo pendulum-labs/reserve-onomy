@@ -10,4 +10,6 @@ import (
 var (
 	// ErrDenomExists - denom already exists
 	ErrMetadataExists = sdkerrors.Register(ModuleName, 1, "metadata already exists") // nolint: gomnd
+	// ErrDenomExists - denom already exists
+	ErrVaultNameExists = sdkerrors.Register(ModuleName, 2, "vault name exists for owner") // nolint: gomnd
 )
