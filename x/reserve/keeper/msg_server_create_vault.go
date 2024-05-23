@@ -20,8 +20,10 @@ func (k msgServer) CreateVault(goCtx context.Context, msg *types.MsgCreateVault)
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "amount is not a valid Coin object")
 	}
 
-	if k.VaultNameExists(ctx, msg.Creator, msg.Name) {
-		return nil, sdkerrors.Wrapf(types.ErrVaultNameExists, "Name %s already exists for owner", msg.Name)
+	_, found := k.GetVaultUid(ctx, msg.Creator, msg.Name)
+
+	if found {
+		return nil, sdkerrors.Wrapf(types.ErrVaultNameExists, "Vault with name %s already exists for owner", msg.Name)
 	}
 
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)

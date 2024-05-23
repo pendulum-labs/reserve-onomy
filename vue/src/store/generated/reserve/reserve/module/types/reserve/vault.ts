@@ -14,9 +14,8 @@ export interface Vault {
   denom: Coin | undefined;
 }
 
-export interface Vaults {
-  owner: string;
-  uids: number[];
+export interface VaultMap {
+  uid: number;
 }
 
 const baseVault: object = { uid: 0, owner: "", name: "", status: "" };
@@ -163,41 +162,25 @@ export const Vault = {
   },
 };
 
-const baseVaults: object = { owner: "", uids: 0 };
+const baseVaultMap: object = { uid: 0 };
 
-export const Vaults = {
-  encode(message: Vaults, writer: Writer = Writer.create()): Writer {
-    if (message.owner !== "") {
-      writer.uint32(10).string(message.owner);
+export const VaultMap = {
+  encode(message: VaultMap, writer: Writer = Writer.create()): Writer {
+    if (message.uid !== 0) {
+      writer.uint32(8).uint64(message.uid);
     }
-    writer.uint32(18).fork();
-    for (const v of message.uids) {
-      writer.uint64(v);
-    }
-    writer.ldelim();
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Vaults {
+  decode(input: Reader | Uint8Array, length?: number): VaultMap {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseVaults } as Vaults;
-    message.uids = [];
+    const message = { ...baseVaultMap } as VaultMap;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.owner = reader.string();
-          break;
-        case 2:
-          if ((tag & 7) === 2) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.uids.push(longToNumber(reader.uint64() as Long));
-            }
-          } else {
-            message.uids.push(longToNumber(reader.uint64() as Long));
-          }
+          message.uid = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -207,45 +190,28 @@ export const Vaults = {
     return message;
   },
 
-  fromJSON(object: any): Vaults {
-    const message = { ...baseVaults } as Vaults;
-    message.uids = [];
-    if (object.owner !== undefined && object.owner !== null) {
-      message.owner = String(object.owner);
+  fromJSON(object: any): VaultMap {
+    const message = { ...baseVaultMap } as VaultMap;
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = Number(object.uid);
     } else {
-      message.owner = "";
-    }
-    if (object.uids !== undefined && object.uids !== null) {
-      for (const e of object.uids) {
-        message.uids.push(Number(e));
-      }
+      message.uid = 0;
     }
     return message;
   },
 
-  toJSON(message: Vaults): unknown {
+  toJSON(message: VaultMap): unknown {
     const obj: any = {};
-    message.owner !== undefined && (obj.owner = message.owner);
-    if (message.uids) {
-      obj.uids = message.uids.map((e) => e);
-    } else {
-      obj.uids = [];
-    }
+    message.uid !== undefined && (obj.uid = message.uid);
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Vaults>): Vaults {
-    const message = { ...baseVaults } as Vaults;
-    message.uids = [];
-    if (object.owner !== undefined && object.owner !== null) {
-      message.owner = object.owner;
+  fromPartial(object: DeepPartial<VaultMap>): VaultMap {
+    const message = { ...baseVaultMap } as VaultMap;
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = object.uid;
     } else {
-      message.owner = "";
-    }
-    if (object.uids !== undefined && object.uids !== null) {
-      for (const e of object.uids) {
-        message.uids.push(e);
-      }
+      message.uid = 0;
     }
     return message;
   },

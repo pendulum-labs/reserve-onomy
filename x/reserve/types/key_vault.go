@@ -8,7 +8,7 @@ const (
 	// VaultKeyPrefix is the prefix to retrieve all Drop
 	VaultKeyPrefix = "Vault/"
 	// VaultsKeyPrefix is the prefix to retrieve all Vaults of Owner
-	VaultsKeyPrefix = "Vault/Owner/"
+	VaultMapKeyPrefix = "Vault/Owner/Name/"
 )
 
 // DropKey returns the store key to retrieve a Drop from the index fields
@@ -26,13 +26,16 @@ func VaultKey(
 }
 
 // VaultsKey returns the store key to retrieve a Drop from the index fields
-func VaultsKey(
+func VaultMapKey(
 	owner string,
+	name string,
 ) []byte {
 	var key []byte
 
 	ownerBytes := []byte(owner)
 	key = append(key, ownerBytes...)
+	nameBytes := []byte(name)
+	key = append(key, nameBytes...)
 	key = append(key, []byte("/")...)
 
 	return key

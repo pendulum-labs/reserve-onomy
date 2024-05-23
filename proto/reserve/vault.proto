@@ -15,8 +15,6 @@ message Vault {
   cosmos.base.v1beta1.Coin denom = 6 [(gogoproto.nullable) = true]; 
 }
 
-message Vaults {
-  
-  string owner = 1;
-  repeated uint64 uids = 2;
+message VaultMap {
+  uint64 uid = 1;
 }
