@@ -21,9 +21,8 @@ The Onomy Reserve
 ## Reserve Transactions
 
 `create-vault` by depositing collateral.  Each vault has a unique name per user as well as UID
-`deposit` collateral into a vault
-`mint` denoms based on vault value and ratios
-`redeem` collateral from a vault by surrendering loaned denoms
+`deposit` collateral or denoms into vault
+`withdraw` collateral or denoms from vault.  Withdrawal of collateral or denoms dependent on collateralization ratio.
 `liquidate` vaults whose collateral ratios drop below the liquidation ratio
 
 ## Reserve Governance
