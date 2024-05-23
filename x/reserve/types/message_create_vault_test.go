@@ -3,9 +3,10 @@ package types
 import (
 	"testing"
 
+	"reserve/testutil/sample"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
-	"reserve/testutil/sample"
 )
 
 func TestMsgCreateVault_ValidateBasic(t *testing.T) {
@@ -23,7 +24,9 @@ func TestMsgCreateVault_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: MsgCreateVault{
-				Creator: sample.AccAddress(),
+				Creator:    sample.AccAddress(),
+				Collateral: "20coin",
+				Name:       "test",
 			},
 		},
 	}
