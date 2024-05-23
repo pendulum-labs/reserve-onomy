@@ -18,6 +18,8 @@ export interface ReserveMsgCreateVaultResponse {
   uid?: string;
 }
 
+export type ReserveMsgDepositResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

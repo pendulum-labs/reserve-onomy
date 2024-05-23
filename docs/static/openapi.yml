@@ -51160,6 +51160,8 @@ definitions:
       uid:
         type: string
         format: uint64
+  reserve.MsgDepositResponse:
+    type: object
   reserve.Params:
     type: object
     properties:

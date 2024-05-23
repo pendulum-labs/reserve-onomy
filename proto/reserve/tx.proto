@@ -8,6 +8,7 @@ option go_package = "reserve/x/reserve/types";
 // Msg defines the Msg service.
 service Msg {
       rpc CreateVault(MsgCreateVault) returns (MsgCreateVaultResponse);
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -19,6 +20,15 @@ message MsgCreateVault {
 
 message MsgCreateVaultResponse {
   uint64 uid = 1;
+}
+
+message MsgDeposit {
+  string creator = 1;
+  string uid = 2;
+  string coin = 3;
+}
+
+message MsgDepositResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
