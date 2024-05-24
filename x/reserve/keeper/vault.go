@@ -9,9 +9,9 @@ import (
 
 // SetVault set a specific vault in the store from its index
 func (k Keeper) SetVault(ctx sdk.Context, vault types.Vault) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultKeyPrefix))
+	store1 := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultKeyPrefix))
 	a := k.cdc.MustMarshal(&vault)
-	store.Set(types.VaultKey(
+	store1.Set(types.VaultKey(
 		vault.Uid,
 	), a)
 }
@@ -52,4 +52,37 @@ func (k Keeper) RemoveVault(
 	store.Delete(types.VaultKey(
 		uid,
 	))
+}
+
+// SetVault set a specific vault in the store from its index
+func (k Keeper) SetVaultUid(ctx sdk.Context, owner string, name string, uid uint64) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultMapKeyPrefix))
+	vaultMapEntry := types.VaultMap{
+		Uid: uid,
+	}
+	a := k.cdc.MustMarshal(&vaultMapEntry)
+	store.Set(types.VaultMapKey(
+		owner,
+		name,
+	), a)
+}
+
+func (k Keeper) GetVaultUid(
+	ctx sdk.Context,
+	owner string,
+	name string,
+) (uid uint64, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultMapKeyPrefix))
+
+	b := store.Get(types.VaultMapKey(
+		owner,
+		name,
+	))
+	if b == nil {
+		return uid, false
+	}
+
+	var vaultMapEntry types.VaultMap
+	k.cdc.MustUnmarshal(b, &vaultMapEntry)
+	return vaultMapEntry.Uid, true
 }

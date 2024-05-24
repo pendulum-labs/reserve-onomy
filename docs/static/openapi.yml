@@ -31064,6 +31064,16 @@ paths:
 
                       burn rate is (parameter / 10000), 9999 representing as
                       99.99%
+                  vault_limit:
+                    type: string
+                    description: >-
+                      Vault limit is a limit to number of vaults a single user
+                      may create
+
+                      There is a potential to slow down the system if a single
+                      user has
+
+                      too many vaults.  The type is string numeric.
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -51144,6 +51154,14 @@ definitions:
         type: string
       amount:
         type: string
+  reserve.MsgCreateVaultResponse:
+    type: object
+    properties:
+      uid:
+        type: string
+        format: uint64
+  reserve.MsgDepositResponse:
+    type: object
   reserve.Params:
     type: object
     properties:
@@ -51158,6 +51176,12 @@ definitions:
           in community pool
 
           burn rate is (parameter / 10000), 9999 representing as 99.99%
+      vault_limit:
+        type: string
+        description: |-
+          Vault limit is a limit to number of vaults a single user may create
+          There is a potential to slow down the system if a single user has
+          too many vaults.  The type is string numeric.
     description: Params defines the parameters for the module.
   reserve.QueryParamsResponse:
     type: object
@@ -51178,4 +51202,13 @@ definitions:
               in community pool
 
               burn rate is (parameter / 10000), 9999 representing as 99.99%
+          vault_limit:
+            type: string
+            description: >-
+              Vault limit is a limit to number of vaults a single user may
+              create
+
+              There is a potential to slow down the system if a single user has
+
+              too many vaults.  The type is string numeric.
     description: QueryParamsResponse is response type for the Query/Params RPC method.

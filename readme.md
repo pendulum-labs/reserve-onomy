@@ -13,16 +13,16 @@ The Onomy Reserve
 ## Reserve Parameters
 
 `vault ratio` is the collateralization ratio that of a vault at a given moment
-`minting ratio` is the minimum vault ratio at which a specific denom may be minted
+`minting ratio` is the minimum vault ratio at which a specific denom may be minted.  Collateralization ratio must be greater than minting ratio to withdraw collateral.  Collateral is locked in vault if collateralization ratio of the vault goes below the minting ratio.
 `liquidation ratio` is the vault ratio at which the vault for a specific denom may be liquidated by a liquidator
 `burn ratio` is parameter that defines the ratio of burned vs stored NOM at liquidation of a vault
 `liquidity deposit` is the minimum amount of liquidity for a specific collateral that must be provided to create a denom
 
 ## Reserve Transactions
 
-`deposit` collateral into a vault
-`mint` denoms based on vault value and ratios
-`redeem` collateral from a vault by surrendering loaned denoms
+`create-vault` by depositing collateral.  Each vault has a unique name per user as well as UID
+`deposit` collateral or denoms into vault
+`withdraw` collateral or denoms from vault.  Withdrawal of collateral or denoms dependent on collateralization ratio.
 `liquidate` vaults whose collateral ratios drop below the liquidation ratio
 
 ## Reserve Governance

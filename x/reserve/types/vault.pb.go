@@ -25,10 +25,12 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Vault struct {
-	Uid        uint64     `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	Status     string     `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	Collateral types.Coin `protobuf:"bytes,3,opt,name=collateral,proto3" json:"collateral"`
-	Denom      types.Coin `protobuf:"bytes,4,opt,name=denom,proto3" json:"denom"`
+	Uid        uint64      `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	Owner      string      `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	Name       string      `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Status     string      `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Collateral types.Coin  `protobuf:"bytes,5,opt,name=collateral,proto3" json:"collateral"`
+	Denom      *types.Coin `protobuf:"bytes,6,opt,name=denom,proto3" json:"denom,omitempty"`
 }
 
 func (m *Vault) Reset()         { *m = Vault{} }
@@ -71,6 +73,20 @@ func (m *Vault) GetUid() uint64 {
 	return 0
 }
 
+func (m *Vault) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *Vault) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
 func (m *Vault) GetStatus() string {
 	if m != nil {
 		return m.Status
@@ -85,36 +101,84 @@ func (m *Vault) GetCollateral() types.Coin {
 	return types.Coin{}
 }
 
-func (m *Vault) GetDenom() types.Coin {
+func (m *Vault) GetDenom() *types.Coin {
 	if m != nil {
 		return m.Denom
 	}
-	return types.Coin{}
+	return nil
+}
+
+type VaultMap struct {
+	Uid uint64 `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
+}
+
+func (m *VaultMap) Reset()         { *m = VaultMap{} }
+func (m *VaultMap) String() string { return proto.CompactTextString(m) }
+func (*VaultMap) ProtoMessage()    {}
+func (*VaultMap) Descriptor() ([]byte, []int) {
+	return fileDescriptor_86b15c27928de5b9, []int{1}
+}
+func (m *VaultMap) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VaultMap) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VaultMap.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VaultMap) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VaultMap.Merge(m, src)
+}
+func (m *VaultMap) XXX_Size() int {
+	return m.Size()
+}
+func (m *VaultMap) XXX_DiscardUnknown() {
+	xxx_messageInfo_VaultMap.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VaultMap proto.InternalMessageInfo
+
+func (m *VaultMap) GetUid() uint64 {
+	if m != nil {
+		return m.Uid
+	}
+	return 0
 }
 
 func init() {
 	proto.RegisterType((*Vault)(nil), "reserve.Vault")
+	proto.RegisterType((*VaultMap)(nil), "reserve.VaultMap")
 }
 
 func init() { proto.RegisterFile("reserve/vault.proto", fileDescriptor_86b15c27928de5b9) }
 
 var fileDescriptor_86b15c27928de5b9 = []byte{
-	// 239 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2e, 0x4a, 0x2d, 0x4e,
-	0x2d, 0x2a, 0x4b, 0xd5, 0x2f, 0x4b, 0x2c, 0xcd, 0x29, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17,
-	0x62, 0x87, 0x0a, 0x4a, 0x89, 0xa4, 0xe7, 0xa7, 0xe7, 0x83, 0xc5, 0xf4, 0x41, 0x2c, 0x88, 0xb4,
-	0x94, 0x5c, 0x72, 0x7e, 0x71, 0x6e, 0x7e, 0xb1, 0x7e, 0x52, 0x62, 0x71, 0xaa, 0x7e, 0x99, 0x61,
-	0x52, 0x6a, 0x49, 0xa2, 0xa1, 0x7e, 0x72, 0x7e, 0x66, 0x1e, 0x44, 0x5e, 0x69, 0x25, 0x23, 0x17,
-	0x6b, 0x18, 0xc8, 0x38, 0x21, 0x01, 0x2e, 0xe6, 0xd2, 0xcc, 0x14, 0x09, 0x46, 0x05, 0x46, 0x0d,
-	0x96, 0x20, 0x10, 0x53, 0x48, 0x8c, 0x8b, 0xad, 0xb8, 0x24, 0xb1, 0xa4, 0xb4, 0x58, 0x82, 0x49,
-	0x81, 0x51, 0x83, 0x33, 0x08, 0xca, 0x13, 0xb2, 0xe7, 0xe2, 0x4a, 0xce, 0xcf, 0xc9, 0x49, 0x2c,
-	0x49, 0x2d, 0x4a, 0xcc, 0x91, 0x60, 0x56, 0x60, 0xd4, 0xe0, 0x36, 0x92, 0xd4, 0x83, 0x58, 0xa4,
-	0x07, 0xb2, 0x48, 0x0f, 0x6a, 0x91, 0x9e, 0x73, 0x7e, 0x66, 0x9e, 0x13, 0xcb, 0x89, 0x7b, 0xf2,
-	0x0c, 0x41, 0x48, 0x5a, 0x84, 0x4c, 0xb9, 0x58, 0x53, 0x52, 0xf3, 0xf2, 0x73, 0x25, 0x58, 0x88,
-	0xd3, 0x0b, 0x51, 0xed, 0x64, 0x78, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e,
-	0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51,
-	0xe2, 0xb0, 0x90, 0xa9, 0xd0, 0x87, 0xb1, 0x4a, 0x2a, 0x0b, 0x52, 0x8b, 0x93, 0xd8, 0xc0, 0xbe,
-	0x34, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x92, 0x27, 0x73, 0xad, 0x3b, 0x01, 0x00, 0x00,
+	// 278 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x90, 0x31, 0x4b, 0xc4, 0x30,
+	0x14, 0xc7, 0x1b, 0xaf, 0xad, 0x1a, 0x17, 0x89, 0x87, 0xc6, 0x43, 0x62, 0xb9, 0xa9, 0x53, 0x43,
+	0x15, 0x67, 0xe1, 0x9c, 0x5d, 0x3a, 0x38, 0xb8, 0xa5, 0xbd, 0x70, 0x14, 0xda, 0xbe, 0xd2, 0xa4,
+	0x55, 0xbf, 0x85, 0x1f, 0xeb, 0xc6, 0x03, 0x17, 0x27, 0x91, 0xf6, 0x8b, 0x48, 0x93, 0x1e, 0x08,
+	0x2e, 0x6e, 0xbf, 0xf7, 0x7b, 0x79, 0xe1, 0xff, 0x1e, 0x3e, 0x6b, 0xa4, 0x92, 0x4d, 0x27, 0x79,
+	0x27, 0xda, 0x42, 0x47, 0x75, 0x03, 0x1a, 0xc8, 0xe1, 0x24, 0x17, 0xf3, 0x0d, 0x6c, 0xc0, 0x38,
+	0x3e, 0x92, 0x6d, 0x2f, 0x58, 0x06, 0xaa, 0x04, 0xc5, 0x53, 0xa1, 0x24, 0xef, 0xe2, 0x54, 0x6a,
+	0x11, 0xf3, 0x0c, 0xf2, 0xca, 0xf6, 0x97, 0x1f, 0x08, 0x7b, 0x4f, 0xe3, 0x77, 0xe4, 0x14, 0xcf,
+	0xda, 0x7c, 0x4d, 0x51, 0x80, 0x42, 0x37, 0x19, 0x91, 0xcc, 0xb1, 0x07, 0x2f, 0x95, 0x6c, 0xe8,
+	0x41, 0x80, 0xc2, 0xe3, 0xc4, 0x16, 0x84, 0x60, 0xb7, 0x12, 0xa5, 0xa4, 0x33, 0x23, 0x0d, 0x93,
+	0x73, 0xec, 0x2b, 0x2d, 0x74, 0xab, 0xa8, 0x6b, 0xec, 0x54, 0x91, 0x7b, 0x8c, 0x33, 0x28, 0x0a,
+	0xa1, 0x65, 0x23, 0x0a, 0xea, 0x05, 0x28, 0x3c, 0xb9, 0xb9, 0x8c, 0x6c, 0xa4, 0x68, 0x8c, 0x14,
+	0x4d, 0x91, 0xa2, 0x07, 0xc8, 0xab, 0x95, 0xbb, 0xfd, 0xba, 0x76, 0x92, 0x5f, 0x23, 0xe4, 0x0e,
+	0x7b, 0x6b, 0x59, 0x41, 0x49, 0xfd, 0xff, 0xcc, 0xa2, 0xc4, 0xbe, 0x5e, 0x5e, 0xe1, 0x23, 0xb3,
+	0xd4, 0xa3, 0xa8, 0xff, 0xee, 0xb5, 0x8a, 0xb7, 0x3d, 0x43, 0xbb, 0x9e, 0xa1, 0xef, 0x9e, 0xa1,
+	0xf7, 0x81, 0x39, 0xbb, 0x81, 0x39, 0x9f, 0x03, 0x73, 0x9e, 0x2f, 0xf6, 0x17, 0x7e, 0xe5, 0x7b,
+	0xd2, 0x6f, 0xb5, 0x54, 0xa9, 0x6f, 0xae, 0x75, 0xfb, 0x13, 0x00, 0x00, 0xff, 0xff, 0xc0, 0xf3,
+	0xb2, 0x33, 0x83, 0x01, 0x00, 0x00,
 }
 
 func (m *Vault) Marshal() (dAtA []byte, err error) {
@@ -137,16 +201,18 @@ func (m *Vault) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	{
-		size, err := m.Denom.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
+	if m.Denom != nil {
+		{
+			size, err := m.Denom.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintVault(dAtA, i, uint64(size))
 		}
-		i -= size
-		i = encodeVarintVault(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x32
 	}
-	i--
-	dAtA[i] = 0x22
 	{
 		size, err := m.Collateral.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
@@ -156,14 +222,56 @@ func (m *Vault) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintVault(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x1a
+	dAtA[i] = 0x2a
 	if len(m.Status) > 0 {
 		i -= len(m.Status)
 		copy(dAtA[i:], m.Status)
 		i = encodeVarintVault(dAtA, i, uint64(len(m.Status)))
 		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintVault(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Owner) > 0 {
+		i -= len(m.Owner)
+		copy(dAtA[i:], m.Owner)
+		i = encodeVarintVault(dAtA, i, uint64(len(m.Owner)))
+		i--
 		dAtA[i] = 0x12
 	}
+	if m.Uid != 0 {
+		i = encodeVarintVault(dAtA, i, uint64(m.Uid))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VaultMap) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VaultMap) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VaultMap) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
 	if m.Uid != 0 {
 		i = encodeVarintVault(dAtA, i, uint64(m.Uid))
 		i--
@@ -192,14 +300,36 @@ func (m *Vault) Size() (n int) {
 	if m.Uid != 0 {
 		n += 1 + sovVault(uint64(m.Uid))
 	}
+	l = len(m.Owner)
+	if l > 0 {
+		n += 1 + l + sovVault(uint64(l))
+	}
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovVault(uint64(l))
+	}
 	l = len(m.Status)
 	if l > 0 {
 		n += 1 + l + sovVault(uint64(l))
 	}
 	l = m.Collateral.Size()
 	n += 1 + l + sovVault(uint64(l))
-	l = m.Denom.Size()
-	n += 1 + l + sovVault(uint64(l))
+	if m.Denom != nil {
+		l = m.Denom.Size()
+		n += 1 + l + sovVault(uint64(l))
+	}
+	return n
+}
+
+func (m *VaultMap) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Uid != 0 {
+		n += 1 + sovVault(uint64(m.Uid))
+	}
 	return n
 }
 
@@ -259,6 +389,70 @@ func (m *Vault) Unmarshal(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowVault
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthVault
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthVault
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Owner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowVault
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthVault
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthVault
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
 			var stringLen uint64
@@ -289,7 +483,7 @@ func (m *Vault) Unmarshal(dAtA []byte) error {
 			}
 			m.Status = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Collateral", wireType)
 			}
@@ -322,7 +516,7 @@ func (m *Vault) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Denom", wireType)
 			}
@@ -351,10 +545,82 @@ func (m *Vault) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
+			if m.Denom == nil {
+				m.Denom = &types.Coin{}
+			}
 			if err := m.Denom.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipVault(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthVault
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VaultMap) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowVault
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VaultMap: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VaultMap: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Uid", wireType)
+			}
+			m.Uid = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowVault
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Uid |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipVault(dAtA[iNdEx:])

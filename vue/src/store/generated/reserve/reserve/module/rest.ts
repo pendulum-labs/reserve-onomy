@@ -13,11 +13,25 @@ export interface ProtobufAny {
   "@type"?: string;
 }
 
+export interface ReserveMsgCreateVaultResponse {
+  /** @format uint64 */
+  uid?: string;
+}
+
+export type ReserveMsgDepositResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */
 export interface ReserveParams {
   burn_rate?: string;
+
+  /**
+   * Vault limit is a limit to number of vaults a single user may create
+   * There is a potential to slow down the system if a single user has
+   * too many vaults.  The type is string numeric.
+   */
+  vault_limit?: string;
 }
 
 /**
