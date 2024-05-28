@@ -27,18 +27,18 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 		switch {
 		case vault.Status == "ready" && vault.Collateral.Denom == coin.Denom:
 			vault.Collateral = vault.Collateral.Add(coin)
-			k.SetVault(ctx, vault)
-			return &types.MsgDepositResponse{}, nil
 		case vault.Status == "active" && vault.Collateral.Denom == coin.Denom:
 			vault.Collateral = vault.Collateral.Add(coin)
-			k.SetVault(ctx, vault)
-			return &types.MsgDepositResponse{}, nil
 		case vault.Status == "active" && vault.Denom.Denom == coin.Denom:
 			vault.Denom = vault.Denom.Add(coin)
-			k.SetVault(ctx, vault)
-			return &types.MsgDepositResponse{}, nil
 		default:
+			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid deposit")
 		}
 	}
-	return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid deposit")
+
+	k.SetVault(ctx, vault)
+	return &types.MsgDepositResponse{
+		Uid:  msg.Uid,
+		Coin: msg.Coin,
+	}, nil
 }

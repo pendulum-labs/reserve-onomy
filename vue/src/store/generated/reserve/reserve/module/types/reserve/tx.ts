@@ -20,7 +20,10 @@ export interface MsgDeposit {
   coin: string;
 }
 
-export interface MsgDepositResponse {}
+export interface MsgDepositResponse {
+  uid: string;
+  coin: string;
+}
 
 const baseMsgCreateVault: object = { creator: "", collateral: "", name: "" };
 
@@ -260,10 +263,19 @@ export const MsgDeposit = {
   },
 };
 
-const baseMsgDepositResponse: object = {};
+const baseMsgDepositResponse: object = { uid: "", coin: "" };
 
 export const MsgDepositResponse = {
-  encode(_: MsgDepositResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: MsgDepositResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.uid !== "") {
+      writer.uint32(10).string(message.uid);
+    }
+    if (message.coin !== "") {
+      writer.uint32(18).string(message.coin);
+    }
     return writer;
   },
 
@@ -274,6 +286,12 @@ export const MsgDepositResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.uid = reader.string();
+          break;
+        case 2:
+          message.coin = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -282,18 +300,40 @@ export const MsgDepositResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgDepositResponse {
+  fromJSON(object: any): MsgDepositResponse {
     const message = { ...baseMsgDepositResponse } as MsgDepositResponse;
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = String(object.uid);
+    } else {
+      message.uid = "";
+    }
+    if (object.coin !== undefined && object.coin !== null) {
+      message.coin = String(object.coin);
+    } else {
+      message.coin = "";
+    }
     return message;
   },
 
-  toJSON(_: MsgDepositResponse): unknown {
+  toJSON(message: MsgDepositResponse): unknown {
     const obj: any = {};
+    message.uid !== undefined && (obj.uid = message.uid);
+    message.coin !== undefined && (obj.coin = message.coin);
     return obj;
   },
 
-  fromPartial(_: DeepPartial<MsgDepositResponse>): MsgDepositResponse {
+  fromPartial(object: DeepPartial<MsgDepositResponse>): MsgDepositResponse {
     const message = { ...baseMsgDepositResponse } as MsgDepositResponse;
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = object.uid;
+    } else {
+      message.uid = "";
+    }
+    if (object.coin !== undefined && object.coin !== null) {
+      message.coin = object.coin;
+    } else {
+      message.coin = "";
+    }
     return message;
   },
 };

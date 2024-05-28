@@ -51162,6 +51162,11 @@ definitions:
         format: uint64
   reserve.MsgDepositResponse:
     type: object
+    properties:
+      uid:
+        type: string
+      coin:
+        type: string
   reserve.Params:
     type: object
     properties:
