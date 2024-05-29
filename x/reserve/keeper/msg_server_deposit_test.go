@@ -18,7 +18,7 @@ import (
 	"reserve/x/reserve/types"
 )
 
-func TestDeposit(t *testing.T) {
+func commonDeposit(t *testing.T) (vault types.Vault) {
 	testInput := keepertest.CreateTestEnvironment(t)
 
 	// TestData
@@ -54,6 +54,11 @@ func TestDeposit(t *testing.T) {
 	require.Equal(t, rst.Uid, beforecount)
 	require.Equal(t, rst.Name, testdata.name)
 	require.Equal(t, rst.Collateral.String(), testdata.coinAStr)
+	return vault
+}
+
+func TestDeposit(t *testing.T) {
+	commonDeposit(t)
 }
 
 func TestDeposit_Insufficient_Funds(t *testing.T) {
@@ -65,8 +70,11 @@ func TestDeposit_Insufficient_Funds(t *testing.T) {
 	require.NoError(t, testInput.BankKeeper.MintCoins(testInput.Context, markettypes.ModuleName, coinPair))
 	requestAddress, _ := sdk.AccAddressFromBech32(addr)
 	require.NoError(t, testInput.BankKeeper.SendCoinsFromModuleToAccount(testInput.Context, markettypes.ModuleName, requestAddress, coinPair))
-	var p = markettypes.MsgCreatePool{CoinA: testdata.coinAStr, CoinB: testdata.coinBStr, Creator: addr}
-	response, err := marketkeeper.NewMsgServerImpl(testInput.MarketKeeper).CreatePool(sdk.WrapSDKContext(testInput.Context), &p)
+
+	// Create Vault
+	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr, Name: testdata.name}
+	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
+
 	require.Error(t, err)
 	require.ErrorContains(t, err, "insufficient funds")
 	require.NotContains(t, p.GetCreator(), response.String())
