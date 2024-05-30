@@ -19,12 +19,12 @@ func (k Keeper) SetCollateral(ctx sdk.Context, collateral types.Collateral) {
 // GetCollateral returns a collateral from its index
 func (k Keeper) GetCollateral(
 	ctx sdk.Context,
-	uid uint64,
+	base string,
 ) (val types.Collateral, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CollateralKeyPrefix))
 
 	b := store.Get(types.CollateralKey(
-		val.Base,
+		base,
 	))
 	if b == nil {
 		return val, false

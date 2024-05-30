@@ -12,6 +12,7 @@ import (
 
 func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types.MsgDepositResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
 	uid, err := strconv.ParseUint(msg.Uid, 10, 64)
 	if err != nil {
 		return nil, err
@@ -34,6 +35,15 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid deposit")
 		}
+	} else {
+		return nil, sdkerrors.Wrapf(types.ErrVaultNotFound, "Vault with uid %s not found", msg.Uid)
+	}
+
+	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
+
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator, types.ModuleName, sdk.NewCoins(coin))
+	if err != nil {
+		return nil, err
 	}
 
 	k.SetVault(ctx, vault)

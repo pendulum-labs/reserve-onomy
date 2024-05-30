@@ -28,10 +28,9 @@ func (k msgServer) CreateVault(goCtx context.Context, msg *types.MsgCreateVault)
 
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-	// Use the module account as pool account
-	sdkError := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator, types.ModuleName, sdk.NewCoins(collateral))
-	if sdkError != nil {
-		return nil, sdkError
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator, types.ModuleName, sdk.NewCoins(collateral))
+	if err != nil {
+		return nil, err
 	}
 
 	// Create the uid

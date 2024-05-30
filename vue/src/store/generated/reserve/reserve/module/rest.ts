@@ -23,6 +23,8 @@ export interface ReserveMsgDepositResponse {
   coin?: string;
 }
 
+export type ReserveMsgWithdrawResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

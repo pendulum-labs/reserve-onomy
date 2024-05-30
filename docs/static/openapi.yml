@@ -51167,6 +51167,8 @@ definitions:
         type: string
       coin:
         type: string
+  reserve.MsgWithdrawResponse:
+    type: object
   reserve.Params:
     type: object
     properties:

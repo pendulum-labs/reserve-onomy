@@ -65,15 +65,21 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 				return err
 			}
 
+			// Need to make sure these work
+			// 100 would be 100%
+			// 125 would be 125%
+			// 999 would be 999%
+			// 9999 would 9999%
+			// minting ratio numerator / 100 = minting ratio
 			mintingRatio, ok := sdk.NewIntFromString(args[2])
 			if !ok {
 				return fmt.Errorf("invalid string number format: %q", mintingRatio)
 			}
 			if mintingRatio.LTE(sdk.ZeroInt()) {
-				return fmt.Errorf("burn rate numerator must be positive and greater than zero: %d", mintingRatio)
+				return fmt.Errorf("minting ratio numerator must be positive and greater than zero: %d", mintingRatio)
 			}
 			if mintingRatio.GTE(sdk.NewInt(10000)) {
-				return fmt.Errorf("burn rate numerator must be less than 10000: %d", mintingRatio)
+				return fmt.Errorf("minting ratio numerator must be less than 10000: %d", mintingRatio)
 			}
 
 			liquidationRatio, ok := sdk.NewIntFromString(args[3])
@@ -81,10 +87,10 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 				return fmt.Errorf("invalid string number format: %q", liquidationRatio)
 			}
 			if liquidationRatio.LTE(sdk.ZeroInt()) {
-				return fmt.Errorf("burn rate numerator must be positive and greater than zero: %d", liquidationRatio)
+				return fmt.Errorf("liquidation ratio numerator must be positive and greater than zero: %d", liquidationRatio)
 			}
 			if liquidationRatio.GTE(sdk.NewInt(10000)) {
-				return fmt.Errorf("burn rate numerator must be less than 10000: %d", liquidationRatio)
+				return fmt.Errorf("liquidation ratio numerator must be less than 10000: %d", liquidationRatio)
 			}
 
 			proposalFlags, err := parseProposalFlags(cmd.Flags())
