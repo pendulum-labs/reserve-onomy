@@ -23,6 +23,8 @@ export interface ReserveMsgDepositResponse {
   coin?: string;
 }
 
+export type ReserveMsgLiquidateResponse = object;
+
 export type ReserveMsgWithdrawResponse = object;
 
 /**
