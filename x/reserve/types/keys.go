@@ -22,5 +22,6 @@ func KeyPrefix(p string) []byte {
 }
 
 const (
-	UidKey = "Uid-value-"
+	UidKey     = "Uid-value-"
+	ReserveKey = "reserve"
 )
