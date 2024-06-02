@@ -35,7 +35,7 @@ func (k Keeper) GetVault(
 }
 
 // GetAllVaults returns all vaults
-func (k Keeper) GetAllVaults(ctx sdk.Context) (list []types.Vault) {
+func (k Keeper) GetVaults(ctx sdk.Context) (list []types.Vault) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 

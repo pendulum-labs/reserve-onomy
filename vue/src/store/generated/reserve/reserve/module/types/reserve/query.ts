@@ -1,6 +1,11 @@
 /* eslint-disable */
 import { Reader, Writer } from "protobufjs/minimal";
 import { Params } from "../reserve/params";
+import {
+  PageRequest,
+  PageResponse,
+} from "../cosmos/base/query/v1beta1/pagination";
+import { Vault } from "../reserve/vault";
 
 export const protobufPackage = "reserve";
 
@@ -11,6 +16,15 @@ export interface QueryParamsRequest {}
 export interface QueryParamsResponse {
   /** params holds all the parameters of this module. */
   params: Params | undefined;
+}
+
+export interface QueryGetAllVaultsRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryGetAllVaultsResponse {
+  vaults: Vault[];
+  pagination: PageResponse | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -110,10 +124,185 @@ export const QueryParamsResponse = {
   },
 };
 
+const baseQueryGetAllVaultsRequest: object = {};
+
+export const QueryGetAllVaultsRequest = {
+  encode(
+    message: QueryGetAllVaultsRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetAllVaultsRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetAllVaultsRequest,
+    } as QueryGetAllVaultsRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetAllVaultsRequest {
+    const message = {
+      ...baseQueryGetAllVaultsRequest,
+    } as QueryGetAllVaultsRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetAllVaultsRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetAllVaultsRequest>
+  ): QueryGetAllVaultsRequest {
+    const message = {
+      ...baseQueryGetAllVaultsRequest,
+    } as QueryGetAllVaultsRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryGetAllVaultsResponse: object = {};
+
+export const QueryGetAllVaultsResponse = {
+  encode(
+    message: QueryGetAllVaultsResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.vaults) {
+      Vault.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetAllVaultsResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetAllVaultsResponse,
+    } as QueryGetAllVaultsResponse;
+    message.vaults = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.vaults.push(Vault.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetAllVaultsResponse {
+    const message = {
+      ...baseQueryGetAllVaultsResponse,
+    } as QueryGetAllVaultsResponse;
+    message.vaults = [];
+    if (object.vaults !== undefined && object.vaults !== null) {
+      for (const e of object.vaults) {
+        message.vaults.push(Vault.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetAllVaultsResponse): unknown {
+    const obj: any = {};
+    if (message.vaults) {
+      obj.vaults = message.vaults.map((e) => (e ? Vault.toJSON(e) : undefined));
+    } else {
+      obj.vaults = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetAllVaultsResponse>
+  ): QueryGetAllVaultsResponse {
+    const message = {
+      ...baseQueryGetAllVaultsResponse,
+    } as QueryGetAllVaultsResponse;
+    message.vaults = [];
+    if (object.vaults !== undefined && object.vaults !== null) {
+      for (const e of object.vaults) {
+        message.vaults.push(Vault.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
+  /** Queries a list of GetAllVaults items. */
+  GetAllVaults(
+    request: QueryGetAllVaultsRequest
+  ): Promise<QueryGetAllVaultsResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -125,6 +314,16 @@ export class QueryClientImpl implements Query {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request("reserve.Query", "Params", data);
     return promise.then((data) => QueryParamsResponse.decode(new Reader(data)));
+  }
+
+  GetAllVaults(
+    request: QueryGetAllVaultsRequest
+  ): Promise<QueryGetAllVaultsResponse> {
+    const data = QueryGetAllVaultsRequest.encode(request).finish();
+    const promise = this.rpc.request("reserve.Query", "GetAllVaults", data);
+    return promise.then((data) =>
+      QueryGetAllVaultsResponse.decode(new Reader(data))
+    );
   }
 }
 
