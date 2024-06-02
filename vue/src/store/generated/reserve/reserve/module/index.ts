@@ -7,12 +7,14 @@ import { Api } from "./rest";
 import { MsgWithdraw } from "./types/reserve/tx";
 import { MsgDeposit } from "./types/reserve/tx";
 import { MsgCreateVault } from "./types/reserve/tx";
+import { MsgLiquidate } from "./types/reserve/tx";
 
 
 const types = [
   ["/reserve.MsgWithdraw", MsgWithdraw],
   ["/reserve.MsgDeposit", MsgDeposit],
   ["/reserve.MsgCreateVault", MsgCreateVault],
+  ["/reserve.MsgLiquidate", MsgLiquidate],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -48,6 +50,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
     msgWithdraw: (data: MsgWithdraw): EncodeObject => ({ typeUrl: "/reserve.MsgWithdraw", value: MsgWithdraw.fromPartial( data ) }),
     msgDeposit: (data: MsgDeposit): EncodeObject => ({ typeUrl: "/reserve.MsgDeposit", value: MsgDeposit.fromPartial( data ) }),
     msgCreateVault: (data: MsgCreateVault): EncodeObject => ({ typeUrl: "/reserve.MsgCreateVault", value: MsgCreateVault.fromPartial( data ) }),
+    msgLiquidate: (data: MsgLiquidate): EncodeObject => ({ typeUrl: "/reserve.MsgLiquidate", value: MsgLiquidate.fromPartial( data ) }),
     
   };
 };

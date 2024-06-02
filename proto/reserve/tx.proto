@@ -10,6 +10,7 @@ service Msg {
       rpc CreateVault(MsgCreateVault) returns (MsgCreateVaultResponse);
   rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
   rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
+  rpc Liquidate(MsgLiquidate) returns (MsgLiquidateResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -41,6 +42,14 @@ message MsgWithdraw {
 }
 
 message MsgWithdrawResponse {
+}
+
+message MsgLiquidate {
+  string creator = 1;
+  string uid = 2;
+}
+
+message MsgLiquidateResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

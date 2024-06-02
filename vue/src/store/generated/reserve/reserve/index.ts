@@ -5,11 +5,12 @@ import { Denom } from "./module/types/reserve/denom"
 import { Params } from "./module/types/reserve/params"
 import { CreateDenomProposal } from "./module/types/reserve/proposal"
 import { RegisterCollateralProposal } from "./module/types/reserve/proposal"
+import { Reserve } from "./module/types/reserve/reserve"
 import { Vault } from "./module/types/reserve/vault"
 import { VaultMap } from "./module/types/reserve/vault"
 
 
-export { Collateral, Denom, Params, CreateDenomProposal, RegisterCollateralProposal, Vault, VaultMap };
+export { Collateral, Denom, Params, CreateDenomProposal, RegisterCollateralProposal, Reserve, Vault, VaultMap };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -55,6 +56,7 @@ const getDefaultState = () => {
 						Params: getStructure(Params.fromPartial({})),
 						CreateDenomProposal: getStructure(CreateDenomProposal.fromPartial({})),
 						RegisterCollateralProposal: getStructure(RegisterCollateralProposal.fromPartial({})),
+						Reserve: getStructure(Reserve.fromPartial({})),
 						Vault: getStructure(Vault.fromPartial({})),
 						VaultMap: getStructure(VaultMap.fromPartial({})),
 						
@@ -192,6 +194,21 @@ export default {
 				}
 			}
 		},
+		async sendMsgLiquidate({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgLiquidate(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgLiquidate:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgLiquidate:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		
 		async MsgWithdraw({ rootGetters }, { value }) {
 			try {
@@ -229,6 +246,19 @@ export default {
 					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgCreateVault:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgLiquidate({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgLiquidate(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgLiquidate:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgLiquidate:Create Could not create message: ' + e.message)
 				}
 			}
 		},

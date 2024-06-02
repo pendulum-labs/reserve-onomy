@@ -33,6 +33,13 @@ export interface MsgWithdraw {
 
 export interface MsgWithdrawResponse {}
 
+export interface MsgLiquidate {
+  creator: string;
+  uid: string;
+}
+
+export interface MsgLiquidateResponse {}
+
 const baseMsgCreateVault: object = { creator: "", collateral: "", name: "" };
 
 export const MsgCreateVault = {
@@ -473,12 +480,123 @@ export const MsgWithdrawResponse = {
   },
 };
 
+const baseMsgLiquidate: object = { creator: "", uid: "" };
+
+export const MsgLiquidate = {
+  encode(message: MsgLiquidate, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.uid !== "") {
+      writer.uint32(18).string(message.uid);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgLiquidate {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgLiquidate } as MsgLiquidate;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.uid = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgLiquidate {
+    const message = { ...baseMsgLiquidate } as MsgLiquidate;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = String(object.uid);
+    } else {
+      message.uid = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgLiquidate): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.uid !== undefined && (obj.uid = message.uid);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgLiquidate>): MsgLiquidate {
+    const message = { ...baseMsgLiquidate } as MsgLiquidate;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = object.uid;
+    } else {
+      message.uid = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgLiquidateResponse: object = {};
+
+export const MsgLiquidateResponse = {
+  encode(_: MsgLiquidateResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgLiquidateResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgLiquidateResponse } as MsgLiquidateResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgLiquidateResponse {
+    const message = { ...baseMsgLiquidateResponse } as MsgLiquidateResponse;
+    return message;
+  },
+
+  toJSON(_: MsgLiquidateResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgLiquidateResponse>): MsgLiquidateResponse {
+    const message = { ...baseMsgLiquidateResponse } as MsgLiquidateResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateVault(request: MsgCreateVault): Promise<MsgCreateVaultResponse>;
   Deposit(request: MsgDeposit): Promise<MsgDepositResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Withdraw(request: MsgWithdraw): Promise<MsgWithdrawResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Liquidate(request: MsgLiquidate): Promise<MsgLiquidateResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -504,6 +622,14 @@ export class MsgClientImpl implements Msg {
     const data = MsgWithdraw.encode(request).finish();
     const promise = this.rpc.request("reserve.Msg", "Withdraw", data);
     return promise.then((data) => MsgWithdrawResponse.decode(new Reader(data)));
+  }
+
+  Liquidate(request: MsgLiquidate): Promise<MsgLiquidateResponse> {
+    const data = MsgLiquidate.encode(request).finish();
+    const promise = this.rpc.request("reserve.Msg", "Liquidate", data);
+    return promise.then((data) =>
+      MsgLiquidateResponse.decode(new Reader(data))
+    );
   }
 }
 

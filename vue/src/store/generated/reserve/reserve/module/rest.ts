@@ -23,6 +23,8 @@ export interface ReserveMsgDepositResponse {
   coin?: string;
 }
 
+export type ReserveMsgLiquidateResponse = object;
+
 export type ReserveMsgWithdrawResponse = object;
 
 /**
@@ -30,13 +32,8 @@ export type ReserveMsgWithdrawResponse = object;
  */
 export interface ReserveParams {
   burn_rate?: string;
-
-  /**
-   * Vault limit is a limit to number of vaults a single user may create
-   * There is a potential to slow down the system if a single user has
-   * too many vaults.  The type is string numeric.
-   */
-  vault_limit?: string;
+  burn_coin?: string;
+  liquidator_reward?: string;
 }
 
 /**

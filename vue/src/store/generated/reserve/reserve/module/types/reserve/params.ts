@@ -12,23 +12,32 @@ export interface Params {
    * burn rate is (parameter / 10000), 9999 representing as 99.99%
    */
   burn_rate: string;
+  /** reserve burn coin */
+  burn_coin: string;
   /**
-   * Vault limit is a limit to number of vaults a single user may create
-   * There is a potential to slow down the system if a single user has
-   * too many vaults.  The type is string numeric.
+   * Vault liquidator receives reward for succesfully identifying and triggering
+   * vault liquidations.  The reward is defined as a percentage.
+   * liquidator_reward is (parameter / 10000), 9999 representing 99.99%
    */
-  vault_limit: string;
+  liquidator_reward: string;
 }
 
-const baseParams: object = { burn_rate: "", vault_limit: "" };
+const baseParams: object = {
+  burn_rate: "",
+  burn_coin: "",
+  liquidator_reward: "",
+};
 
 export const Params = {
   encode(message: Params, writer: Writer = Writer.create()): Writer {
     if (message.burn_rate !== "") {
       writer.uint32(10).string(message.burn_rate);
     }
-    if (message.vault_limit !== "") {
-      writer.uint32(18).string(message.vault_limit);
+    if (message.burn_coin !== "") {
+      writer.uint32(18).string(message.burn_coin);
+    }
+    if (message.liquidator_reward !== "") {
+      writer.uint32(26).string(message.liquidator_reward);
     }
     return writer;
   },
@@ -44,7 +53,10 @@ export const Params = {
           message.burn_rate = reader.string();
           break;
         case 2:
-          message.vault_limit = reader.string();
+          message.burn_coin = reader.string();
+          break;
+        case 3:
+          message.liquidator_reward = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -61,10 +73,18 @@ export const Params = {
     } else {
       message.burn_rate = "";
     }
-    if (object.vault_limit !== undefined && object.vault_limit !== null) {
-      message.vault_limit = String(object.vault_limit);
+    if (object.burn_coin !== undefined && object.burn_coin !== null) {
+      message.burn_coin = String(object.burn_coin);
     } else {
-      message.vault_limit = "";
+      message.burn_coin = "";
+    }
+    if (
+      object.liquidator_reward !== undefined &&
+      object.liquidator_reward !== null
+    ) {
+      message.liquidator_reward = String(object.liquidator_reward);
+    } else {
+      message.liquidator_reward = "";
     }
     return message;
   },
@@ -72,8 +92,9 @@ export const Params = {
   toJSON(message: Params): unknown {
     const obj: any = {};
     message.burn_rate !== undefined && (obj.burn_rate = message.burn_rate);
-    message.vault_limit !== undefined &&
-      (obj.vault_limit = message.vault_limit);
+    message.burn_coin !== undefined && (obj.burn_coin = message.burn_coin);
+    message.liquidator_reward !== undefined &&
+      (obj.liquidator_reward = message.liquidator_reward);
     return obj;
   },
 
@@ -84,10 +105,18 @@ export const Params = {
     } else {
       message.burn_rate = "";
     }
-    if (object.vault_limit !== undefined && object.vault_limit !== null) {
-      message.vault_limit = object.vault_limit;
+    if (object.burn_coin !== undefined && object.burn_coin !== null) {
+      message.burn_coin = object.burn_coin;
     } else {
-      message.vault_limit = "";
+      message.burn_coin = "";
+    }
+    if (
+      object.liquidator_reward !== undefined &&
+      object.liquidator_reward !== null
+    ) {
+      message.liquidator_reward = object.liquidator_reward;
+    } else {
+      message.liquidator_reward = "";
     }
     return message;
   },

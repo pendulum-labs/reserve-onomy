@@ -34,6 +34,41 @@ func (k Keeper) GetVault(
 	return val, true
 }
 
+// GetAllVaults returns all vaults
+func (k Keeper) GetAllVaults(ctx sdk.Context) (list []types.Vault) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+	var val types.Vault
+
+	for ; iterator.Valid(); iterator.Next() {
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
+
+// GetAllVaultsByOwner returns all vaults for a specific owner
+func (k Keeper) GetAllVaultsByOwner(ctx sdk.Context, owner string) (list []types.Vault) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	var vault types.Vault
+
+	for ; iterator.Valid(); iterator.Next() {
+		k.cdc.MustUnmarshal(iterator.Value(), &vault)
+		if vault.Owner == owner {
+			list = append(list, vault)
+		}
+	}
+
+	return
+}
+
 // RemoveVault removes a vault from the store
 func (k Keeper) RemoveVault(
 	ctx sdk.Context,

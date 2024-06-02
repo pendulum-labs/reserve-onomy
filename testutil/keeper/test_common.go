@@ -149,13 +149,8 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(minttypes.ModuleName)
 	paramsKeeper.Subspace(markettypes.ModuleName)
+	paramsKeeper.Subspace(reservetypes.ModuleName)
 
-	paramsSubspace := paramstypes.NewSubspace(cdc,
-		reservetypes.Amino,
-		storeKey,
-		memReserveStoreKey,
-		"ReserveParams",
-	)
 	// this is also used to initialize module accounts for all the map keys
 	maccPerms := map[string][]string{
 		reservetypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
@@ -200,7 +195,7 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 		cdc,
 		storeKey,
 		memMarketStoreKey,
-		paramsSubspace,
+		getSubspace(paramsKeeper, markettypes.ModuleName),
 		bankKeeper,
 	)
 	// Initialize params
@@ -211,7 +206,7 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 		cdc,
 		storeKey,
 		memReserveStoreKey,
-		paramsSubspace,
+		getSubspace(paramsKeeper, reservetypes.ModuleName),
 		accountKeeper,
 		bankKeeper,
 		marketKeeper,
