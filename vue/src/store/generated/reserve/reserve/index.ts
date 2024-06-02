@@ -51,6 +51,7 @@ const getDefaultState = () => {
 				Params: {},
 				GetAllVaults: {},
 				GetAllVaultsByOwner: {},
+				GetAllVaultsInDefault: {},
 				
 				_Structure: {
 						Collateral: getStructure(Collateral.fromPartial({})),
@@ -106,6 +107,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.GetAllVaultsByOwner[JSON.stringify(params)] ?? {}
+		},
+				getGetAllVaultsInDefault: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.GetAllVaultsInDefault[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -198,11 +205,11 @@ export default {
 			try {
 				const key = params ?? {};
 				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.queryGetAllVaultsByOwner(query)).data
+				let value= (await queryClient.queryGetAllVaultsByOwner( key.address, query)).data
 				
 					
 				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
-					let next_values=(await queryClient.queryGetAllVaultsByOwner({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					let next_values=(await queryClient.queryGetAllVaultsByOwner( key.address, {...query, 'pagination.key':(<any> value).pagination.next_key})).data
 					value = mergeResults(value, next_values);
 				}
 				commit('QUERY', { query: 'GetAllVaultsByOwner', key: { params: {...key}, query}, value })
@@ -215,6 +222,47 @@ export default {
 		},
 		
 		
+		
+		
+		 		
+		
+		
+		async QueryGetAllVaultsInDefault({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryGetAllVaultsInDefault(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryGetAllVaultsInDefault({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'GetAllVaultsInDefault', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryGetAllVaultsInDefault', payload: { options: { all }, params: {...key},query }})
+				return getters['getGetAllVaultsInDefault']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryGetAllVaultsInDefault API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		async sendMsgCreateVault({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateVault(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateVault:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgLiquidate({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -245,21 +293,6 @@ export default {
 				}
 			}
 		},
-		async sendMsgCreateVault({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateVault(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreateVault:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgDeposit({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -276,6 +309,19 @@ export default {
 			}
 		},
 		
+		async MsgCreateVault({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateVault(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateVault:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgLiquidate({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -299,19 +345,6 @@ export default {
 					throw new Error('TxClient:MsgWithdraw:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgWithdraw:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgCreateVault({ rootGetters }, { value }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateVault(value)
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCreateVault:Create Could not create message: ' + e.message)
 				}
 			}
 		},

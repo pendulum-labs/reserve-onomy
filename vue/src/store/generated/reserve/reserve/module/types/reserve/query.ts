@@ -37,6 +37,15 @@ export interface QueryGetAllVaultsByOwnerResponse {
   pagination: PageResponse | undefined;
 }
 
+export interface QueryGetAllVaultsInDefaultRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryGetAllVaultsInDefaultResponse {
+  vaults: Vault[];
+  pagination: PageResponse | undefined;
+}
+
 const baseQueryParamsRequest: object = {};
 
 export const QueryParamsRequest = {
@@ -493,6 +502,177 @@ export const QueryGetAllVaultsByOwnerResponse = {
   },
 };
 
+const baseQueryGetAllVaultsInDefaultRequest: object = {};
+
+export const QueryGetAllVaultsInDefaultRequest = {
+  encode(
+    message: QueryGetAllVaultsInDefaultRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetAllVaultsInDefaultRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetAllVaultsInDefaultRequest,
+    } as QueryGetAllVaultsInDefaultRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetAllVaultsInDefaultRequest {
+    const message = {
+      ...baseQueryGetAllVaultsInDefaultRequest,
+    } as QueryGetAllVaultsInDefaultRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetAllVaultsInDefaultRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetAllVaultsInDefaultRequest>
+  ): QueryGetAllVaultsInDefaultRequest {
+    const message = {
+      ...baseQueryGetAllVaultsInDefaultRequest,
+    } as QueryGetAllVaultsInDefaultRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryGetAllVaultsInDefaultResponse: object = {};
+
+export const QueryGetAllVaultsInDefaultResponse = {
+  encode(
+    message: QueryGetAllVaultsInDefaultResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.vaults) {
+      Vault.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetAllVaultsInDefaultResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetAllVaultsInDefaultResponse,
+    } as QueryGetAllVaultsInDefaultResponse;
+    message.vaults = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.vaults.push(Vault.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetAllVaultsInDefaultResponse {
+    const message = {
+      ...baseQueryGetAllVaultsInDefaultResponse,
+    } as QueryGetAllVaultsInDefaultResponse;
+    message.vaults = [];
+    if (object.vaults !== undefined && object.vaults !== null) {
+      for (const e of object.vaults) {
+        message.vaults.push(Vault.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetAllVaultsInDefaultResponse): unknown {
+    const obj: any = {};
+    if (message.vaults) {
+      obj.vaults = message.vaults.map((e) => (e ? Vault.toJSON(e) : undefined));
+    } else {
+      obj.vaults = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetAllVaultsInDefaultResponse>
+  ): QueryGetAllVaultsInDefaultResponse {
+    const message = {
+      ...baseQueryGetAllVaultsInDefaultResponse,
+    } as QueryGetAllVaultsInDefaultResponse;
+    message.vaults = [];
+    if (object.vaults !== undefined && object.vaults !== null) {
+      for (const e of object.vaults) {
+        message.vaults.push(Vault.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -505,6 +685,10 @@ export interface Query {
   GetAllVaultsByOwner(
     request: QueryGetAllVaultsByOwnerRequest
   ): Promise<QueryGetAllVaultsByOwnerResponse>;
+  /** Queries a list of GetAllVaultsInDefault items. */
+  GetAllVaultsInDefault(
+    request: QueryGetAllVaultsInDefaultRequest
+  ): Promise<QueryGetAllVaultsInDefaultResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -539,6 +723,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryGetAllVaultsByOwnerResponse.decode(new Reader(data))
+    );
+  }
+
+  GetAllVaultsInDefault(
+    request: QueryGetAllVaultsInDefaultRequest
+  ): Promise<QueryGetAllVaultsInDefaultResponse> {
+    const data = QueryGetAllVaultsInDefaultRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "reserve.Query",
+      "GetAllVaultsInDefault",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetAllVaultsInDefaultResponse.decode(new Reader(data))
     );
   }
 }

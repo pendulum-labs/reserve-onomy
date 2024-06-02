@@ -51,6 +51,21 @@ export interface ReserveQueryGetAllVaultsByOwnerResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface ReserveQueryGetAllVaultsInDefaultResponse {
+  vaults?: ReserveVault[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface ReserveQueryGetAllVaultsResponse {
   vaults?: ReserveVault[];
 
@@ -153,6 +168,13 @@ export interface V1Beta1PageRequest {
    * is set.
    */
   count_total?: boolean;
+
+  /**
+   * reverse is set to true if results are to be returned in the descending order.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  reverse?: boolean;
 }
 
 /**
@@ -388,32 +410,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QueryGetAllVaultsByOwner
-   * @summary Queries a list of GetAllVaultsByOwner items.
-   * @request GET:/reserve/reserve/get_all_vaults_by_owner
-   */
-  queryGetAllVaultsByOwner = (
-    query?: {
-      "pagination.key"?: string;
-      "pagination.offset"?: string;
-      "pagination.limit"?: string;
-      "pagination.count_total"?: boolean;
-      address?: string;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<ReserveQueryGetAllVaultsByOwnerResponse, RpcStatus>({
-      path: `/reserve/reserve/get_all_vaults_by_owner`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-
-  /**
-   * No description
-   *
-   * @tags Query
    * @name QueryGetAllVaults
    * @summary Queries a list of GetAllVaults items.
    * @request GET:/reserve/reserve/vaults
@@ -424,11 +420,65 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       "pagination.offset"?: string;
       "pagination.limit"?: string;
       "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
     },
     params: RequestParams = {},
   ) =>
     this.request<ReserveQueryGetAllVaultsResponse, RpcStatus>({
       path: `/reserve/reserve/vaults`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryGetAllVaultsInDefault
+   * @summary Queries a list of GetAllVaultsInDefault items.
+   * @request GET:/reserve/reserve/vaults/default
+   */
+  queryGetAllVaultsInDefault = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<ReserveQueryGetAllVaultsInDefaultResponse, RpcStatus>({
+      path: `/reserve/reserve/vaults/default`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryGetAllVaultsByOwner
+   * @summary Queries a list of GetAllVaultsByOwner items.
+   * @request GET:/reserve/reserve/vaults/{address}
+   */
+  queryGetAllVaultsByOwner = (
+    address: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<ReserveQueryGetAllVaultsByOwnerResponse, RpcStatus>({
+      path: `/reserve/reserve/vaults/${address}`,
       method: "GET",
       query: query,
       format: "json",
