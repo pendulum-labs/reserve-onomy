@@ -50,6 +50,7 @@ const getDefaultState = () => {
 	return {
 				Params: {},
 				GetAllVaults: {},
+				GetAllVaultsByOwner: {},
 				
 				_Structure: {
 						Collateral: getStructure(Collateral.fromPartial({})),
@@ -99,6 +100,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.GetAllVaults[JSON.stringify(params)] ?? {}
+		},
+				getGetAllVaultsByOwner: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.GetAllVaultsByOwner[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -182,18 +189,44 @@ export default {
 		},
 		
 		
-		async sendMsgCreateVault({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		
+		 		
+		
+		
+		async QueryGetAllVaultsByOwner({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryGetAllVaultsByOwner(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryGetAllVaultsByOwner({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'GetAllVaultsByOwner', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryGetAllVaultsByOwner', payload: { options: { all }, params: {...key},query }})
+				return getters['getGetAllVaultsByOwner']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryGetAllVaultsByOwner API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		async sendMsgLiquidate({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateVault(value)
+				const msg = await txClient.msgLiquidate(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgLiquidate:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateVault:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgLiquidate:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -212,18 +245,18 @@ export default {
 				}
 			}
 		},
-		async sendMsgLiquidate({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateVault({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgLiquidate(value)
+				const msg = await txClient.msgCreateVault(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgLiquidate:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgLiquidate:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateVault:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -243,16 +276,16 @@ export default {
 			}
 		},
 		
-		async MsgCreateVault({ rootGetters }, { value }) {
+		async MsgLiquidate({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateVault(value)
+				const msg = await txClient.msgLiquidate(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgLiquidate:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateVault:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgLiquidate:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -269,16 +302,16 @@ export default {
 				}
 			}
 		},
-		async MsgLiquidate({ rootGetters }, { value }) {
+		async MsgCreateVault({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgLiquidate(value)
+				const msg = await txClient.msgCreateVault(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgLiquidate:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgLiquidate:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateVault:Create Could not create message: ' + e.message)
 				}
 			}
 		},

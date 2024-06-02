@@ -27,6 +27,16 @@ export interface QueryGetAllVaultsResponse {
   pagination: PageResponse | undefined;
 }
 
+export interface QueryGetAllVaultsByOwnerRequest {
+  pagination: PageRequest | undefined;
+  address: string;
+}
+
+export interface QueryGetAllVaultsByOwnerResponse {
+  vaults: Vault[];
+  pagination: PageResponse | undefined;
+}
+
 const baseQueryParamsRequest: object = {};
 
 export const QueryParamsRequest = {
@@ -295,6 +305,194 @@ export const QueryGetAllVaultsResponse = {
   },
 };
 
+const baseQueryGetAllVaultsByOwnerRequest: object = { address: "" };
+
+export const QueryGetAllVaultsByOwnerRequest = {
+  encode(
+    message: QueryGetAllVaultsByOwnerRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.address !== "") {
+      writer.uint32(18).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetAllVaultsByOwnerRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetAllVaultsByOwnerRequest,
+    } as QueryGetAllVaultsByOwnerRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetAllVaultsByOwnerRequest {
+    const message = {
+      ...baseQueryGetAllVaultsByOwnerRequest,
+    } as QueryGetAllVaultsByOwnerRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetAllVaultsByOwnerRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetAllVaultsByOwnerRequest>
+  ): QueryGetAllVaultsByOwnerRequest {
+    const message = {
+      ...baseQueryGetAllVaultsByOwnerRequest,
+    } as QueryGetAllVaultsByOwnerRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetAllVaultsByOwnerResponse: object = {};
+
+export const QueryGetAllVaultsByOwnerResponse = {
+  encode(
+    message: QueryGetAllVaultsByOwnerResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.vaults) {
+      Vault.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetAllVaultsByOwnerResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetAllVaultsByOwnerResponse,
+    } as QueryGetAllVaultsByOwnerResponse;
+    message.vaults = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.vaults.push(Vault.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetAllVaultsByOwnerResponse {
+    const message = {
+      ...baseQueryGetAllVaultsByOwnerResponse,
+    } as QueryGetAllVaultsByOwnerResponse;
+    message.vaults = [];
+    if (object.vaults !== undefined && object.vaults !== null) {
+      for (const e of object.vaults) {
+        message.vaults.push(Vault.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetAllVaultsByOwnerResponse): unknown {
+    const obj: any = {};
+    if (message.vaults) {
+      obj.vaults = message.vaults.map((e) => (e ? Vault.toJSON(e) : undefined));
+    } else {
+      obj.vaults = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetAllVaultsByOwnerResponse>
+  ): QueryGetAllVaultsByOwnerResponse {
+    const message = {
+      ...baseQueryGetAllVaultsByOwnerResponse,
+    } as QueryGetAllVaultsByOwnerResponse;
+    message.vaults = [];
+    if (object.vaults !== undefined && object.vaults !== null) {
+      for (const e of object.vaults) {
+        message.vaults.push(Vault.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -303,6 +501,10 @@ export interface Query {
   GetAllVaults(
     request: QueryGetAllVaultsRequest
   ): Promise<QueryGetAllVaultsResponse>;
+  /** Queries a list of GetAllVaultsByOwner items. */
+  GetAllVaultsByOwner(
+    request: QueryGetAllVaultsByOwnerRequest
+  ): Promise<QueryGetAllVaultsByOwnerResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -323,6 +525,20 @@ export class QueryClientImpl implements Query {
     const promise = this.rpc.request("reserve.Query", "GetAllVaults", data);
     return promise.then((data) =>
       QueryGetAllVaultsResponse.decode(new Reader(data))
+    );
+  }
+
+  GetAllVaultsByOwner(
+    request: QueryGetAllVaultsByOwnerRequest
+  ): Promise<QueryGetAllVaultsByOwnerResponse> {
+    const data = QueryGetAllVaultsByOwnerRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "reserve.Query",
+      "GetAllVaultsByOwner",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetAllVaultsByOwnerResponse.decode(new Reader(data))
     );
   }
 }

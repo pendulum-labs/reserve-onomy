@@ -21,6 +21,11 @@ service Query {
 		option (google.api.http).get = "/reserve/reserve/vaults";
 	}
 
+// Queries a list of GetAllVaultsByOwner items.
+	rpc GetAllVaultsByOwner(QueryGetAllVaultsByOwnerRequest) returns (QueryGetAllVaultsByOwnerResponse) {
+		option (google.api.http).get = "/reserve/reserve/get_all_vaults_by_owner";
+	}
+
 // this line is used by starport scaffolding # 2
 }
 
@@ -38,6 +43,16 @@ message QueryGetAllVaultsRequest {
 }
 
 message QueryGetAllVaultsResponse {
+  repeated Vault vaults = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetAllVaultsByOwnerRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string address = 2;
+}
+
+message QueryGetAllVaultsByOwnerResponse {
   repeated Vault vaults = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
