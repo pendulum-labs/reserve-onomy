@@ -1,12 +1,12 @@
 # Simple usage with a mounted data directory:
 # > docker build -t market .
-# > docker run -it -v ~/.market:/market/.market onomy/market-dev init market --home /market/.market
-# Copy genesis.json from dev/config to ~/.market/config and Dealer and Validator keys are in dev/config
-# > docker run -it -v ~/.market:/market/.market onomy/market-dev keys add dealer --recover --home /market/.market
-# > docker run -it -v ~/.market:/market/.market onomy/market-dev keys add validator --recover --home /market/.market
-# > docker run -it -v ~/.market:/market/.market onomy/market-dev gentx validator 10000000000000000000stake --chain-id market --home /market/.market
-# > docker run -it -v ~/.market:/market/.market onomy/market-dev collect-gentxs --home /market/.market
-# > docker run -it -p 26656:26656 -p 26657:26657 -p 1317:1317 -p 9090:9090 -p 9091:9091 -d -v ~/.market:/market/.market onomy/market-dev start --home /market/.market
+# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev init market --home /reserve/.reserve
+# Copy genesis.json from tools/config/devnet to ~/.reserve/config and Dealer and Validator keys are in dev/config
+# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev keys add dealer --recover --home /reserve/.reserve
+# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev keys add validator --recover --home /reserve/.reserve
+# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev gentx validator 10000000000000000000stake --chain-id market --home /reserve/.reserve
+# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev collect-gentxs --home /reserve/.reserve
+# > docker run -it -p 26656:26656 -p 26657:26657 -p 1317:1317 -p 9090:9090 -p 9091:9091 -d -v ~/.reserve:/reserve/.reserve onomy/reserve-dev start --home /reserve/.reserve
 FROM golang:1.19-alpine AS build-env
 
 # Set up dependencies
