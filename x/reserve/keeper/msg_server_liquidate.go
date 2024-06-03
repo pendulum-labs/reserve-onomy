@@ -37,7 +37,7 @@ func (k msgServer) Liquidate(goCtx context.Context, msg *types.MsgLiquidate) (*t
 
 	// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * vault_denoms)
 	collateralization_ratio := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(vault.Denom.Amount))
-	if collateralization_ratio.LTE(sdk.Int(collateral.LiquidationRatio)) {
+	if collateralization_ratio.GT(sdk.Int(collateral.LiquidationRatio)) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "collateralization ratio not less than liquidation ratio")
 	}
 

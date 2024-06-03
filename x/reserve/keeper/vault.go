@@ -35,7 +35,7 @@ func (k Keeper) GetVault(
 }
 
 // GetAllVaults returns all vaults
-func (k Keeper) GetAllVaults(ctx sdk.Context) (list []types.Vault) {
+func (k Keeper) GetVaults(ctx sdk.Context) (list []types.Vault) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -51,7 +51,7 @@ func (k Keeper) GetAllVaults(ctx sdk.Context) (list []types.Vault) {
 }
 
 // GetAllVaultsByOwner returns all vaults for a specific owner
-func (k Keeper) GetAllVaultsByOwner(ctx sdk.Context, owner string) (list []types.Vault) {
+func (k Keeper) GetVaultsByOwner(ctx sdk.Context, owner string) (list []types.Vault) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -66,6 +66,37 @@ func (k Keeper) GetAllVaultsByOwner(ctx sdk.Context, owner string) (list []types
 		}
 	}
 
+	return
+}
+
+// GetAllVaultsByOwner returns all vaults for a specific owner
+func (k Keeper) GetVaultsInDefault(ctx sdk.Context) (list []types.Vault) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultKeyPrefix))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	var vault types.Vault
+
+	for ; iterator.Valid(); iterator.Next() {
+		k.cdc.MustUnmarshal(iterator.Value(), &vault)
+
+		collateral, found := k.GetCollateral(ctx, vault.Collateral.Denom)
+		if !found {
+			iterator.Next()
+		}
+
+		numerator, denominator, err := k.GetRate(ctx, vault.Denom.Denom, vault.Collateral.Denom)
+		if err != nil {
+			iterator.Next()
+		}
+
+		// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * vault_denoms)
+		collateralization_ratio := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(vault.Denom.Amount))
+		if collateralization_ratio.LTE(sdk.Int(collateral.LiquidationRatio)) {
+			list = append(list, vault)
+		}
+	}
 	return
 }
 

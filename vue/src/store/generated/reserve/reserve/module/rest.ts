@@ -36,6 +36,55 @@ export interface ReserveParams {
   liquidator_reward?: string;
 }
 
+export interface ReserveQueryGetAllVaultsByOwnerResponse {
+  vaults?: ReserveVault[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface ReserveQueryGetAllVaultsInDefaultResponse {
+  vaults?: ReserveVault[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface ReserveQueryGetAllVaultsResponse {
+  vaults?: ReserveVault[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface ReserveQueryGetVaultByUidResponse {
+  vault?: ReserveVault;
+}
+
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  */
@@ -44,11 +93,109 @@ export interface ReserveQueryParamsResponse {
   params?: ReserveParams;
 }
 
+export interface ReserveVault {
+  /** @format uint64 */
+  uid?: string;
+  owner?: string;
+  name?: string;
+  status?: string;
+
+  /**
+   * Coin defines a token with a denomination and an amount.
+   *
+   * NOTE: The amount field is an Int which implements the custom method
+   * signatures required by gogoproto.
+   */
+  collateral?: V1Beta1Coin;
+
+  /**
+   * Coin defines a token with a denomination and an amount.
+   *
+   * NOTE: The amount field is an Int which implements the custom method
+   * signatures required by gogoproto.
+   */
+  denom?: V1Beta1Coin;
+}
+
 export interface RpcStatus {
   /** @format int32 */
   code?: number;
   message?: string;
   details?: ProtobufAny[];
+}
+
+/**
+* Coin defines a token with a denomination and an amount.
+
+NOTE: The amount field is an Int which implements the custom method
+signatures required by gogoproto.
+*/
+export interface V1Beta1Coin {
+  denom?: string;
+  amount?: string;
+}
+
+/**
+* message SomeRequest {
+         Foo some_parameter = 1;
+         PageRequest pagination = 2;
+ }
+*/
+export interface V1Beta1PageRequest {
+  /**
+   * key is a value returned in PageResponse.next_key to begin
+   * querying the next page most efficiently. Only one of offset or key
+   * should be set.
+   * @format byte
+   */
+  key?: string;
+
+  /**
+   * offset is a numeric offset that can be used when key is unavailable.
+   * It is less efficient than using key. Only one of offset or key should
+   * be set.
+   * @format uint64
+   */
+  offset?: string;
+
+  /**
+   * limit is the total number of results to be returned in the result page.
+   * If left empty it will default to a value to be set by each app.
+   * @format uint64
+   */
+  limit?: string;
+
+  /**
+   * count_total is set to true  to indicate that the result set should include
+   * a count of the total number of items available for pagination in UIs.
+   * count_total is only respected when offset is used. It is ignored when key
+   * is set.
+   */
+  count_total?: boolean;
+
+  /**
+   * reverse is set to true if results are to be returned in the descending order.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  reverse?: boolean;
+}
+
+/**
+* PageResponse is to be embedded in gRPC response messages where the
+corresponding request message has used PageRequest.
+
+ message SomeResponse {
+         repeated Bar results = 1;
+         PageResponse page = 2;
+ }
+*/
+export interface V1Beta1PageResponse {
+  /** @format byte */
+  next_key?: string;
+
+  /** @format uint64 */
+  total?: string;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -253,12 +400,107 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryParams
    * @summary Parameters queries the parameters of the module.
-   * @request GET:/denom/reserve/params
+   * @request GET:/reserve/params
    */
   queryParams = (params: RequestParams = {}) =>
     this.request<ReserveQueryParamsResponse, RpcStatus>({
-      path: `/denom/reserve/params`,
+      path: `/reserve/params`,
       method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryGetVaultByUid
+   * @summary Queries a list of GetVaultByUid items.
+   * @request GET:/reserve/vault/{uid}
+   */
+  queryGetVaultByUid = (uid: string, params: RequestParams = {}) =>
+    this.request<ReserveQueryGetVaultByUidResponse, RpcStatus>({
+      path: `/reserve/vault/${uid}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryGetAllVaults
+   * @summary Queries a list of GetAllVaults items.
+   * @request GET:/reserve/vaults
+   */
+  queryGetAllVaults = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<ReserveQueryGetAllVaultsResponse, RpcStatus>({
+      path: `/reserve/vaults`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryGetAllVaultsInDefault
+   * @summary Queries a list of GetAllVaultsInDefault items.
+   * @request GET:/reserve/vaults/default
+   */
+  queryGetAllVaultsInDefault = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<ReserveQueryGetAllVaultsInDefaultResponse, RpcStatus>({
+      path: `/reserve/vaults/default`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryGetAllVaultsByOwner
+   * @summary Queries a list of GetAllVaultsByOwner items.
+   * @request GET:/reserve/vaults/{address}
+   */
+  queryGetAllVaultsByOwner = (
+    address: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<ReserveQueryGetAllVaultsByOwnerResponse, RpcStatus>({
+      path: `/reserve/vaults/${address}`,
+      method: "GET",
+      query: query,
       format: "json",
       ...params,
     });
