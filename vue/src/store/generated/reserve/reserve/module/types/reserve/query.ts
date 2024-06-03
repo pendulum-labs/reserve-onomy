@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { Reader, Writer } from "protobufjs/minimal";
+import { Reader, util, configure, Writer } from "protobufjs/minimal";
+import * as Long from "long";
 import { Params } from "../reserve/params";
 import {
   PageRequest,
@@ -44,6 +45,14 @@ export interface QueryGetAllVaultsInDefaultRequest {
 export interface QueryGetAllVaultsInDefaultResponse {
   vaults: Vault[];
   pagination: PageResponse | undefined;
+}
+
+export interface QueryGetVaultByUidRequest {
+  uid: number;
+}
+
+export interface QueryGetVaultByUidResponse {
+  vault: Vault | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -673,6 +682,145 @@ export const QueryGetAllVaultsInDefaultResponse = {
   },
 };
 
+const baseQueryGetVaultByUidRequest: object = { uid: 0 };
+
+export const QueryGetVaultByUidRequest = {
+  encode(
+    message: QueryGetVaultByUidRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.uid !== 0) {
+      writer.uint32(8).uint64(message.uid);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetVaultByUidRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetVaultByUidRequest,
+    } as QueryGetVaultByUidRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.uid = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetVaultByUidRequest {
+    const message = {
+      ...baseQueryGetVaultByUidRequest,
+    } as QueryGetVaultByUidRequest;
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = Number(object.uid);
+    } else {
+      message.uid = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetVaultByUidRequest): unknown {
+    const obj: any = {};
+    message.uid !== undefined && (obj.uid = message.uid);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetVaultByUidRequest>
+  ): QueryGetVaultByUidRequest {
+    const message = {
+      ...baseQueryGetVaultByUidRequest,
+    } as QueryGetVaultByUidRequest;
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = object.uid;
+    } else {
+      message.uid = 0;
+    }
+    return message;
+  },
+};
+
+const baseQueryGetVaultByUidResponse: object = {};
+
+export const QueryGetVaultByUidResponse = {
+  encode(
+    message: QueryGetVaultByUidResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.vault !== undefined) {
+      Vault.encode(message.vault, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetVaultByUidResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetVaultByUidResponse,
+    } as QueryGetVaultByUidResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.vault = Vault.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetVaultByUidResponse {
+    const message = {
+      ...baseQueryGetVaultByUidResponse,
+    } as QueryGetVaultByUidResponse;
+    if (object.vault !== undefined && object.vault !== null) {
+      message.vault = Vault.fromJSON(object.vault);
+    } else {
+      message.vault = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetVaultByUidResponse): unknown {
+    const obj: any = {};
+    message.vault !== undefined &&
+      (obj.vault = message.vault ? Vault.toJSON(message.vault) : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetVaultByUidResponse>
+  ): QueryGetVaultByUidResponse {
+    const message = {
+      ...baseQueryGetVaultByUidResponse,
+    } as QueryGetVaultByUidResponse;
+    if (object.vault !== undefined && object.vault !== null) {
+      message.vault = Vault.fromPartial(object.vault);
+    } else {
+      message.vault = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -689,6 +837,10 @@ export interface Query {
   GetAllVaultsInDefault(
     request: QueryGetAllVaultsInDefaultRequest
   ): Promise<QueryGetAllVaultsInDefaultResponse>;
+  /** Queries a list of GetVaultByUid items. */
+  GetVaultByUid(
+    request: QueryGetVaultByUidRequest
+  ): Promise<QueryGetVaultByUidResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -739,6 +891,16 @@ export class QueryClientImpl implements Query {
       QueryGetAllVaultsInDefaultResponse.decode(new Reader(data))
     );
   }
+
+  GetVaultByUid(
+    request: QueryGetVaultByUidRequest
+  ): Promise<QueryGetVaultByUidResponse> {
+    const data = QueryGetVaultByUidRequest.encode(request).finish();
+    const promise = this.rpc.request("reserve.Query", "GetVaultByUid", data);
+    return promise.then((data) =>
+      QueryGetVaultByUidResponse.decode(new Reader(data))
+    );
+  }
 }
 
 interface Rpc {
@@ -748,6 +910,16 @@ interface Rpc {
     data: Uint8Array
   ): Promise<Uint8Array>;
 }
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -759,3 +931,15 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

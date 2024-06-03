@@ -10,6 +10,23 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+func (k Keeper) GetVaultByUid(goCtx context.Context, req *types.QueryGetVaultByUidRequest) (*types.QueryGetVaultByUidResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	vault, found := k.GetVault(ctx, req.Uid)
+	if !found {
+		return nil, status.Error(codes.InvalidArgument, "vault not found")
+	}
+
+	return &types.QueryGetVaultByUidResponse{
+		Vault: &vault,
+	}, nil
+}
+
 func (k Keeper) GetAllVaults(goCtx context.Context, req *types.QueryGetAllVaultsRequest) (*types.QueryGetAllVaultsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")

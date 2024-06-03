@@ -81,6 +81,10 @@ export interface ReserveQueryGetAllVaultsResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface ReserveQueryGetVaultByUidResponse {
+  vault?: ReserveVault;
+}
+
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  */
@@ -396,11 +400,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryParams
    * @summary Parameters queries the parameters of the module.
-   * @request GET:/denom/reserve/params
+   * @request GET:/reserve/params
    */
   queryParams = (params: RequestParams = {}) =>
     this.request<ReserveQueryParamsResponse, RpcStatus>({
-      path: `/denom/reserve/params`,
+      path: `/reserve/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryGetVaultByUid
+   * @summary Queries a list of GetVaultByUid items.
+   * @request GET:/reserve/vault/{uid}
+   */
+  queryGetVaultByUid = (uid: string, params: RequestParams = {}) =>
+    this.request<ReserveQueryGetVaultByUidResponse, RpcStatus>({
+      path: `/reserve/vault/${uid}`,
       method: "GET",
       format: "json",
       ...params,
@@ -412,7 +432,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryGetAllVaults
    * @summary Queries a list of GetAllVaults items.
-   * @request GET:/reserve/reserve/vaults
+   * @request GET:/reserve/vaults
    */
   queryGetAllVaults = (
     query?: {
@@ -425,7 +445,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<ReserveQueryGetAllVaultsResponse, RpcStatus>({
-      path: `/reserve/reserve/vaults`,
+      path: `/reserve/vaults`,
       method: "GET",
       query: query,
       format: "json",
@@ -438,7 +458,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryGetAllVaultsInDefault
    * @summary Queries a list of GetAllVaultsInDefault items.
-   * @request GET:/reserve/reserve/vaults/default
+   * @request GET:/reserve/vaults/default
    */
   queryGetAllVaultsInDefault = (
     query?: {
@@ -451,7 +471,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<ReserveQueryGetAllVaultsInDefaultResponse, RpcStatus>({
-      path: `/reserve/reserve/vaults/default`,
+      path: `/reserve/vaults/default`,
       method: "GET",
       query: query,
       format: "json",
@@ -464,7 +484,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryGetAllVaultsByOwner
    * @summary Queries a list of GetAllVaultsByOwner items.
-   * @request GET:/reserve/reserve/vaults/{address}
+   * @request GET:/reserve/vaults/{address}
    */
   queryGetAllVaultsByOwner = (
     address: string,
@@ -478,7 +498,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     params: RequestParams = {},
   ) =>
     this.request<ReserveQueryGetAllVaultsByOwnerResponse, RpcStatus>({
-      path: `/reserve/reserve/vaults/${address}`,
+      path: `/reserve/vaults/${address}`,
       method: "GET",
       query: query,
       format: "json",

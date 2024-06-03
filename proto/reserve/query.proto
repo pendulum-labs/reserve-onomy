@@ -14,21 +14,26 @@ option go_package = "reserve/x/reserve/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/denom/reserve/params";
+    option (google.api.http).get = "/reserve/params";
   }
   // Queries a list of GetAllVaults items.
 	rpc GetAllVaults(QueryGetAllVaultsRequest) returns (QueryGetAllVaultsResponse) {
-		option (google.api.http).get = "/reserve/reserve/vaults";
+		option (google.api.http).get = "/reserve/vaults";
 	}
 
 // Queries a list of GetAllVaultsByOwner items.
 	rpc GetAllVaultsByOwner(QueryGetAllVaultsByOwnerRequest) returns (QueryGetAllVaultsByOwnerResponse) {
-		option (google.api.http).get = "/reserve/reserve/vaults/{address}";
+		option (google.api.http).get = "/reserve/vaults/{address}";
 	}
 
 // Queries a list of GetAllVaultsInDefault items.
 	rpc GetAllVaultsInDefault(QueryGetAllVaultsInDefaultRequest) returns (QueryGetAllVaultsInDefaultResponse) {
-		option (google.api.http).get = "/reserve/reserve/vaults/default";
+		option (google.api.http).get = "/reserve/vaults/default";
+	}
+
+// Queries a list of GetVaultByUid items.
+	rpc GetVaultByUid(QueryGetVaultByUidRequest) returns (QueryGetVaultByUidResponse) {
+		option (google.api.http).get = "/reserve/vault/{uid}";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -69,6 +74,14 @@ message QueryGetAllVaultsInDefaultRequest {
 message QueryGetAllVaultsInDefaultResponse {
   repeated Vault vaults = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetVaultByUidRequest {
+  uint64 uid = 1;
+}
+
+message QueryGetVaultByUidResponse {
+  Vault vault = 1;
 }
 
 // this line is used by starport scaffolding # 3

@@ -52,6 +52,7 @@ const getDefaultState = () => {
 				GetAllVaults: {},
 				GetAllVaultsByOwner: {},
 				GetAllVaultsInDefault: {},
+				GetVaultByUid: {},
 				
 				_Structure: {
 						Collateral: getStructure(Collateral.fromPartial({})),
@@ -113,6 +114,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.GetAllVaultsInDefault[JSON.stringify(params)] ?? {}
+		},
+				getGetVaultByUid: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.GetVaultByUid[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -243,6 +250,28 @@ export default {
 				return getters['getGetAllVaultsInDefault']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryGetAllVaultsInDefault API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryGetVaultByUid({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryGetVaultByUid( key.uid)).data
+				
+					
+				commit('QUERY', { query: 'GetVaultByUid', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryGetVaultByUid', payload: { options: { all }, params: {...key},query }})
+				return getters['getGetVaultByUid']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryGetVaultByUid API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

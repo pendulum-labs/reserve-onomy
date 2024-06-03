@@ -31037,7 +31037,7 @@ paths:
           type: string
       tags:
         - Query
-  /denom/reserve/params:
+  /reserve/params:
     get:
       summary: Parameters queries the parameters of the module.
       operationId: ReserveParams
@@ -31101,7 +31101,85 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
-  /reserve/reserve/vaults:
+  '/reserve/vault/{uid}':
+    get:
+      summary: Queries a list of GetVaultByUid items.
+      operationId: ReserveGetVaultByUid
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              vault:
+                type: object
+                properties:
+                  uid:
+                    type: string
+                    format: uint64
+                  owner:
+                    type: string
+                  name:
+                    type: string
+                  status:
+                    type: string
+                  collateral:
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  denom:
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query
+  /reserve/vaults:
     get:
       summary: Queries a list of GetAllVaults items.
       operationId: ReserveGetAllVaults
@@ -31259,7 +31337,7 @@ paths:
           type: boolean
       tags:
         - Query
-  /reserve/reserve/vaults/default:
+  /reserve/vaults/default:
     get:
       summary: Queries a list of GetAllVaultsInDefault items.
       operationId: ReserveGetAllVaultsInDefault
@@ -31417,7 +31495,7 @@ paths:
           type: boolean
       tags:
         - Query
-  '/reserve/reserve/vaults/{address}':
+  '/reserve/vaults/{address}':
     get:
       summary: Queries a list of GetAllVaultsByOwner items.
       operationId: ReserveGetAllVaultsByOwner
@@ -51896,6 +51974,51 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
+  reserve.QueryGetVaultByUidResponse:
+    type: object
+    properties:
+      vault:
+        type: object
+        properties:
+          uid:
+            type: string
+            format: uint64
+          owner:
+            type: string
+          name:
+            type: string
+          status:
+            type: string
+          collateral:
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          denom:
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
   reserve.QueryParamsResponse:
     type: object
     properties:
