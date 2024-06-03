@@ -4,7 +4,7 @@
 # Copy genesis.json from tools/config/devnet to ~/.reserve/config and Dealer and Validator keys are in dev/config
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev keys add dealer --recover --home /reserve/.reserve
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev keys add validator --recover --home /reserve/.reserve
-# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev gentx validator 10000000000000000000stake --chain-id market --home /reserve/.reserve
+# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev gentx validator 10000000000000000000stake --chain-id reserve --home /reserve/.reserve
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev collect-gentxs --home /reserve/.reserve
 # > docker run -it -p 26656:26656 -p 26657:26657 -p 1317:1317 -p 9090:9090 -p 9091:9091 -d -v ~/.reserve:/reserve/.reserve onomy/reserve-dev start --home /reserve/.reserve
 FROM golang:1.19-alpine AS build-env
