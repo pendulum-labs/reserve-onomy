@@ -1,6 +1,6 @@
 # Simple usage with a mounted data directory:
-# > docker build -t market .
-# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev init market --home /reserve/.reserve
+# > docker build -t reserve .
+# > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev init reserve --home /reserve/.reserve
 # Copy genesis.json from tools/config/devnet to ~/.reserve/config and Dealer and Validator keys are in dev/config
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev keys add dealer --recover --home /reserve/.reserve
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev keys add validator --recover --home /reserve/.reserve
@@ -13,7 +13,7 @@ FROM golang:1.19-alpine AS build-env
 ENV PACKAGES curl make git libc-dev bash gcc linux-headers eudev-dev python3
 
 # Set working directory for the build
-WORKDIR /go/src/github.com/pendulum-labs/market
+WORKDIR /go/src/github.com/pendulum-labs/reserve
 
 # Add source files
 COPY . .
@@ -29,12 +29,12 @@ RUN make install
 # Final image
 FROM alpine:edge
 
-ENV MARKET /market
+ENV reserve /reserve
 
 # Install ca-certificates
 RUN apk add --update ca-certificates
 
-WORKDIR $MARKET
+WORKDIR $reserve
 
 # Copy over binaries from the build-env
 COPY --from=build-env /go/bin/reserved /usr/bin/reserved
@@ -45,5 +45,5 @@ EXPOSE 1317
 EXPOSE 9090
 EXPOSE 9091
 
-# Run reserved by default, omit entrypoint to ease using container with marketcli
+# Run reserved by default, omit entrypoint to ease using container with reservecli
 ENTRYPOINT ["reserved"]
