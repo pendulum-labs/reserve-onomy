@@ -1,7 +1,7 @@
 # Simple usage with a mounted data directory:
 # > docker build -t reserve .
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev init reserve --home /reserve/.reserve
-# Copy genesis.json from tools/config/devnet to ~/.reserve/config and Dealer and Validator keys are in dev/config
+# Copy genesis.json from tools/config/devnet to ~/.reserve/config and Dealer and Validator keys are in tools/config/devnet/keys-devnet.json
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev keys add dealer --recover --home /reserve/.reserve
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev keys add validator --recover --home /reserve/.reserve
 # > docker run -it -v ~/.reserve:/reserve/.reserve onomy/reserve-dev gentx validator 10000000000000000000stake --chain-id reserve --home /reserve/.reserve
