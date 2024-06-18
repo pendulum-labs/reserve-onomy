@@ -1,0 +1,25 @@
+syntax = "proto3";
+package reserve;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "reserve/x/reserve/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+  // Upon vault liquidation event collateral is traded for market module
+  // burn coin. burn ratio is the ratio of market burn coin burned vs stored
+  // in community pool
+  // burn rate is (parameter / 10000), 9999 representing as 99.99%
+  string burn_rate = 1;
+
+  // reserve burn coin
+  string burn_coin = 2;
+
+  // Vault liquidator receives reward for succesfully identifying and triggering
+  // vault liquidations.  The reward is defined as a percentage.
+  // liquidator_reward is (parameter / 10000), 9999 representing 99.99%
+  string liquidator_reward = 3;
+}

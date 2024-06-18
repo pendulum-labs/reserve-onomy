@@ -1,0 +1,13 @@
+syntax = "proto3";
+package reserve;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "reserve/x/reserve/types";
+option (gogoproto.equal_all) = true;
+
+message Denom {
+  string base = 1;
+  string display = 2;
+  int64 init_time = 3;
+}

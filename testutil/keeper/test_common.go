@@ -28,8 +28,12 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/pendulum-labs/market/x/market/keeper"
+	marketkeeper "github.com/pendulum-labs/market/x/market/keeper"
 	markettypes "github.com/pendulum-labs/market/x/market/types"
+
+	"reserve/x/reserve/keeper"
+	reservetypes "reserve/x/reserve/types"
+
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -54,7 +58,8 @@ type TestInput struct {
 	MintKeeper    mintkeeper.Keeper
 	Context       sdk.Context
 	Marshaler     codec.Codec
-	MarketKeeper  *keeper.Keeper
+	MarketKeeper  marketkeeper.Keeper
+	ReserveKeeper *keeper.Keeper
 	LegacyAmino   *codec.LegacyAmino
 }
 
@@ -88,7 +93,8 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 	keyStake := sdk.NewKVStoreKey(stakingtypes.StoreKey)
 	keyMint := sdk.NewKVStoreKey(minttypes.StoreKey)
 	keyParams := sdk.NewKVStoreKey(paramstypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(markettypes.MemStoreKey)
+	memMarketStoreKey := storetypes.NewMemoryStoreKey(markettypes.MemStoreKey)
+	memReserveStoreKey := storetypes.NewMemoryStoreKey(reservetypes.MemStoreKey)
 	tkeyParams := sdk.NewTransientStoreKey(paramstypes.TStoreKey)
 
 	db := tmdb.NewMemDB()
@@ -103,7 +109,8 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 	stateStore.MountStoreWithDB(keyMint, sdk.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(keyParams, sdk.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(tkeyParams, sdk.StoreTypeTransient, db)
-	stateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
+	stateStore.MountStoreWithDB(memMarketStoreKey, sdk.StoreTypeMemory, nil)
+	stateStore.MountStoreWithDB(memReserveStoreKey, sdk.StoreTypeMemory, nil)
 	require.NoError(t, stateStore.LoadLatestVersion())
 
 	//ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
@@ -142,15 +149,11 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(minttypes.ModuleName)
 	paramsKeeper.Subspace(markettypes.ModuleName)
+	paramsKeeper.Subspace(reservetypes.ModuleName)
 
-	paramsSubspace := paramstypes.NewSubspace(cdc,
-		markettypes.Amino,
-		storeKey,
-		memStoreKey,
-		"MarketParams",
-	)
 	// this is also used to initialize module accounts for all the map keys
 	maccPerms := map[string][]string{
+		reservetypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		markettypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 		authtypes.FeeCollectorName:     nil,
 		minttypes.ModuleName:           {authtypes.Minter},
@@ -188,16 +191,29 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 		cdc, keyMint, getSubspace(paramsKeeper, minttypes.ModuleName), &stakingKeeper,
 		accountKeeper, bankKeeper, authtypes.FeeCollectorName,
 	)
-	marketKeeper := keeper.NewKeeper(
+	marketKeeper := marketkeeper.NewKeeper(
 		cdc,
 		storeKey,
-		memStoreKey,
-		paramsSubspace,
+		memMarketStoreKey,
+		getSubspace(paramsKeeper, markettypes.ModuleName),
 		bankKeeper,
 	)
 	// Initialize params
 	//marketKeeper.setID
 	marketKeeper.SetParams(ctx, markettypes.DefaultParams())
+
+	reserveKeeper := keeper.NewKeeper(
+		cdc,
+		storeKey,
+		memReserveStoreKey,
+		getSubspace(paramsKeeper, reservetypes.ModuleName),
+		accountKeeper,
+		bankKeeper,
+		marketKeeper,
+	)
+	// Initialize params
+	//marketKeeper.setID
+	reserveKeeper.SetParams(ctx, reservetypes.DefaultParams())
 
 	return TestInput{
 		AccountKeeper: accountKeeper,
@@ -205,8 +221,9 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 		MintKeeper:    mintKeeper,
 		Context:       ctx,
 		Marshaler:     cdc,
+		MarketKeeper:  *marketKeeper,
+		ReserveKeeper: reserveKeeper,
 		LegacyAmino:   legacyCodec,
-		MarketKeeper:  marketKeeper,
 	}
 }
 

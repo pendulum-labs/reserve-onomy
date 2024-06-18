@@ -22,6 +22,7 @@ import CosmosIbcGoIbcCoreConnectionV1 from './cosmos/ibc-go/ibc.core.connection.
 import CosmosIbcGoIbcCorePortV1 from './cosmos/ibc-go/ibc.core.port.v1'
 import OnomyprotocolMarketOnomyprotocolMarketMarket from './onomyprotocol/market/onomyprotocol.market.market'
 import PendulumLabsMarketPendulumlabsMarketMarket from './pendulum-labs/market/pendulumlabs.market.market'
+import ReserveReserve from './reserve/reserve'
 
 
 export default { 
@@ -47,6 +48,7 @@ export default {
   CosmosIbcGoIbcCorePortV1: load(CosmosIbcGoIbcCorePortV1, 'ibc.core.port.v1'),
   OnomyprotocolMarketOnomyprotocolMarketMarket: load(OnomyprotocolMarketOnomyprotocolMarketMarket, 'onomyprotocol.market.market'),
   PendulumLabsMarketPendulumlabsMarketMarket: load(PendulumLabsMarketPendulumlabsMarketMarket, 'pendulumlabs.market.market'),
+  ReserveReserve: load(ReserveReserve, 'reserve'),
   
 }
 

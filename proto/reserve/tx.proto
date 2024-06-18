@@ -1,0 +1,55 @@
+syntax = "proto3";
+package reserve;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "reserve/x/reserve/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc CreateVault(MsgCreateVault) returns (MsgCreateVaultResponse);
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
+  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
+  rpc Liquidate(MsgLiquidate) returns (MsgLiquidateResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateVault {
+  string creator = 1;
+  string collateral = 2;
+  string name = 3;
+}
+
+message MsgCreateVaultResponse {
+  uint64 uid = 1;
+}
+
+message MsgDeposit {
+  string creator = 1;
+  string uid = 2;
+  string coin = 3;
+}
+
+message MsgDepositResponse {
+  string uid = 1;
+  string coin = 2;
+}
+
+message MsgWithdraw {
+  string creator = 1;
+  string uid = 2;
+  string coin = 3;
+}
+
+message MsgWithdrawResponse {
+}
+
+message MsgLiquidate {
+  string creator = 1;
+  string uid = 2;
+}
+
+message MsgLiquidateResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message
