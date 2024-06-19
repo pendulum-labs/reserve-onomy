@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strings"
 	"testing"
 
 	keepertest "reserve/testutil/keeper"
@@ -17,6 +16,8 @@ import (
 	"reserve/x/reserve/keeper"
 	"reserve/x/reserve/types"
 )
+
+var addr string = sample.AccAddress()
 
 func commonDeposit(t *testing.T) (vault types.Vault) {
 	testInput := keepertest.CreateTestEnvironment(t)
@@ -94,71 +95,5 @@ func TestDeposit_With_New_Creator(t *testing.T) {
 	require.Error(t, err)
 	require.ErrorContains(t, err, "insufficient funds")
 	require.NotContains(t, p.GetCreator(), response.String())
-
-}
-
-func TestDeposit_With_Swap_Coins(t *testing.T) {
-	testInput := keepertest.CreateTestEnvironment(t)
-	//TestData
-	testdata := testData{coinAStr: "15CoinB", coinBStr: "15CoinA", RateAstrArray: []string{"0", "0"}, RateBstrArray: []string{"0", "0"}}
-	coinPair, _ := sample.SampleCoins("20CoinA", "20CoinB")
-	denomA, denomB := sample.SampleDenoms(coinPair)
-	pair := strings.Join([]string{denomA, denomB}, ",")
-	require.NoError(t, testInput.BankKeeper.MintCoins(testInput.Context, markettypes.ModuleName, coinPair))
-	requestAddress, _ := sdk.AccAddressFromBech32(addr)
-	require.NoError(t, testInput.BankKeeper.SendCoinsFromModuleToAccount(testInput.Context, markettypes.ModuleName, requestAddress, coinPair))
-	//validate SetUidCount function.
-	beforecount := testInput.MarketKeeper.GetUidCount(testInput.Context)
-
-	var p = markettypes.MsgCreatePool{CoinA: testdata.coinAStr, CoinB: testdata.coinBStr, Creator: addr}
-	response, err := marketkeeper.NewMsgServerImpl(testInput.MarketKeeper).CreatePool(sdk.WrapSDKContext(testInput.Context), &p)
-	require.NoError(t, err)
-	require.Contains(t, p.GetCreator(), response.String())
-	//validate SetUidCount function.
-	aftercount := testInput.MarketKeeper.GetUidCount(testInput.Context)
-	require.Equal(t, beforecount+1, aftercount)
-	rst, found := testInput.MarketKeeper.GetPool(testInput.Context, pair)
-	require.True(t, found)
-	require.Equal(t, rst.Pair, pair)
-	//validate GetMember
-	members, memberfound := testInput.MarketKeeper.GetMember(testInput.Context, denomB, denomA)
-	members1, memberfound1 := testInput.MarketKeeper.GetMember(testInput.Context, denomA, denomB)
-	require.True(t, memberfound)
-	require.Equal(t, members.DenomA, denomB)
-	require.Equal(t, members.DenomB, denomA)
-	require.True(t, memberfound1)
-	require.Equal(t, members1.DenomA, denomA)
-	require.Equal(t, members1.DenomB, denomB)
-	//validate GetDrop
-	drops, dropFound := testInput.MarketKeeper.GetDrop(testInput.Context, beforecount)
-	require.True(t, dropFound)
-	require.Equal(t, drops.Pair, pair)
-
-}
-
-func TestDeposit_Invalid_Coin(t *testing.T) {
-	testInput := keepertest.CreateTestEnvironment(t)
-
-	scenarios := []struct {
-		coinAStr      string
-		coinBStr      string
-		RateAstrArray []string
-		RateBstrArray []string
-	}{
-		{coinAStr: "20Coin", coinBStr: "20CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}},
-		{coinAStr: "20CoinA", coinBStr: "20Coin", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}},
-		//{coinAStr: "20CoinA", coinBStr: "20", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}},
-	}
-	for _, s := range scenarios {
-		coinPair, _ := sample.SampleCoins("20CoinA", "20CoinB")
-		require.NoError(t, testInput.BankKeeper.MintCoins(testInput.Context, markettypes.ModuleName, coinPair))
-		requestAddress, _ := sdk.AccAddressFromBech32(addr)
-		require.NoError(t, testInput.BankKeeper.SendCoinsFromModuleToAccount(testInput.Context, markettypes.ModuleName, requestAddress, coinPair))
-		var p = markettypes.MsgCreatePool{CoinA: s.coinAStr, CoinB: s.coinBStr, Creator: addr}
-		response, err := marketkeeper.NewMsgServerImpl(testInput.MarketKeeper).CreatePool(sdk.WrapSDKContext(testInput.Context), &p)
-		require.Error(t, err)
-		require.NotContains(t, p.GetCreator(), response.String())
-
-	}
 
 }

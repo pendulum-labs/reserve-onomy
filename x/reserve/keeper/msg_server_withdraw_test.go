@@ -113,7 +113,7 @@ func TestWithdraw_With_Swap_Coins(t *testing.T) {
 	var p = markettypes.MsgCreatePool{CoinA: testdata.coinAStr, CoinB: testdata.coinBStr, Creator: addr}
 	response, err := marketkeeper.NewMsgServerImpl(testInput.MarketKeeper).CreatePool(sdk.WrapSDKContext(testInput.Context), &p)
 	require.NoError(t, err)
-	require.Contains(t, p.GetCreator(), response.String())
+	require.Contains(t, response.String(), p.GetCreator())
 	//validate SetUidCount function.
 	aftercount := testInput.MarketKeeper.GetUidCount(testInput.Context)
 	require.Equal(t, beforecount+1, aftercount)
