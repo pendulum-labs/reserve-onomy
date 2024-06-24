@@ -30,6 +30,10 @@ The Onomy Reserve
 
 `liquidity deposit` is the minimum amount of liquidity for a specific collateral that must be provided to create a denom
 
+`minting interest rate` is the interest rate on denoms loaned to minters.  This is meant to aide in stabilization of the stablecoin.
+
+`savings interest rate` is the interest rate paid on denoms that have been bonded to the reserve.
+
 ## Reserve Transactions
 
 `create-vault` by depositing collateral.  Each vault has a unique name per user as well as UID
