@@ -3,33 +3,32 @@ package cli
 import (
 	"strconv"
 
+	"reserve/x/reserve/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
-	"reserve/x/reserve/types"
 )
 
 var _ = strconv.Itoa(0)
 
-func CmdCreateVault() *cobra.Command {
+func CmdCreate() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-vault [collateral] [name]",
-		Short: "Broadcast message create-vault",
+		Use:   "create [collateral]",
+		Short: "Create a vault with collateral",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argCollateral := args[0]
-			argName := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgCreateVault(
+			msg := types.NewMsgCreate(
 				clientCtx.GetFromAddress().String(),
 				argCollateral,
-				argName,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

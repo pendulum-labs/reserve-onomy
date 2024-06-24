@@ -25,9 +25,9 @@ var (
 )
 
 const (
-	opWeightMsgCreateVault = "op_weight_msg_create_vault"
+	opWeightMsgCreate = "op_weight_msg_create_vault"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgCreateVault int = 100
+	defaultWeightMsgCreate int = 100
 
 	opWeightMsgDeposit = "op_weight_msg_deposit"
 	// TODO: Determine the simulation weight value
@@ -75,15 +75,15 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgCreateVault int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateVault, &weightMsgCreateVault, nil,
+	var weightMsgCreate int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreate, &weightMsgCreate, nil,
 		func(_ *rand.Rand) {
-			weightMsgCreateVault = defaultWeightMsgCreateVault
+			weightMsgCreate = defaultWeightMsgCreate
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCreateVault,
-		reservesimulation.SimulateMsgCreateVault(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgCreate,
+		reservesimulation.SimulateMsgCreate(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	var weightMsgDeposit int

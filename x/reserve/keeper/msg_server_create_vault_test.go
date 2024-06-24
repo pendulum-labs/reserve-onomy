@@ -24,7 +24,7 @@ type testData struct {
 	name          string
 }
 
-func TestCreateVault(t *testing.T) {
+func TestCreate(t *testing.T) {
 	testInput := keepertest.CreateTestEnvironment(t)
 
 	// TestData
@@ -43,10 +43,10 @@ func TestCreateVault(t *testing.T) {
 	beforecount := testInput.MarketKeeper.GetUidCount(testInput.Context)
 
 	// Create Vault
-	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr}
-	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
+	var p = types.MsgCreate{Creator: addr, Collateral: testdata.coinAStr}
+	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).Create(sdk.WrapSDKContext(testInput.Context), &p)
 
-	// Validate CreateVault
+	// Validate Create
 	require.NoError(t, err)
 	require.Equal(t, beforecount, response.Uid)
 

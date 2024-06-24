@@ -37,10 +37,10 @@ func commonWithdraw(t *testing.T) (vault types.Vault) {
 	beforecount := testInput.MarketKeeper.GetUidCount(testInput.Context)
 
 	// Create Vault
-	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr}
-	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
+	var p = types.MsgCreate{Creator: addr, Collateral: testdata.coinAStr}
+	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).Create(sdk.WrapSDKContext(testInput.Context), &p)
 
-	// Validate CreateVault
+	// Validate Create
 	require.NoError(t, err)
 	require.Equal(t, beforecount, response.Uid)
 
@@ -72,8 +72,8 @@ func TestWithdraw_Insufficient_Funds(t *testing.T) {
 	require.NoError(t, testInput.BankKeeper.SendCoinsFromModuleToAccount(testInput.Context, markettypes.ModuleName, requestAddress, coinPair))
 
 	// Create Vault
-	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr}
-	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
+	var p = types.MsgCreate{Creator: addr, Collateral: testdata.coinAStr}
+	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).Create(sdk.WrapSDKContext(testInput.Context), &p)
 
 	require.Error(t, err)
 	require.ErrorContains(t, err, "insufficient funds")

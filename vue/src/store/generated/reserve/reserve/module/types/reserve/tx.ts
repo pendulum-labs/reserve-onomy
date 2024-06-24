@@ -4,12 +4,12 @@ import * as Long from "long";
 
 export const protobufPackage = "reserve";
 
-export interface MsgCreateVault {
+export interface MsgCreate {
   creator: string;
   collateral: string;
 }
 
-export interface MsgCreateVaultResponse {
+export interface MsgCreateResponse {
   uid: number;
 }
 
@@ -39,10 +39,10 @@ export interface MsgLiquidate {
 
 export interface MsgLiquidateResponse {}
 
-const baseMsgCreateVault: object = { creator: "", collateral: "" };
+const baseMsgCreate: object = { creator: "", collateral: "" };
 
-export const MsgCreateVault = {
-  encode(message: MsgCreateVault, writer: Writer = Writer.create()): Writer {
+export const MsgCreate = {
+  encode(message: MsgCreate, writer: Writer = Writer.create()): Writer {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
@@ -52,10 +52,10 @@ export const MsgCreateVault = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MsgCreateVault {
+  decode(input: Reader | Uint8Array, length?: number): MsgCreate {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMsgCreateVault } as MsgCreateVault;
+    const message = { ...baseMsgCreate } as MsgCreate;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -73,8 +73,8 @@ export const MsgCreateVault = {
     return message;
   },
 
-  fromJSON(object: any): MsgCreateVault {
-    const message = { ...baseMsgCreateVault } as MsgCreateVault;
+  fromJSON(object: any): MsgCreate {
+    const message = { ...baseMsgCreate } as MsgCreate;
     if (object.creator !== undefined && object.creator !== null) {
       message.creator = String(object.creator);
     } else {
@@ -88,15 +88,15 @@ export const MsgCreateVault = {
     return message;
   },
 
-  toJSON(message: MsgCreateVault): unknown {
+  toJSON(message: MsgCreate): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.collateral !== undefined && (obj.collateral = message.collateral);
     return obj;
   },
 
-  fromPartial(object: DeepPartial<MsgCreateVault>): MsgCreateVault {
-    const message = { ...baseMsgCreateVault } as MsgCreateVault;
+  fromPartial(object: DeepPartial<MsgCreate>): MsgCreate {
+    const message = { ...baseMsgCreate } as MsgCreate;
     if (object.creator !== undefined && object.creator !== null) {
       message.creator = object.creator;
     } else {
@@ -111,23 +111,20 @@ export const MsgCreateVault = {
   },
 };
 
-const baseMsgCreateVaultResponse: object = { uid: 0 };
+const baseMsgCreateResponse: object = { uid: 0 };
 
-export const MsgCreateVaultResponse = {
-  encode(
-    message: MsgCreateVaultResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+export const MsgCreateResponse = {
+  encode(message: MsgCreateResponse, writer: Writer = Writer.create()): Writer {
     if (message.uid !== 0) {
       writer.uint32(8).uint64(message.uid);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MsgCreateVaultResponse {
+  decode(input: Reader | Uint8Array, length?: number): MsgCreateResponse {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMsgCreateVaultResponse } as MsgCreateVaultResponse;
+    const message = { ...baseMsgCreateResponse } as MsgCreateResponse;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -142,8 +139,8 @@ export const MsgCreateVaultResponse = {
     return message;
   },
 
-  fromJSON(object: any): MsgCreateVaultResponse {
-    const message = { ...baseMsgCreateVaultResponse } as MsgCreateVaultResponse;
+  fromJSON(object: any): MsgCreateResponse {
+    const message = { ...baseMsgCreateResponse } as MsgCreateResponse;
     if (object.uid !== undefined && object.uid !== null) {
       message.uid = Number(object.uid);
     } else {
@@ -152,16 +149,14 @@ export const MsgCreateVaultResponse = {
     return message;
   },
 
-  toJSON(message: MsgCreateVaultResponse): unknown {
+  toJSON(message: MsgCreateResponse): unknown {
     const obj: any = {};
     message.uid !== undefined && (obj.uid = message.uid);
     return obj;
   },
 
-  fromPartial(
-    object: DeepPartial<MsgCreateVaultResponse>
-  ): MsgCreateVaultResponse {
-    const message = { ...baseMsgCreateVaultResponse } as MsgCreateVaultResponse;
+  fromPartial(object: DeepPartial<MsgCreateResponse>): MsgCreateResponse {
+    const message = { ...baseMsgCreateResponse } as MsgCreateResponse;
     if (object.uid !== undefined && object.uid !== null) {
       message.uid = object.uid;
     } else {
@@ -574,7 +569,7 @@ export const MsgLiquidateResponse = {
 
 /** Msg defines the Msg service. */
 export interface Msg {
-  CreateVault(request: MsgCreateVault): Promise<MsgCreateVaultResponse>;
+  Create(request: MsgCreate): Promise<MsgCreateResponse>;
   Deposit(request: MsgDeposit): Promise<MsgDepositResponse>;
   Withdraw(request: MsgWithdraw): Promise<MsgWithdrawResponse>;
   /** this line is used by starport scaffolding # proto/tx/rpc */
@@ -586,12 +581,10 @@ export class MsgClientImpl implements Msg {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
   }
-  CreateVault(request: MsgCreateVault): Promise<MsgCreateVaultResponse> {
-    const data = MsgCreateVault.encode(request).finish();
-    const promise = this.rpc.request("reserve.Msg", "CreateVault", data);
-    return promise.then((data) =>
-      MsgCreateVaultResponse.decode(new Reader(data))
-    );
+  Create(request: MsgCreate): Promise<MsgCreateResponse> {
+    const data = MsgCreate.encode(request).finish();
+    const promise = this.rpc.request("reserve.Msg", "Create", data);
+    return promise.then((data) => MsgCreateResponse.decode(new Reader(data)));
   }
 
   Deposit(request: MsgDeposit): Promise<MsgDepositResponse> {

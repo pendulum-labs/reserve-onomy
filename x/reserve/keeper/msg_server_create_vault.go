@@ -9,7 +9,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-func (k msgServer) CreateVault(goCtx context.Context, msg *types.MsgCreateVault) (*types.MsgCreateVaultResponse, error) {
+func (k msgServer) Create(goCtx context.Context, msg *types.MsgCreate) (*types.MsgCreateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	collateral, err := sdk.ParseCoinNormalized(msg.Collateral)
@@ -42,5 +42,5 @@ func (k msgServer) CreateVault(goCtx context.Context, msg *types.MsgCreateVault)
 	// Update drop uid count
 	k.SetUidCount(ctx, uid+1)
 
-	return &types.MsgCreateVaultResponse{Uid: uid}, nil
+	return &types.MsgCreateResponse{Uid: uid}, nil
 }

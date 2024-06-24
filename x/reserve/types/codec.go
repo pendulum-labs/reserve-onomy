@@ -8,7 +8,7 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgCreateVault{}, "reserve/CreateVault", nil)
+	cdc.RegisterConcrete(&MsgCreate{}, "reserve/Create", nil)
 	cdc.RegisterConcrete(&MsgDeposit{}, "reserve/Deposit", nil)
 	cdc.RegisterConcrete(&MsgWithdraw{}, "reserve/Withdraw", nil)
 	cdc.RegisterConcrete(&MsgLiquidate{}, "reserve/Liquidate", nil)
@@ -17,7 +17,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateVault{},
+		&MsgCreate{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgDeposit{},

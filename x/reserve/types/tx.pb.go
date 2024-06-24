@@ -27,23 +27,23 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type MsgCreateVault struct {
+type MsgCreate struct {
 	Creator    string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Collateral string `protobuf:"bytes,2,opt,name=collateral,proto3" json:"collateral,omitempty"`
 }
 
-func (m *MsgCreateVault) Reset()         { *m = MsgCreateVault{} }
-func (m *MsgCreateVault) String() string { return proto.CompactTextString(m) }
-func (*MsgCreateVault) ProtoMessage()    {}
-func (*MsgCreateVault) Descriptor() ([]byte, []int) {
+func (m *MsgCreate) Reset()         { *m = MsgCreate{} }
+func (m *MsgCreate) String() string { return proto.CompactTextString(m) }
+func (*MsgCreate) ProtoMessage()    {}
+func (*MsgCreate) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2e84bf6b55a05af7, []int{0}
 }
-func (m *MsgCreateVault) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreate) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgCreateVault) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreate) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgCreateVault.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreate.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -53,48 +53,48 @@ func (m *MsgCreateVault) XXX_Marshal(b []byte, deterministic bool) ([]byte, erro
 		return b[:n], nil
 	}
 }
-func (m *MsgCreateVault) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgCreateVault.Merge(m, src)
+func (m *MsgCreate) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreate.Merge(m, src)
 }
-func (m *MsgCreateVault) XXX_Size() int {
+func (m *MsgCreate) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgCreateVault) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgCreateVault.DiscardUnknown(m)
+func (m *MsgCreate) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreate.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgCreateVault proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreate proto.InternalMessageInfo
 
-func (m *MsgCreateVault) GetCreator() string {
+func (m *MsgCreate) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgCreateVault) GetCollateral() string {
+func (m *MsgCreate) GetCollateral() string {
 	if m != nil {
 		return m.Collateral
 	}
 	return ""
 }
 
-type MsgCreateVaultResponse struct {
+type MsgCreateResponse struct {
 	Uid uint64 `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
 }
 
-func (m *MsgCreateVaultResponse) Reset()         { *m = MsgCreateVaultResponse{} }
-func (m *MsgCreateVaultResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgCreateVaultResponse) ProtoMessage()    {}
-func (*MsgCreateVaultResponse) Descriptor() ([]byte, []int) {
+func (m *MsgCreateResponse) Reset()         { *m = MsgCreateResponse{} }
+func (m *MsgCreateResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateResponse) ProtoMessage()    {}
+func (*MsgCreateResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2e84bf6b55a05af7, []int{1}
 }
-func (m *MsgCreateVaultResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreateResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgCreateVaultResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreateResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgCreateVaultResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreateResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -104,19 +104,19 @@ func (m *MsgCreateVaultResponse) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *MsgCreateVaultResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgCreateVaultResponse.Merge(m, src)
+func (m *MsgCreateResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateResponse.Merge(m, src)
 }
-func (m *MsgCreateVaultResponse) XXX_Size() int {
+func (m *MsgCreateResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgCreateVaultResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgCreateVaultResponse.DiscardUnknown(m)
+func (m *MsgCreateResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgCreateVaultResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreateResponse proto.InternalMessageInfo
 
-func (m *MsgCreateVaultResponse) GetUid() uint64 {
+func (m *MsgCreateResponse) GetUid() uint64 {
 	if m != nil {
 		return m.Uid
 	}
@@ -420,8 +420,8 @@ func (m *MsgLiquidateResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgLiquidateResponse proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*MsgCreateVault)(nil), "reserve.MsgCreateVault")
-	proto.RegisterType((*MsgCreateVaultResponse)(nil), "reserve.MsgCreateVaultResponse")
+	proto.RegisterType((*MsgCreate)(nil), "reserve.MsgCreate")
+	proto.RegisterType((*MsgCreateResponse)(nil), "reserve.MsgCreateResponse")
 	proto.RegisterType((*MsgDeposit)(nil), "reserve.MsgDeposit")
 	proto.RegisterType((*MsgDepositResponse)(nil), "reserve.MsgDepositResponse")
 	proto.RegisterType((*MsgWithdraw)(nil), "reserve.MsgWithdraw")
@@ -433,29 +433,29 @@ func init() {
 func init() { proto.RegisterFile("reserve/tx.proto", fileDescriptor_2e84bf6b55a05af7) }
 
 var fileDescriptor_2e84bf6b55a05af7 = []byte{
-	// 352 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x93, 0x4d, 0x4b, 0x33, 0x31,
-	0x10, 0xc7, 0xbb, 0x6d, 0x79, 0xfa, 0x74, 0x2a, 0x52, 0xd2, 0xb7, 0x65, 0xd5, 0x28, 0x7b, 0x12,
-	0x0f, 0x2d, 0xea, 0xad, 0x82, 0xe0, 0x0b, 0x08, 0xd2, 0xbd, 0xf4, 0xa0, 0xe0, 0x2d, 0xb6, 0x61,
-	0x0d, 0x2c, 0xcd, 0x9a, 0xa4, 0x5a, 0xbf, 0x84, 0xf8, 0xb1, 0x3c, 0xf6, 0xe8, 0x51, 0xda, 0x2f,
-	0x22, 0x5d, 0x37, 0x69, 0x2a, 0xab, 0x20, 0xde, 0x26, 0xbf, 0xcc, 0xff, 0x3f, 0xc3, 0x0c, 0x03,
-	0x55, 0x41, 0x25, 0x15, 0x0f, 0xb4, 0xa3, 0x26, 0xed, 0x58, 0x70, 0xc5, 0x51, 0x29, 0x25, 0xfe,
-	0x25, 0xac, 0x07, 0x32, 0x3c, 0x13, 0x94, 0x28, 0x7a, 0x45, 0xc6, 0x91, 0x42, 0x2e, 0x94, 0x06,
-	0x8b, 0x27, 0x17, 0xae, 0xb3, 0xe3, 0xec, 0x96, 0xfb, 0xfa, 0x89, 0x30, 0xc0, 0x80, 0x47, 0x11,
-	0x51, 0x54, 0x90, 0xc8, 0xcd, 0x27, 0x9f, 0x16, 0xf1, 0xf7, 0xa0, 0xb9, 0xea, 0xd5, 0xa7, 0x32,
-	0xe6, 0x23, 0x49, 0x51, 0x15, 0x0a, 0x63, 0x36, 0x4c, 0xfc, 0x8a, 0xfd, 0x45, 0xe8, 0xf7, 0x00,
-	0x02, 0x19, 0x9e, 0xd3, 0x98, 0x4b, 0xf6, 0x53, 0xcd, 0x54, 0xf9, 0x59, 0x6c, 0x11, 0x22, 0x04,
-	0xc5, 0x01, 0x67, 0x23, 0xb7, 0x90, 0xa0, 0x24, 0xf6, 0xbb, 0x80, 0x96, 0x6e, 0x59, 0x55, 0xbf,
-	0x68, 0xf3, 0x96, 0x36, 0x80, 0x4a, 0x20, 0xc3, 0x6b, 0xa6, 0xee, 0x86, 0x82, 0x3c, 0xfe, 0xb9,
-	0x95, 0x06, 0xd4, 0x2c, 0x3b, 0xdd, 0x8b, 0xdf, 0x85, 0xb5, 0x40, 0x86, 0x3d, 0x76, 0x3f, 0x66,
-	0x43, 0xa2, 0xe8, 0x6f, 0xca, 0xf8, 0x4d, 0xa8, 0xdb, 0x5a, 0xed, 0x79, 0xf0, 0x9c, 0x87, 0x42,
-	0x20, 0x43, 0x74, 0x01, 0x15, 0x7b, 0x81, 0xad, 0x76, 0xba, 0xdc, 0xf6, 0xea, 0x36, 0xbc, 0xed,
-	0x6f, 0x3e, 0xcc, 0xc0, 0x8e, 0xa0, 0xa4, 0x37, 0x52, 0xb3, 0x73, 0x53, 0xe8, 0x6d, 0x64, 0x40,
-	0x23, 0x3e, 0x86, 0xff, 0x66, 0x88, 0x75, 0x3b, 0x51, 0x53, 0x6f, 0x33, 0x8b, 0x1a, 0xfd, 0x09,
-	0x94, 0x97, 0xe3, 0x69, 0xd8, 0xa9, 0x06, 0x7b, 0x5b, 0x99, 0x58, 0x5b, 0x9c, 0xee, 0xbf, 0xce,
-	0xb0, 0x33, 0x9d, 0x61, 0xe7, 0x7d, 0x86, 0x9d, 0x97, 0x39, 0xce, 0x4d, 0xe7, 0x38, 0xf7, 0x36,
-	0xc7, 0xb9, 0x9b, 0x96, 0xbe, 0x80, 0x49, 0xc7, 0xdc, 0xc2, 0x53, 0x4c, 0xe5, 0xed, 0xbf, 0xe4,
-	0x1e, 0x0e, 0x3f, 0x02, 0x00, 0x00, 0xff, 0xff, 0xb9, 0x19, 0x7c, 0x50, 0x23, 0x03, 0x00, 0x00,
+	// 343 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x92, 0xcf, 0x4e, 0x02, 0x31,
+	0x10, 0xc6, 0x59, 0x20, 0x20, 0xa3, 0x07, 0x2c, 0xa0, 0x9b, 0x55, 0x1b, 0xd3, 0xc4, 0xc4, 0x13,
+	0x44, 0xbd, 0x18, 0x4c, 0x4c, 0xfc, 0x77, 0xa3, 0x17, 0x2e, 0x26, 0xde, 0x56, 0x68, 0xd6, 0x26,
+	0x84, 0xae, 0x6d, 0x51, 0x7c, 0x0b, 0x1f, 0xcb, 0x23, 0x47, 0x8f, 0x06, 0x1e, 0x44, 0xb3, 0xeb,
+	0xb6, 0x34, 0xb2, 0xe1, 0xe2, 0x6d, 0xf6, 0xb7, 0xf3, 0x7d, 0xd3, 0xcc, 0x37, 0x50, 0x97, 0x4c,
+	0x31, 0xf9, 0xc2, 0x3a, 0x7a, 0xda, 0x8e, 0xa5, 0xd0, 0x02, 0x55, 0x33, 0x42, 0xee, 0xa0, 0x46,
+	0x55, 0x74, 0x23, 0x59, 0xa8, 0x19, 0xf2, 0xa1, 0x3a, 0x48, 0x2a, 0x21, 0x7d, 0xef, 0xd0, 0x3b,
+	0xae, 0xf5, 0xcd, 0x27, 0xc2, 0x00, 0x03, 0x31, 0x1a, 0x85, 0x9a, 0xc9, 0x70, 0xe4, 0x17, 0xd3,
+	0x9f, 0x0e, 0x21, 0x47, 0xb0, 0x6d, 0x6d, 0xfa, 0x4c, 0xc5, 0x62, 0xac, 0x18, 0xaa, 0x43, 0x69,
+	0xc2, 0x87, 0xa9, 0x55, 0xb9, 0x9f, 0x94, 0xa4, 0x07, 0x40, 0x55, 0x74, 0xcb, 0x62, 0xa1, 0xb8,
+	0x5e, 0x33, 0x2e, 0x53, 0xfe, 0xce, 0x49, 0x4a, 0x84, 0xa0, 0x3c, 0x10, 0x7c, 0xec, 0x97, 0x52,
+	0x94, 0xd6, 0xa4, 0x0b, 0x68, 0xe9, 0x96, 0x37, 0xf5, 0x8f, 0xb6, 0xe8, 0x68, 0x29, 0x6c, 0x52,
+	0x15, 0xdd, 0x73, 0xfd, 0x34, 0x94, 0xe1, 0xeb, 0xbf, 0x9f, 0xd2, 0x82, 0x86, 0x63, 0x67, 0xde,
+	0x42, 0xba, 0xb0, 0x45, 0x55, 0xd4, 0xe3, 0xcf, 0x13, 0x3e, 0x5c, 0xbf, 0xe0, 0x95, 0x31, 0x64,
+	0x07, 0x9a, 0xae, 0xd6, 0x78, 0x9e, 0x7e, 0x7b, 0x50, 0xa2, 0x2a, 0x42, 0xe7, 0x50, 0xc9, 0x62,
+	0x43, 0xed, 0x2c, 0xcd, 0xb6, 0xcd, 0x20, 0x08, 0x56, 0x99, 0xdd, 0xd0, 0x05, 0x54, 0x4d, 0x04,
+	0x0d, 0xb7, 0x2d, 0x83, 0xc1, 0x5e, 0x0e, 0xb4, 0xe2, 0x4b, 0xd8, 0xb0, 0x5b, 0x6b, 0xba, 0x8d,
+	0x86, 0x06, 0xfb, 0x79, 0xd4, 0xea, 0xaf, 0xa0, 0xb6, 0xdc, 0x47, 0xcb, 0x6d, 0xb5, 0x38, 0x38,
+	0xc8, 0xc5, 0xc6, 0xe2, 0xfa, 0xe4, 0x63, 0x8e, 0xbd, 0xd9, 0x1c, 0x7b, 0x5f, 0x73, 0xec, 0xbd,
+	0x2f, 0x70, 0x61, 0xb6, 0xc0, 0x85, 0xcf, 0x05, 0x2e, 0x3c, 0xec, 0x9a, 0x43, 0x9f, 0x76, 0xec,
+	0xc9, 0xbf, 0xc5, 0x4c, 0x3d, 0x56, 0xd2, 0xb3, 0x3f, 0xfb, 0x09, 0x00, 0x00, 0xff, 0xff, 0x11,
+	0x3b, 0x01, 0xd8, 0x0a, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -470,7 +470,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	CreateVault(ctx context.Context, in *MsgCreateVault, opts ...grpc.CallOption) (*MsgCreateVaultResponse, error)
+	Create(ctx context.Context, in *MsgCreate, opts ...grpc.CallOption) (*MsgCreateResponse, error)
 	Deposit(ctx context.Context, in *MsgDeposit, opts ...grpc.CallOption) (*MsgDepositResponse, error)
 	Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.CallOption) (*MsgWithdrawResponse, error)
 	Liquidate(ctx context.Context, in *MsgLiquidate, opts ...grpc.CallOption) (*MsgLiquidateResponse, error)
@@ -484,9 +484,9 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) CreateVault(ctx context.Context, in *MsgCreateVault, opts ...grpc.CallOption) (*MsgCreateVaultResponse, error) {
-	out := new(MsgCreateVaultResponse)
-	err := c.cc.Invoke(ctx, "/reserve.Msg/CreateVault", in, out, opts...)
+func (c *msgClient) Create(ctx context.Context, in *MsgCreate, opts ...grpc.CallOption) (*MsgCreateResponse, error) {
+	out := new(MsgCreateResponse)
+	err := c.cc.Invoke(ctx, "/reserve.Msg/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -522,7 +522,7 @@ func (c *msgClient) Liquidate(ctx context.Context, in *MsgLiquidate, opts ...grp
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	CreateVault(context.Context, *MsgCreateVault) (*MsgCreateVaultResponse, error)
+	Create(context.Context, *MsgCreate) (*MsgCreateResponse, error)
 	Deposit(context.Context, *MsgDeposit) (*MsgDepositResponse, error)
 	Withdraw(context.Context, *MsgWithdraw) (*MsgWithdrawResponse, error)
 	Liquidate(context.Context, *MsgLiquidate) (*MsgLiquidateResponse, error)
@@ -532,8 +532,8 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) CreateVault(ctx context.Context, req *MsgCreateVault) (*MsgCreateVaultResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateVault not implemented")
+func (*UnimplementedMsgServer) Create(ctx context.Context, req *MsgCreate) (*MsgCreateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
 func (*UnimplementedMsgServer) Deposit(ctx context.Context, req *MsgDeposit) (*MsgDepositResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Deposit not implemented")
@@ -549,20 +549,20 @@ func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_CreateVault_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgCreateVault)
+func _Msg_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreate)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).CreateVault(ctx, in)
+		return srv.(MsgServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/reserve.Msg/CreateVault",
+		FullMethod: "/reserve.Msg/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).CreateVault(ctx, req.(*MsgCreateVault))
+		return srv.(MsgServer).Create(ctx, req.(*MsgCreate))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -626,8 +626,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateVault",
-			Handler:    _Msg_CreateVault_Handler,
+			MethodName: "Create",
+			Handler:    _Msg_Create_Handler,
 		},
 		{
 			MethodName: "Deposit",
@@ -646,7 +646,7 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	Metadata: "reserve/tx.proto",
 }
 
-func (m *MsgCreateVault) Marshal() (dAtA []byte, err error) {
+func (m *MsgCreate) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -656,12 +656,12 @@ func (m *MsgCreateVault) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgCreateVault) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCreate) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgCreateVault) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCreate) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -683,7 +683,7 @@ func (m *MsgCreateVault) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgCreateVaultResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgCreateResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -693,12 +693,12 @@ func (m *MsgCreateVaultResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgCreateVaultResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCreateResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgCreateVaultResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCreateResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -930,7 +930,7 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgCreateVault) Size() (n int) {
+func (m *MsgCreate) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -947,7 +947,7 @@ func (m *MsgCreateVault) Size() (n int) {
 	return n
 }
 
-func (m *MsgCreateVaultResponse) Size() (n int) {
+func (m *MsgCreateResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1059,7 +1059,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgCreateVault) Unmarshal(dAtA []byte) error {
+func (m *MsgCreate) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1082,10 +1082,10 @@ func (m *MsgCreateVault) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgCreateVault: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreate: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgCreateVault: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreate: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1173,7 +1173,7 @@ func (m *MsgCreateVault) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgCreateVaultResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgCreateResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1196,10 +1196,10 @@ func (m *MsgCreateVaultResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgCreateVaultResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreateResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgCreateVaultResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreateResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

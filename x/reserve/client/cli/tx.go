@@ -39,7 +39,7 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdCreateVault())
+	cmd.AddCommand(CmdCreate())
 	cmd.AddCommand(CmdDeposit())
 	cmd.AddCommand(CmdWithdraw())
 	cmd.AddCommand(CmdLiquidate())
