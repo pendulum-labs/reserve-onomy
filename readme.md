@@ -12,6 +12,8 @@ The Onomy Reserve
 
 `collateralization ratio` is the ratio of value of denoms minted to the collateral stored within a vault
 
+`vault ratio` is the collateralization ratio of a vault at a given moment
+
 `minter` is a user that mints stablecoins
 
 `saver` is a user that bonds stablecoins for interest
@@ -20,9 +22,7 @@ The Onomy Reserve
 
 ## Reserve Parameters
 
-`vault ratio` is the collateralization ratio of a vault at a given moment
-
-`minting ratio` is the minimum vault ratio at which a specific denom may be minted.  Collateralization ratio must be greater than minting ratio for minter to withdraw collateral.  Collateral is locked in vault if collateralization ratio of the vault goes below the minting ratio.
+`minting ratio` is the minimum vault ratio at which a specific denom may be minted or collateral withdrawn
 
 `liquidation ratio` is the vault ratio at which the vault for a specific denom may be liquidated by a liquidator
 
@@ -43,6 +43,10 @@ The Onomy Reserve
 `withdraw` collateral or denoms from vault.  Withdrawal of collateral or denoms dependent on collateralization ratio.
 
 `liquidate` vaults whose collateral ratios drop below the liquidation ratio
+
+`bond` denoms to the reserve to earn savings interest
+
+`unbond` denoms that have been bonded to the reserve
 
 ## Reserve Governance
 
