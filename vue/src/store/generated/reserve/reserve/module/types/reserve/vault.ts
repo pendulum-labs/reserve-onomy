@@ -8,7 +8,6 @@ export const protobufPackage = "reserve";
 export interface Vault {
   uid: number;
   owner: string;
-  name: string;
   status: string;
   collateral: Coin | undefined;
   denom: Coin | undefined;
@@ -18,7 +17,7 @@ export interface VaultMap {
   uid: number;
 }
 
-const baseVault: object = { uid: 0, owner: "", name: "", status: "" };
+const baseVault: object = { uid: 0, owner: "", status: "" };
 
 export const Vault = {
   encode(message: Vault, writer: Writer = Writer.create()): Writer {
@@ -27,9 +26,6 @@ export const Vault = {
     }
     if (message.owner !== "") {
       writer.uint32(18).string(message.owner);
-    }
-    if (message.name !== "") {
-      writer.uint32(26).string(message.name);
     }
     if (message.status !== "") {
       writer.uint32(34).string(message.status);
@@ -55,9 +51,6 @@ export const Vault = {
           break;
         case 2:
           message.owner = reader.string();
-          break;
-        case 3:
-          message.name = reader.string();
           break;
         case 4:
           message.status = reader.string();
@@ -88,11 +81,6 @@ export const Vault = {
     } else {
       message.owner = "";
     }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = "";
-    }
     if (object.status !== undefined && object.status !== null) {
       message.status = String(object.status);
     } else {
@@ -115,7 +103,6 @@ export const Vault = {
     const obj: any = {};
     message.uid !== undefined && (obj.uid = message.uid);
     message.owner !== undefined && (obj.owner = message.owner);
-    message.name !== undefined && (obj.name = message.name);
     message.status !== undefined && (obj.status = message.status);
     message.collateral !== undefined &&
       (obj.collateral = message.collateral
@@ -137,11 +124,6 @@ export const Vault = {
       message.owner = object.owner;
     } else {
       message.owner = "";
-    }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = "";
     }
     if (object.status !== undefined && object.status !== null) {
       message.status = object.status;

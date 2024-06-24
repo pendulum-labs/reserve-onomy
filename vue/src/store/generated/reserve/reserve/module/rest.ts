@@ -97,7 +97,6 @@ export interface ReserveVault {
   /** @format uint64 */
   uid?: string;
   owner?: string;
-  name?: string;
   status?: string;
 
   /**
