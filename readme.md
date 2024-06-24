@@ -58,6 +58,10 @@ The Onomy Reserve
 
 `update-liquidation-ratio` is a governance proposal that updates the liquidation ratio for a denom
 
+`update-minting-interest-rate` is a governance proposal that updates the minting interest rate for a denom
+
+`update-savings-interest-rate` is a governance proposal that updates the savings interest rate for a denom
+
 ## Development
 
 **reserve** is a blockchain module built using Cosmos SDK and Tendermint and created with [Ignite](https://github.com/ignite/cli).
