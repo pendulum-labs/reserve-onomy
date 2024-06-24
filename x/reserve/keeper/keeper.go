@@ -55,3 +55,22 @@ func NewKeeper(
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
+
+func addUid(s []uint64, r uint64) ([]uint64, bool) {
+	for _, v := range s {
+		if v == r {
+			return s, false
+		}
+	}
+
+	return append(s, r), true
+}
+
+func removeUid(s []uint64, r uint64) ([]uint64, bool) {
+	for i, v := range s {
+		if v == r {
+			return append(s[:i], s[i+1:]...), true
+		}
+	}
+	return s, false
+}

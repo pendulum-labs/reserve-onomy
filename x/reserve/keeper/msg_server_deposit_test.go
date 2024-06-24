@@ -23,7 +23,7 @@ func commonDeposit(t *testing.T) (vault types.Vault) {
 	testInput := keepertest.CreateTestEnvironment(t)
 
 	// TestData
-	testdata := testData{coinAStr: "20CoinA", coinBStr: "20CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}, name: "testvault"}
+	testdata := testData{coinAStr: "20CoinA", coinBStr: "20CoinB", name: "testvault"}
 	coinPair, _ := sample.SampleCoins(testdata.coinAStr, testdata.coinBStr)
 
 	// MintCoins
@@ -38,7 +38,7 @@ func commonDeposit(t *testing.T) (vault types.Vault) {
 	beforecount := testInput.MarketKeeper.GetUidCount(testInput.Context)
 
 	// Create Vault
-	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr, Name: testdata.name}
+	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr}
 	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
 
 	// Validate CreateVault
@@ -65,7 +65,7 @@ func TestDeposit(t *testing.T) {
 func TestDeposit_Insufficient_Funds(t *testing.T) {
 	testInput := keepertest.CreateTestEnvironment(t)
 	//TestData
-	testdata := testData{coinAStr: "15CoinA", coinBStr: "15CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}}
+	testdata := testData{coinAStr: "15CoinA"}
 	coinPair, _ := sample.SampleCoins("10CoinA", "10CoinB")
 
 	require.NoError(t, testInput.BankKeeper.MintCoins(testInput.Context, markettypes.ModuleName, coinPair))
@@ -73,7 +73,7 @@ func TestDeposit_Insufficient_Funds(t *testing.T) {
 	require.NoError(t, testInput.BankKeeper.SendCoinsFromModuleToAccount(testInput.Context, markettypes.ModuleName, requestAddress, coinPair))
 
 	// Create Vault
-	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr, Name: testdata.name}
+	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr}
 	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
 
 	require.Error(t, err)
@@ -84,7 +84,7 @@ func TestDeposit_Insufficient_Funds(t *testing.T) {
 func TestDeposit_With_New_Creator(t *testing.T) {
 	testInput := keepertest.CreateTestEnvironment(t)
 	//TestData
-	testdata := testData{coinAStr: "15CoinA", coinBStr: "15CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}}
+	testdata := testData{coinAStr: "15CoinA", coinBStr: "15CoinB"}
 	coinPair, _ := sample.SampleCoins("10CoinA", "10CoinB")
 
 	require.NoError(t, testInput.BankKeeper.MintCoins(testInput.Context, markettypes.ModuleName, coinPair))

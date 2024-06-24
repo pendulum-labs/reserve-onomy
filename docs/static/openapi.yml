@@ -28918,16 +28918,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/bookends/{coinA}/{coinB}/{orderType}/{rate}':
@@ -29142,16 +29132,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/burnings/{denom}':
@@ -29316,16 +29296,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/drop/amounts/{uid}':
@@ -29419,7 +29389,7 @@ paths:
           type: string
       tags:
         - Query
-  '/pendulum-labs/market/market/drop/coins/{pair}/{drops}':
+  '/pendulum-labs/market/market/drop/coins/{denom1}/{denom2}/{drops}':
     get:
       summary: Converts drops to coin amounts
       operationId: PendulumlabsMarketMarketDropsToCoins
@@ -29431,9 +29401,9 @@ paths:
             properties:
               denom1:
                 type: string
-              denom2:
-                type: string
               amount1:
+                type: string
+              denom2:
                 type: string
               amount2:
                 type: string
@@ -29456,7 +29426,11 @@ paths:
                       type: string
                   additionalProperties: {}
       parameters:
-        - name: pair
+        - name: denom1
+          in: path
+          required: true
+          type: string
+        - name: denom2
           in: path
           required: true
           type: string
@@ -29630,16 +29604,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -29843,16 +29807,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   /pendulum-labs/market/market/member:
@@ -29975,16 +29929,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -30186,16 +30130,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/order/uids/{address}':
@@ -30309,16 +30243,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -30463,16 +30387,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -30742,16 +30656,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/pool/{pair}':
@@ -30985,16 +30889,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -31325,16 +31219,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   /reserve/vaults/default:
@@ -31480,16 +31364,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -31642,16 +31516,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -50880,6 +50744,20 @@ definitions:
     type: object
   pendulumlabs.market.market.MsgCreateDropResponse:
     type: object
+    properties:
+      creator:
+        type: string
+      uid:
+        type: string
+        format: uint64
+      pair:
+        type: string
+      drops:
+        type: string
+      coin1:
+        type: string
+      coin2:
+        type: string
   pendulumlabs.market.market.MsgCreateOrderResponse:
     type: object
     properties:
@@ -50888,9 +50766,25 @@ definitions:
         format: uint64
   pendulumlabs.market.market.MsgCreatePoolResponse:
     type: object
+    properties:
+      creator:
+        type: string
+      drop_uid:
+        type: string
+        format: uint64
+      pair:
+        type: string
+      drops:
+        type: string
+      coin1:
+        type: string
+      coin2:
+        type: string
   pendulumlabs.market.market.MsgMarketOrderResponse:
     type: object
     properties:
+      uid:
+        type: string
       amountBid:
         type: string
       amountAsk:
@@ -50899,6 +50793,20 @@ definitions:
         type: string
   pendulumlabs.market.market.MsgRedeemDropResponse:
     type: object
+    properties:
+      creator:
+        type: string
+      uid:
+        type: string
+        format: uint64
+      pair:
+        type: string
+      drops:
+        type: string
+      coin1:
+        type: string
+      coin2:
+        type: string
   pendulumlabs.market.market.Order:
     type: object
     properties:
@@ -51400,6 +51308,17 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
+  pendulumlabs.market.market.QueryDropsToCoinsResponse:
+    type: object
+    properties:
+      denom1:
+        type: string
+      amount1:
+        type: string
+      denom2:
+        type: string
+      amount2:
+        type: string
   pendulumlabs.market.market.QueryGetBurningsResponse:
     type: object
     properties:
