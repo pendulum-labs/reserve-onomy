@@ -13,7 +13,6 @@ func NewMsgCreateVault(creator string, collateral string, name string) *MsgCreat
 	return &MsgCreateVault{
 		Creator:    creator,
 		Collateral: collateral,
-		Name:       name,
 	}
 }
 

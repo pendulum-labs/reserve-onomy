@@ -28,7 +28,7 @@ func TestCreateVault(t *testing.T) {
 	testInput := keepertest.CreateTestEnvironment(t)
 
 	// TestData
-	testdata := testData{coinAStr: "20CoinA", coinBStr: "20CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}, name: "testvault"}
+	testdata := testData{coinAStr: "20CoinA", coinBStr: "20CoinB", name: "testvault"}
 	coinPair, _ := sample.SampleCoins(testdata.coinAStr, testdata.coinBStr)
 
 	// MintCoins
@@ -43,7 +43,7 @@ func TestCreateVault(t *testing.T) {
 	beforecount := testInput.MarketKeeper.GetUidCount(testInput.Context)
 
 	// Create Vault
-	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr, Name: testdata.name}
+	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr}
 	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
 
 	// Validate CreateVault

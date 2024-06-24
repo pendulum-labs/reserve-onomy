@@ -17,7 +17,6 @@ service Msg {
 message MsgCreateVault {
   string creator = 1;
   string collateral = 2;
-  string name = 3;
 }
 
 message MsgCreateVaultResponse {

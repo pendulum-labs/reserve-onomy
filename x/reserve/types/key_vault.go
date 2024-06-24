@@ -24,19 +24,3 @@ func VaultKey(
 
 	return key
 }
-
-// VaultsKey returns the store key to retrieve a Drop from the index fields
-func VaultMapKey(
-	owner string,
-	name string,
-) []byte {
-	var key []byte
-
-	ownerBytes := []byte(owner)
-	key = append(key, ownerBytes...)
-	nameBytes := []byte(name)
-	key = append(key, nameBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
-}

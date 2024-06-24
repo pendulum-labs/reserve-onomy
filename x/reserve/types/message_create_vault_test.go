@@ -26,7 +26,6 @@ func TestMsgCreateVault_ValidateBasic(t *testing.T) {
 			msg: MsgCreateVault{
 				Creator:    sample.AccAddress(),
 				Collateral: "20coin",
-				Name:       "test",
 			},
 		},
 	}

@@ -7,7 +7,6 @@ export const protobufPackage = "reserve";
 export interface MsgCreateVault {
   creator: string;
   collateral: string;
-  name: string;
 }
 
 export interface MsgCreateVaultResponse {
@@ -40,7 +39,7 @@ export interface MsgLiquidate {
 
 export interface MsgLiquidateResponse {}
 
-const baseMsgCreateVault: object = { creator: "", collateral: "", name: "" };
+const baseMsgCreateVault: object = { creator: "", collateral: "" };
 
 export const MsgCreateVault = {
   encode(message: MsgCreateVault, writer: Writer = Writer.create()): Writer {
@@ -49,9 +48,6 @@ export const MsgCreateVault = {
     }
     if (message.collateral !== "") {
       writer.uint32(18).string(message.collateral);
-    }
-    if (message.name !== "") {
-      writer.uint32(26).string(message.name);
     }
     return writer;
   },
@@ -68,9 +64,6 @@ export const MsgCreateVault = {
           break;
         case 2:
           message.collateral = reader.string();
-          break;
-        case 3:
-          message.name = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -92,11 +85,6 @@ export const MsgCreateVault = {
     } else {
       message.collateral = "";
     }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = "";
-    }
     return message;
   },
 
@@ -104,7 +92,6 @@ export const MsgCreateVault = {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.collateral !== undefined && (obj.collateral = message.collateral);
-    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 
@@ -119,11 +106,6 @@ export const MsgCreateVault = {
       message.collateral = object.collateral;
     } else {
       message.collateral = "";
-    }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = "";
     }
     return message;
   },
