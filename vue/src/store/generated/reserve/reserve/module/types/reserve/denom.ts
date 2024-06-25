@@ -8,9 +8,25 @@ export interface Denom {
   base: string;
   display: string;
   init_time: number;
+  /** Positive Interest rate on denom debt pool */
+  debt_interest_rate: string;
+  /** Total shares of the denom debt pool */
+  debt_shares: string;
+  /** Negative Interest rate on Denoms Bonded */
+  bond_interest_rate: string;
+  /** Total shares of the denom bond pool */
+  bond_shares: string;
 }
 
-const baseDenom: object = { base: "", display: "", init_time: 0 };
+const baseDenom: object = {
+  base: "",
+  display: "",
+  init_time: 0,
+  debt_interest_rate: "",
+  debt_shares: "",
+  bond_interest_rate: "",
+  bond_shares: "",
+};
 
 export const Denom = {
   encode(message: Denom, writer: Writer = Writer.create()): Writer {
@@ -22,6 +38,18 @@ export const Denom = {
     }
     if (message.init_time !== 0) {
       writer.uint32(24).int64(message.init_time);
+    }
+    if (message.debt_interest_rate !== "") {
+      writer.uint32(42).string(message.debt_interest_rate);
+    }
+    if (message.debt_shares !== "") {
+      writer.uint32(50).string(message.debt_shares);
+    }
+    if (message.bond_interest_rate !== "") {
+      writer.uint32(58).string(message.bond_interest_rate);
+    }
+    if (message.bond_shares !== "") {
+      writer.uint32(66).string(message.bond_shares);
     }
     return writer;
   },
@@ -41,6 +69,18 @@ export const Denom = {
           break;
         case 3:
           message.init_time = longToNumber(reader.int64() as Long);
+          break;
+        case 5:
+          message.debt_interest_rate = reader.string();
+          break;
+        case 6:
+          message.debt_shares = reader.string();
+          break;
+        case 7:
+          message.bond_interest_rate = reader.string();
+          break;
+        case 8:
+          message.bond_shares = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -67,6 +107,32 @@ export const Denom = {
     } else {
       message.init_time = 0;
     }
+    if (
+      object.debt_interest_rate !== undefined &&
+      object.debt_interest_rate !== null
+    ) {
+      message.debt_interest_rate = String(object.debt_interest_rate);
+    } else {
+      message.debt_interest_rate = "";
+    }
+    if (object.debt_shares !== undefined && object.debt_shares !== null) {
+      message.debt_shares = String(object.debt_shares);
+    } else {
+      message.debt_shares = "";
+    }
+    if (
+      object.bond_interest_rate !== undefined &&
+      object.bond_interest_rate !== null
+    ) {
+      message.bond_interest_rate = String(object.bond_interest_rate);
+    } else {
+      message.bond_interest_rate = "";
+    }
+    if (object.bond_shares !== undefined && object.bond_shares !== null) {
+      message.bond_shares = String(object.bond_shares);
+    } else {
+      message.bond_shares = "";
+    }
     return message;
   },
 
@@ -75,6 +141,14 @@ export const Denom = {
     message.base !== undefined && (obj.base = message.base);
     message.display !== undefined && (obj.display = message.display);
     message.init_time !== undefined && (obj.init_time = message.init_time);
+    message.debt_interest_rate !== undefined &&
+      (obj.debt_interest_rate = message.debt_interest_rate);
+    message.debt_shares !== undefined &&
+      (obj.debt_shares = message.debt_shares);
+    message.bond_interest_rate !== undefined &&
+      (obj.bond_interest_rate = message.bond_interest_rate);
+    message.bond_shares !== undefined &&
+      (obj.bond_shares = message.bond_shares);
     return obj;
   },
 
@@ -94,6 +168,32 @@ export const Denom = {
       message.init_time = object.init_time;
     } else {
       message.init_time = 0;
+    }
+    if (
+      object.debt_interest_rate !== undefined &&
+      object.debt_interest_rate !== null
+    ) {
+      message.debt_interest_rate = object.debt_interest_rate;
+    } else {
+      message.debt_interest_rate = "";
+    }
+    if (object.debt_shares !== undefined && object.debt_shares !== null) {
+      message.debt_shares = object.debt_shares;
+    } else {
+      message.debt_shares = "";
+    }
+    if (
+      object.bond_interest_rate !== undefined &&
+      object.bond_interest_rate !== null
+    ) {
+      message.bond_interest_rate = object.bond_interest_rate;
+    } else {
+      message.bond_interest_rate = "";
+    }
+    if (object.bond_shares !== undefined && object.bond_shares !== null) {
+      message.bond_shares = object.bond_shares;
+    } else {
+      message.bond_shares = "";
     }
     return message;
   },

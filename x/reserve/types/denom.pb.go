@@ -5,6 +5,7 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -27,6 +28,14 @@ type Denom struct {
 	Base     string `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
 	Display  string `protobuf:"bytes,2,opt,name=display,proto3" json:"display,omitempty"`
 	InitTime int64  `protobuf:"varint,3,opt,name=init_time,json=initTime,proto3" json:"init_time,omitempty"`
+	// Positive Interest rate on denom debt pool
+	DebtInterestRate github_com_cosmos_cosmos_sdk_types.Uint `protobuf:"bytes,5,opt,name=debt_interest_rate,json=debtInterestRate,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"debt_interest_rate"`
+	// Total shares of the denom debt pool
+	DebtShares github_com_cosmos_cosmos_sdk_types.Uint `protobuf:"bytes,6,opt,name=debt_shares,json=debtShares,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"debt_shares"`
+	// Negative Interest rate on Denoms Bonded
+	BondInterestRate github_com_cosmos_cosmos_sdk_types.Uint `protobuf:"bytes,7,opt,name=bond_interest_rate,json=bondInterestRate,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"bond_interest_rate"`
+	// Total shares of the denom bond pool
+	BondShares github_com_cosmos_cosmos_sdk_types.Uint `protobuf:"bytes,8,opt,name=bond_shares,json=bondShares,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"bond_shares"`
 }
 
 func (m *Denom) Reset()         { *m = Denom{} }
@@ -90,19 +99,27 @@ func init() {
 func init() { proto.RegisterFile("reserve/denom.proto", fileDescriptor_26550448cb73c9b3) }
 
 var fileDescriptor_26550448cb73c9b3 = []byte{
-	// 179 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2e, 0x4a, 0x2d, 0x4e,
-	0x2d, 0x2a, 0x4b, 0xd5, 0x4f, 0x49, 0xcd, 0xcb, 0xcf, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17,
-	0x62, 0x87, 0x0a, 0x4a, 0x89, 0xa4, 0xe7, 0xa7, 0xe7, 0x83, 0xc5, 0xf4, 0x41, 0x2c, 0x88, 0xb4,
-	0x52, 0x10, 0x17, 0xab, 0x0b, 0x48, 0xb5, 0x90, 0x10, 0x17, 0x4b, 0x52, 0x62, 0x71, 0xaa, 0x04,
-	0xa3, 0x02, 0xa3, 0x06, 0x67, 0x10, 0x98, 0x2d, 0x24, 0xc1, 0xc5, 0x9e, 0x92, 0x59, 0x5c, 0x90,
-	0x93, 0x58, 0x29, 0xc1, 0x04, 0x16, 0x86, 0x71, 0x85, 0xa4, 0xb9, 0x38, 0x33, 0xf3, 0x32, 0x4b,
-	0xe2, 0x4b, 0x32, 0x73, 0x53, 0x25, 0x98, 0x15, 0x18, 0x35, 0x98, 0x83, 0x38, 0x40, 0x02, 0x21,
-	0x99, 0xb9, 0xa9, 0x4e, 0xa6, 0x2b, 0x1e, 0xc9, 0x31, 0x9e, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91,
-	0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3,
-	0xb1, 0x1c, 0x43, 0x94, 0x38, 0xcc, 0x95, 0x15, 0xfa, 0x30, 0x56, 0x49, 0x65, 0x41, 0x6a, 0x71,
-	0x12, 0x1b, 0xd8, 0x45, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0xb2, 0x83, 0x2b, 0x22, 0xc7,
-	0x00, 0x00, 0x00,
+	// 305 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0xc1, 0x4a, 0xc3, 0x30,
+	0x18, 0xc7, 0x1b, 0xe7, 0xd6, 0x2d, 0x5e, 0x24, 0x0a, 0x06, 0x85, 0x6c, 0x78, 0x71, 0x17, 0x9b,
+	0x83, 0xf8, 0x02, 0xc3, 0x8b, 0x37, 0xa9, 0x7a, 0x11, 0xa4, 0xb4, 0xeb, 0x47, 0x17, 0xb4, 0x4d,
+	0x49, 0xa2, 0xb8, 0xb7, 0xf0, 0x31, 0x7c, 0x00, 0x1f, 0x62, 0xc7, 0x1d, 0xc5, 0xc3, 0x90, 0xf6,
+	0x45, 0x24, 0x59, 0x7b, 0xd9, 0xb1, 0xa7, 0xfc, 0xf3, 0x4f, 0xf8, 0xf1, 0x83, 0xef, 0xc3, 0x47,
+	0x0a, 0x34, 0xa8, 0x77, 0xe0, 0x29, 0x14, 0x32, 0x0f, 0x4a, 0x25, 0x8d, 0x24, 0x7e, 0x53, 0x9e,
+	0x1e, 0x67, 0x32, 0x93, 0xae, 0xe3, 0x36, 0x6d, 0x9f, 0xcf, 0xbf, 0x7b, 0xb8, 0x7f, 0x63, 0xbf,
+	0x13, 0x82, 0xf7, 0x93, 0x58, 0x03, 0x45, 0x13, 0x34, 0x1d, 0x85, 0x2e, 0x13, 0x8a, 0xfd, 0x54,
+	0xe8, 0xf2, 0x35, 0x5e, 0xd2, 0x3d, 0x57, 0xb7, 0x57, 0x72, 0x86, 0x47, 0xa2, 0x10, 0x26, 0x32,
+	0x22, 0x07, 0xda, 0x9b, 0xa0, 0x69, 0x2f, 0x1c, 0xda, 0xe2, 0x41, 0xe4, 0x40, 0x9e, 0x31, 0x49,
+	0x21, 0x31, 0x91, 0x28, 0x0c, 0x28, 0xd0, 0x26, 0x52, 0xb1, 0x01, 0xda, 0xb7, 0x84, 0x19, 0x5f,
+	0x6d, 0xc6, 0xde, 0xef, 0x66, 0x7c, 0x91, 0x09, 0xb3, 0x78, 0x4b, 0x82, 0xb9, 0xcc, 0xf9, 0x5c,
+	0xea, 0x5c, 0xea, 0xe6, 0xb8, 0xd4, 0xe9, 0x0b, 0x37, 0xcb, 0x12, 0x74, 0xf0, 0x28, 0x0a, 0x13,
+	0x1e, 0x5a, 0xd4, 0x6d, 0x43, 0x0a, 0x63, 0x03, 0xe4, 0x0e, 0x1f, 0x38, 0xbc, 0x5e, 0xc4, 0x0a,
+	0x34, 0x1d, 0x74, 0xe3, 0x62, 0xcb, 0xb8, 0x77, 0x08, 0x2b, 0x9c, 0xc8, 0x22, 0xdd, 0x11, 0xf6,
+	0x3b, 0x0a, 0x5b, 0xd4, 0xae, 0xb0, 0xc3, 0x37, 0xc2, 0xc3, 0x8e, 0xc2, 0x96, 0xb1, 0x15, 0x9e,
+	0x5d, 0x7f, 0x55, 0x0c, 0xad, 0x2a, 0x86, 0xd6, 0x15, 0x43, 0x7f, 0x15, 0x43, 0x9f, 0x35, 0xf3,
+	0xd6, 0x35, 0xf3, 0x7e, 0x6a, 0xe6, 0x3d, 0x9d, 0xb4, 0x8b, 0xf0, 0xc1, 0xdb, 0xe4, 0x38, 0xc9,
+	0xc0, 0x0d, 0xfd, 0xea, 0x3f, 0x00, 0x00, 0xff, 0xff, 0x90, 0x2f, 0x34, 0x85, 0x2a, 0x02, 0x00,
+	0x00,
 }
 
 func (this *Denom) Equal(that interface{}) bool {
@@ -133,6 +150,18 @@ func (this *Denom) Equal(that interface{}) bool {
 	if this.InitTime != that1.InitTime {
 		return false
 	}
+	if !this.DebtInterestRate.Equal(that1.DebtInterestRate) {
+		return false
+	}
+	if !this.DebtShares.Equal(that1.DebtShares) {
+		return false
+	}
+	if !this.BondInterestRate.Equal(that1.BondInterestRate) {
+		return false
+	}
+	if !this.BondShares.Equal(that1.BondShares) {
+		return false
+	}
 	return true
 }
 func (m *Denom) Marshal() (dAtA []byte, err error) {
@@ -155,6 +184,46 @@ func (m *Denom) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	{
+		size := m.BondShares.Size()
+		i -= size
+		if _, err := m.BondShares.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintDenom(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x42
+	{
+		size := m.BondInterestRate.Size()
+		i -= size
+		if _, err := m.BondInterestRate.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintDenom(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x3a
+	{
+		size := m.DebtShares.Size()
+		i -= size
+		if _, err := m.DebtShares.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintDenom(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x32
+	{
+		size := m.DebtInterestRate.Size()
+		i -= size
+		if _, err := m.DebtInterestRate.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintDenom(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
 	if m.InitTime != 0 {
 		i = encodeVarintDenom(dAtA, i, uint64(m.InitTime))
 		i--
@@ -205,6 +274,14 @@ func (m *Denom) Size() (n int) {
 	if m.InitTime != 0 {
 		n += 1 + sovDenom(uint64(m.InitTime))
 	}
+	l = m.DebtInterestRate.Size()
+	n += 1 + l + sovDenom(uint64(l))
+	l = m.DebtShares.Size()
+	n += 1 + l + sovDenom(uint64(l))
+	l = m.BondInterestRate.Size()
+	n += 1 + l + sovDenom(uint64(l))
+	l = m.BondShares.Size()
+	n += 1 + l + sovDenom(uint64(l))
 	return n
 }
 
@@ -326,6 +403,142 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DebtInterestRate", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDenom
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDenom
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDenom
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DebtInterestRate.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DebtShares", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDenom
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDenom
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDenom
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.DebtShares.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BondInterestRate", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDenom
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDenom
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDenom
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BondInterestRate.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BondShares", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDenom
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDenom
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDenom
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BondShares.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipDenom(dAtA[iNdEx:])

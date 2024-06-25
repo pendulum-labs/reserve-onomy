@@ -10,4 +10,24 @@ message Denom {
   string base = 1;
   string display = 2;
   int64 init_time = 3;
+  // Positive Interest rate on denom debt pool
+  string debt_interest_rate = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+  // Total shares of the denom debt pool
+  string debt_shares = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+  // Negative Interest rate on Denoms Bonded
+  string bond_interest_rate = 7 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
+  // Total shares of the denom bond pool
+  string bond_shares = 8 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
 }
