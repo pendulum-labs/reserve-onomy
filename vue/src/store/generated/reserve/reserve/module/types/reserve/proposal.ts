@@ -10,7 +10,7 @@ export interface CreateDenomProposal {
   title: string;
   description: string;
   metadata: Metadata | undefined;
-  rate: string[];
+  exchange_rate: string[];
   collateral_deposit: string;
 }
 
@@ -29,7 +29,7 @@ const baseCreateDenomProposal: object = {
   sender: "",
   title: "",
   description: "",
-  rate: "",
+  exchange_rate: "",
   collateral_deposit: "",
 };
 
@@ -50,7 +50,7 @@ export const CreateDenomProposal = {
     if (message.metadata !== undefined) {
       Metadata.encode(message.metadata, writer.uint32(34).fork()).ldelim();
     }
-    for (const v of message.rate) {
+    for (const v of message.exchange_rate) {
       writer.uint32(42).string(v!);
     }
     if (message.collateral_deposit !== "") {
@@ -63,7 +63,7 @@ export const CreateDenomProposal = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
+    message.exchange_rate = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -80,7 +80,7 @@ export const CreateDenomProposal = {
           message.metadata = Metadata.decode(reader, reader.uint32());
           break;
         case 5:
-          message.rate.push(reader.string());
+          message.exchange_rate.push(reader.string());
           break;
         case 6:
           message.collateral_deposit = reader.string();
@@ -95,7 +95,7 @@ export const CreateDenomProposal = {
 
   fromJSON(object: any): CreateDenomProposal {
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
+    message.exchange_rate = [];
     if (object.sender !== undefined && object.sender !== null) {
       message.sender = String(object.sender);
     } else {
@@ -116,9 +116,9 @@ export const CreateDenomProposal = {
     } else {
       message.metadata = undefined;
     }
-    if (object.rate !== undefined && object.rate !== null) {
-      for (const e of object.rate) {
-        message.rate.push(String(e));
+    if (object.exchange_rate !== undefined && object.exchange_rate !== null) {
+      for (const e of object.exchange_rate) {
+        message.exchange_rate.push(String(e));
       }
     }
     if (
@@ -142,10 +142,10 @@ export const CreateDenomProposal = {
       (obj.metadata = message.metadata
         ? Metadata.toJSON(message.metadata)
         : undefined);
-    if (message.rate) {
-      obj.rate = message.rate.map((e) => e);
+    if (message.exchange_rate) {
+      obj.exchange_rate = message.exchange_rate.map((e) => e);
     } else {
-      obj.rate = [];
+      obj.exchange_rate = [];
     }
     message.collateral_deposit !== undefined &&
       (obj.collateral_deposit = message.collateral_deposit);
@@ -154,7 +154,7 @@ export const CreateDenomProposal = {
 
   fromPartial(object: DeepPartial<CreateDenomProposal>): CreateDenomProposal {
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
+    message.exchange_rate = [];
     if (object.sender !== undefined && object.sender !== null) {
       message.sender = object.sender;
     } else {
@@ -175,9 +175,9 @@ export const CreateDenomProposal = {
     } else {
       message.metadata = undefined;
     }
-    if (object.rate !== undefined && object.rate !== null) {
-      for (const e of object.rate) {
-        message.rate.push(e);
+    if (object.exchange_rate !== undefined && object.exchange_rate !== null) {
+      for (const e of object.exchange_rate) {
+        message.exchange_rate.push(e);
       }
     }
     if (

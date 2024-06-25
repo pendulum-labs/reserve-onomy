@@ -4,17 +4,17 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgLiquidate } from "./types/reserve/tx";
-import { MsgCreate } from "./types/reserve/tx";
-import { MsgWithdraw } from "./types/reserve/tx";
 import { MsgDeposit } from "./types/reserve/tx";
+import { MsgWithdraw } from "./types/reserve/tx";
+import { MsgCreate } from "./types/reserve/tx";
+import { MsgLiquidate } from "./types/reserve/tx";
 
 
 const types = [
-  ["/reserve.MsgLiquidate", MsgLiquidate],
-  ["/reserve.MsgCreate", MsgCreate],
-  ["/reserve.MsgWithdraw", MsgWithdraw],
   ["/reserve.MsgDeposit", MsgDeposit],
+  ["/reserve.MsgWithdraw", MsgWithdraw],
+  ["/reserve.MsgCreate", MsgCreate],
+  ["/reserve.MsgLiquidate", MsgLiquidate],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -47,10 +47,10 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgLiquidate: (data: MsgLiquidate): EncodeObject => ({ typeUrl: "/reserve.MsgLiquidate", value: MsgLiquidate.fromPartial( data ) }),
-    msgCreate: (data: MsgCreate): EncodeObject => ({ typeUrl: "/reserve.MsgCreate", value: MsgCreate.fromPartial( data ) }),
-    msgWithdraw: (data: MsgWithdraw): EncodeObject => ({ typeUrl: "/reserve.MsgWithdraw", value: MsgWithdraw.fromPartial( data ) }),
     msgDeposit: (data: MsgDeposit): EncodeObject => ({ typeUrl: "/reserve.MsgDeposit", value: MsgDeposit.fromPartial( data ) }),
+    msgWithdraw: (data: MsgWithdraw): EncodeObject => ({ typeUrl: "/reserve.MsgWithdraw", value: MsgWithdraw.fromPartial( data ) }),
+    msgCreate: (data: MsgCreate): EncodeObject => ({ typeUrl: "/reserve.MsgCreate", value: MsgCreate.fromPartial( data ) }),
+    msgLiquidate: (data: MsgLiquidate): EncodeObject => ({ typeUrl: "/reserve.MsgLiquidate", value: MsgLiquidate.fromPartial( data ) }),
     
   };
 };
