@@ -39,6 +39,15 @@ export interface MsgLiquidate {
 
 export interface MsgLiquidateResponse {}
 
+export interface MsgBond {
+  creator: string;
+  coin: string;
+}
+
+export interface MsgBondResponse {
+  bond_shares: string;
+}
+
 const baseMsgCreate: object = { creator: "", collateral: "" };
 
 export const MsgCreate = {
@@ -567,13 +576,142 @@ export const MsgLiquidateResponse = {
   },
 };
 
+const baseMsgBond: object = { creator: "", coin: "" };
+
+export const MsgBond = {
+  encode(message: MsgBond, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.coin !== "") {
+      writer.uint32(18).string(message.coin);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgBond {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgBond } as MsgBond;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.coin = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgBond {
+    const message = { ...baseMsgBond } as MsgBond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.coin !== undefined && object.coin !== null) {
+      message.coin = String(object.coin);
+    } else {
+      message.coin = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgBond): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.coin !== undefined && (obj.coin = message.coin);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgBond>): MsgBond {
+    const message = { ...baseMsgBond } as MsgBond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.coin !== undefined && object.coin !== null) {
+      message.coin = object.coin;
+    } else {
+      message.coin = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgBondResponse: object = { bond_shares: "" };
+
+export const MsgBondResponse = {
+  encode(message: MsgBondResponse, writer: Writer = Writer.create()): Writer {
+    if (message.bond_shares !== "") {
+      writer.uint32(10).string(message.bond_shares);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgBondResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.bond_shares = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgBondResponse {
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    if (object.bond_shares !== undefined && object.bond_shares !== null) {
+      message.bond_shares = String(object.bond_shares);
+    } else {
+      message.bond_shares = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgBondResponse): unknown {
+    const obj: any = {};
+    message.bond_shares !== undefined &&
+      (obj.bond_shares = message.bond_shares);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgBondResponse>): MsgBondResponse {
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    if (object.bond_shares !== undefined && object.bond_shares !== null) {
+      message.bond_shares = object.bond_shares;
+    } else {
+      message.bond_shares = "";
+    }
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   Create(request: MsgCreate): Promise<MsgCreateResponse>;
   Deposit(request: MsgDeposit): Promise<MsgDepositResponse>;
   Withdraw(request: MsgWithdraw): Promise<MsgWithdrawResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Liquidate(request: MsgLiquidate): Promise<MsgLiquidateResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Bond(request: MsgBond): Promise<MsgBondResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -605,6 +743,12 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) =>
       MsgLiquidateResponse.decode(new Reader(data))
     );
+  }
+
+  Bond(request: MsgBond): Promise<MsgBondResponse> {
+    const data = MsgBond.encode(request).finish();
+    const promise = this.rpc.request("reserve.Msg", "Bond", data);
+    return promise.then((data) => MsgBondResponse.decode(new Reader(data)));
   }
 }
 

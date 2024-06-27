@@ -12,6 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/version"
 
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
@@ -26,7 +27,7 @@ import (
 func CmdCreateDenomProposal() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-denom rate metadata-path",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(4),
 		Short: "Submit a create denom proposal",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
@@ -61,6 +62,19 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test P
 				return err
 			}
 
+			debtInterestRate, err := sdk.ParseUint(args[2])
+			if err != nil {
+				return err
+			}
+			if debtInterestRate.GTE(sdk.Uint(sdk.NewIntFromUint64(10000))) {
+				return sdkerrors.Wrap(types.ErrRateIntTooLarge, "debt interest rate integer GTE 10000")
+			}
+
+			bondInterestRate, err := sdk.ParseUint(args[3])
+			if err != nil {
+				return err
+			}
+
 			proposalFlags, err := parseProposalFlags(cmd.Flags())
 			if err != nil {
 				return err
@@ -91,7 +105,7 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test P
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, rate, collateralDeposit)
+			content := types.NewCreateDenomProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, rate, collateralDeposit, debtInterestRate, bondInterestRate)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {

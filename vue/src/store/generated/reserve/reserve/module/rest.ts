@@ -13,6 +13,10 @@ export interface ProtobufAny {
   "@type"?: string;
 }
 
+export interface ReserveMsgBondResponse {
+  bond_shares?: string;
+}
+
 export interface ReserveMsgCreateResponse {
   /** @format uint64 */
   uid?: string;
