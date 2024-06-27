@@ -11,13 +11,15 @@ export interface Vault {
   status: string;
   collateral: Coin | undefined;
   denom: Coin | undefined;
+  /** Shares of the denom debt pool */
+  debt_shares: string;
 }
 
 export interface VaultMap {
   uid: number;
 }
 
-const baseVault: object = { uid: 0, owner: "", status: "" };
+const baseVault: object = { uid: 0, owner: "", status: "", debt_shares: "" };
 
 export const Vault = {
   encode(message: Vault, writer: Writer = Writer.create()): Writer {
@@ -35,6 +37,9 @@ export const Vault = {
     }
     if (message.denom !== undefined) {
       Coin.encode(message.denom, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.debt_shares !== "") {
+      writer.uint32(58).string(message.debt_shares);
     }
     return writer;
   },
@@ -60,6 +65,9 @@ export const Vault = {
           break;
         case 6:
           message.denom = Coin.decode(reader, reader.uint32());
+          break;
+        case 7:
+          message.debt_shares = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -96,6 +104,11 @@ export const Vault = {
     } else {
       message.denom = undefined;
     }
+    if (object.debt_shares !== undefined && object.debt_shares !== null) {
+      message.debt_shares = String(object.debt_shares);
+    } else {
+      message.debt_shares = "";
+    }
     return message;
   },
 
@@ -110,6 +123,8 @@ export const Vault = {
         : undefined);
     message.denom !== undefined &&
       (obj.denom = message.denom ? Coin.toJSON(message.denom) : undefined);
+    message.debt_shares !== undefined &&
+      (obj.debt_shares = message.debt_shares);
     return obj;
   },
 
@@ -139,6 +154,11 @@ export const Vault = {
       message.denom = Coin.fromPartial(object.denom);
     } else {
       message.denom = undefined;
+    }
+    if (object.debt_shares !== undefined && object.debt_shares !== null) {
+      message.debt_shares = object.debt_shares;
+    } else {
+      message.debt_shares = "";
     }
     return message;
   },

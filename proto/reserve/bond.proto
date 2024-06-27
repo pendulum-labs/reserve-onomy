@@ -1,0 +1,12 @@
+syntax = "proto3";
+package reserve.reserve;
+
+option go_package = "reserve/x/reserve/types";
+
+message Bond {
+  
+  string uid = 1; 
+  string owner = 2; 
+  string denom = 3; 
+  string bondShares = 4; 
+}

@@ -31045,6 +31045,9 @@ paths:
                       custom method
 
                       signatures required by gogoproto.
+                  debt_shares:
+                    type: string
+                    title: Shares of the denom debt pool
         default:
           description: An unexpected error response.
           schema:
@@ -31123,6 +31126,9 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                    debt_shares:
+                      type: string
+                      title: Shares of the denom debt pool
               pagination:
                 type: object
                 properties:
@@ -31279,6 +31285,9 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                    debt_shares:
+                      type: string
+                      title: Shares of the denom debt pool
               pagination:
                 type: object
                 properties:
@@ -31435,6 +31444,9 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                    debt_shares:
+                      type: string
+                      title: Shares of the denom debt pool
               pagination:
                 type: object
                 properties:
@@ -51744,6 +51756,9 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+            debt_shares:
+              type: string
+              title: Shares of the denom debt pool
       pagination:
         type: object
         properties:
@@ -51814,6 +51829,9 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+            debt_shares:
+              type: string
+              title: Shares of the denom debt pool
       pagination:
         type: object
         properties:
@@ -51884,6 +51902,9 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+            debt_shares:
+              type: string
+              title: Shares of the denom debt pool
       pagination:
         type: object
         properties:
@@ -51952,6 +51973,9 @@ definitions:
               method
 
               signatures required by gogoproto.
+          debt_shares:
+            type: string
+            title: Shares of the denom debt pool
   reserve.QueryParamsResponse:
     type: object
     properties:
@@ -52018,3 +52042,6 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
+      debt_shares:
+        type: string
+        title: Shares of the denom debt pool

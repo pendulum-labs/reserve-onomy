@@ -12,6 +12,8 @@ export interface CreateDenomProposal {
   metadata: Metadata | undefined;
   exchange_rate: string[];
   collateral_deposit: string;
+  debt_interest_rate: string;
+  bond_interest_rate: string;
 }
 
 /** RegisterCollateralProposal details a register-collateral proposal. */
@@ -31,6 +33,8 @@ const baseCreateDenomProposal: object = {
   description: "",
   exchange_rate: "",
   collateral_deposit: "",
+  debt_interest_rate: "",
+  bond_interest_rate: "",
 };
 
 export const CreateDenomProposal = {
@@ -55,6 +59,12 @@ export const CreateDenomProposal = {
     }
     if (message.collateral_deposit !== "") {
       writer.uint32(50).string(message.collateral_deposit);
+    }
+    if (message.debt_interest_rate !== "") {
+      writer.uint32(58).string(message.debt_interest_rate);
+    }
+    if (message.bond_interest_rate !== "") {
+      writer.uint32(66).string(message.bond_interest_rate);
     }
     return writer;
   },
@@ -84,6 +94,12 @@ export const CreateDenomProposal = {
           break;
         case 6:
           message.collateral_deposit = reader.string();
+          break;
+        case 7:
+          message.debt_interest_rate = reader.string();
+          break;
+        case 8:
+          message.bond_interest_rate = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -129,6 +145,22 @@ export const CreateDenomProposal = {
     } else {
       message.collateral_deposit = "";
     }
+    if (
+      object.debt_interest_rate !== undefined &&
+      object.debt_interest_rate !== null
+    ) {
+      message.debt_interest_rate = String(object.debt_interest_rate);
+    } else {
+      message.debt_interest_rate = "";
+    }
+    if (
+      object.bond_interest_rate !== undefined &&
+      object.bond_interest_rate !== null
+    ) {
+      message.bond_interest_rate = String(object.bond_interest_rate);
+    } else {
+      message.bond_interest_rate = "";
+    }
     return message;
   },
 
@@ -149,6 +181,10 @@ export const CreateDenomProposal = {
     }
     message.collateral_deposit !== undefined &&
       (obj.collateral_deposit = message.collateral_deposit);
+    message.debt_interest_rate !== undefined &&
+      (obj.debt_interest_rate = message.debt_interest_rate);
+    message.bond_interest_rate !== undefined &&
+      (obj.bond_interest_rate = message.bond_interest_rate);
     return obj;
   },
 
@@ -187,6 +223,22 @@ export const CreateDenomProposal = {
       message.collateral_deposit = object.collateral_deposit;
     } else {
       message.collateral_deposit = "";
+    }
+    if (
+      object.debt_interest_rate !== undefined &&
+      object.debt_interest_rate !== null
+    ) {
+      message.debt_interest_rate = object.debt_interest_rate;
+    } else {
+      message.debt_interest_rate = "";
+    }
+    if (
+      object.bond_interest_rate !== undefined &&
+      object.bond_interest_rate !== null
+    ) {
+      message.bond_interest_rate = object.bond_interest_rate;
+    } else {
+      message.bond_interest_rate = "";
     }
     return message;
   },
