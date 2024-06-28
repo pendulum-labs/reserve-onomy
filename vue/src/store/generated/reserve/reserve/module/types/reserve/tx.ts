@@ -39,6 +39,13 @@ export interface MsgLiquidate {
 
 export interface MsgLiquidateResponse {}
 
+export interface MsgBond {
+  creator: string;
+  denom: string;
+}
+
+export interface MsgBondResponse {}
+
 const baseMsgCreateVault: object = { creator: "", collateral: "" };
 
 export const MsgCreateVault = {
@@ -572,13 +579,124 @@ export const MsgLiquidateResponse = {
   },
 };
 
+const baseMsgBond: object = { creator: "", denom: "" };
+
+export const MsgBond = {
+  encode(message: MsgBond, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.denom !== "") {
+      writer.uint32(18).string(message.denom);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgBond {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgBond } as MsgBond;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.denom = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgBond {
+    const message = { ...baseMsgBond } as MsgBond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.denom !== undefined && object.denom !== null) {
+      message.denom = String(object.denom);
+    } else {
+      message.denom = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgBond): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.denom !== undefined && (obj.denom = message.denom);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgBond>): MsgBond {
+    const message = { ...baseMsgBond } as MsgBond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.denom !== undefined && object.denom !== null) {
+      message.denom = object.denom;
+    } else {
+      message.denom = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgBondResponse: object = {};
+
+export const MsgBondResponse = {
+  encode(_: MsgBondResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgBondResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgBondResponse {
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    return message;
+  },
+
+  toJSON(_: MsgBondResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgBondResponse>): MsgBondResponse {
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateVault(request: MsgCreateVault): Promise<MsgCreateVaultResponse>;
   Deposit(request: MsgDeposit): Promise<MsgDepositResponse>;
   Withdraw(request: MsgWithdraw): Promise<MsgWithdrawResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Liquidate(request: MsgLiquidate): Promise<MsgLiquidateResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Bond(request: MsgBond): Promise<MsgBondResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -612,6 +730,12 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) =>
       MsgLiquidateResponse.decode(new Reader(data))
     );
+  }
+
+  Bond(request: MsgBond): Promise<MsgBondResponse> {
+    const data = MsgBond.encode(request).finish();
+    const promise = this.rpc.request("reserve.Msg", "Bond", data);
+    return promise.then((data) => MsgBondResponse.decode(new Reader(data)));
   }
 }
 

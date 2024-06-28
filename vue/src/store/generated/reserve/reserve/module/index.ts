@@ -7,6 +7,7 @@ import { Api } from "./rest";
 import { MsgWithdraw } from "./types/reserve/tx";
 import { MsgLiquidate } from "./types/reserve/tx";
 import { MsgCreateVault } from "./types/reserve/tx";
+import { MsgBond } from "./types/reserve/tx";
 import { MsgDeposit } from "./types/reserve/tx";
 
 
@@ -14,6 +15,7 @@ const types = [
   ["/reserve.MsgWithdraw", MsgWithdraw],
   ["/reserve.MsgLiquidate", MsgLiquidate],
   ["/reserve.MsgCreateVault", MsgCreateVault],
+  ["/reserve.MsgBond", MsgBond],
   ["/reserve.MsgDeposit", MsgDeposit],
   
 ];
@@ -50,6 +52,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
     msgWithdraw: (data: MsgWithdraw): EncodeObject => ({ typeUrl: "/reserve.MsgWithdraw", value: MsgWithdraw.fromPartial( data ) }),
     msgLiquidate: (data: MsgLiquidate): EncodeObject => ({ typeUrl: "/reserve.MsgLiquidate", value: MsgLiquidate.fromPartial( data ) }),
     msgCreateVault: (data: MsgCreateVault): EncodeObject => ({ typeUrl: "/reserve.MsgCreateVault", value: MsgCreateVault.fromPartial( data ) }),
+    msgBond: (data: MsgBond): EncodeObject => ({ typeUrl: "/reserve.MsgBond", value: MsgBond.fromPartial( data ) }),
     msgDeposit: (data: MsgDeposit): EncodeObject => ({ typeUrl: "/reserve.MsgDeposit", value: MsgDeposit.fromPartial( data ) }),
     
   };
