@@ -10,8 +10,11 @@ export interface CreateDenomProposal {
   title: string;
   description: string;
   metadata: Metadata | undefined;
-  rate: string[];
+  exchange_rate: string[];
   collateral_deposit: string;
+  debt_interest_rate: string;
+  /** Negative Interest rate on Denoms Bonded */
+  bond_interest_rate: string;
 }
 
 /** RegisterCollateralProposal details a register-collateral proposal. */
@@ -29,8 +32,10 @@ const baseCreateDenomProposal: object = {
   sender: "",
   title: "",
   description: "",
-  rate: "",
+  exchange_rate: "",
   collateral_deposit: "",
+  debt_interest_rate: "",
+  bond_interest_rate: "",
 };
 
 export const CreateDenomProposal = {
@@ -50,11 +55,17 @@ export const CreateDenomProposal = {
     if (message.metadata !== undefined) {
       Metadata.encode(message.metadata, writer.uint32(34).fork()).ldelim();
     }
-    for (const v of message.rate) {
+    for (const v of message.exchange_rate) {
       writer.uint32(42).string(v!);
     }
     if (message.collateral_deposit !== "") {
       writer.uint32(50).string(message.collateral_deposit);
+    }
+    if (message.debt_interest_rate !== "") {
+      writer.uint32(58).string(message.debt_interest_rate);
+    }
+    if (message.bond_interest_rate !== "") {
+      writer.uint32(66).string(message.bond_interest_rate);
     }
     return writer;
   },
@@ -63,7 +74,7 @@ export const CreateDenomProposal = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
+    message.exchange_rate = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -80,10 +91,16 @@ export const CreateDenomProposal = {
           message.metadata = Metadata.decode(reader, reader.uint32());
           break;
         case 5:
-          message.rate.push(reader.string());
+          message.exchange_rate.push(reader.string());
           break;
         case 6:
           message.collateral_deposit = reader.string();
+          break;
+        case 7:
+          message.debt_interest_rate = reader.string();
+          break;
+        case 8:
+          message.bond_interest_rate = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -95,7 +112,7 @@ export const CreateDenomProposal = {
 
   fromJSON(object: any): CreateDenomProposal {
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
+    message.exchange_rate = [];
     if (object.sender !== undefined && object.sender !== null) {
       message.sender = String(object.sender);
     } else {
@@ -116,9 +133,9 @@ export const CreateDenomProposal = {
     } else {
       message.metadata = undefined;
     }
-    if (object.rate !== undefined && object.rate !== null) {
-      for (const e of object.rate) {
-        message.rate.push(String(e));
+    if (object.exchange_rate !== undefined && object.exchange_rate !== null) {
+      for (const e of object.exchange_rate) {
+        message.exchange_rate.push(String(e));
       }
     }
     if (
@@ -128,6 +145,22 @@ export const CreateDenomProposal = {
       message.collateral_deposit = String(object.collateral_deposit);
     } else {
       message.collateral_deposit = "";
+    }
+    if (
+      object.debt_interest_rate !== undefined &&
+      object.debt_interest_rate !== null
+    ) {
+      message.debt_interest_rate = String(object.debt_interest_rate);
+    } else {
+      message.debt_interest_rate = "";
+    }
+    if (
+      object.bond_interest_rate !== undefined &&
+      object.bond_interest_rate !== null
+    ) {
+      message.bond_interest_rate = String(object.bond_interest_rate);
+    } else {
+      message.bond_interest_rate = "";
     }
     return message;
   },
@@ -142,19 +175,23 @@ export const CreateDenomProposal = {
       (obj.metadata = message.metadata
         ? Metadata.toJSON(message.metadata)
         : undefined);
-    if (message.rate) {
-      obj.rate = message.rate.map((e) => e);
+    if (message.exchange_rate) {
+      obj.exchange_rate = message.exchange_rate.map((e) => e);
     } else {
-      obj.rate = [];
+      obj.exchange_rate = [];
     }
     message.collateral_deposit !== undefined &&
       (obj.collateral_deposit = message.collateral_deposit);
+    message.debt_interest_rate !== undefined &&
+      (obj.debt_interest_rate = message.debt_interest_rate);
+    message.bond_interest_rate !== undefined &&
+      (obj.bond_interest_rate = message.bond_interest_rate);
     return obj;
   },
 
   fromPartial(object: DeepPartial<CreateDenomProposal>): CreateDenomProposal {
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
+    message.exchange_rate = [];
     if (object.sender !== undefined && object.sender !== null) {
       message.sender = object.sender;
     } else {
@@ -175,9 +212,9 @@ export const CreateDenomProposal = {
     } else {
       message.metadata = undefined;
     }
-    if (object.rate !== undefined && object.rate !== null) {
-      for (const e of object.rate) {
-        message.rate.push(e);
+    if (object.exchange_rate !== undefined && object.exchange_rate !== null) {
+      for (const e of object.exchange_rate) {
+        message.exchange_rate.push(e);
       }
     }
     if (
@@ -187,6 +224,22 @@ export const CreateDenomProposal = {
       message.collateral_deposit = object.collateral_deposit;
     } else {
       message.collateral_deposit = "";
+    }
+    if (
+      object.debt_interest_rate !== undefined &&
+      object.debt_interest_rate !== null
+    ) {
+      message.debt_interest_rate = object.debt_interest_rate;
+    } else {
+      message.debt_interest_rate = "";
+    }
+    if (
+      object.bond_interest_rate !== undefined &&
+      object.bond_interest_rate !== null
+    ) {
+      message.bond_interest_rate = object.bond_interest_rate;
+    } else {
+      message.bond_interest_rate = "";
     }
     return message;
   },
