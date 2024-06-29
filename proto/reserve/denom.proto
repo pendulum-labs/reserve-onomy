@@ -30,8 +30,13 @@ message Denom {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
+  // Total amount of denom in the denom bond pool
+  string bond_denoms = 9 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
   // Unbonding blocks
-  string bond_blocks = 9 [
+  string bond_blocks = 10 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];

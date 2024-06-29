@@ -16,6 +16,8 @@ export interface Denom {
   bond_interest_rate: string;
   /** Total shares of the denom bond pool */
   bond_shares: string;
+  /** Total amount of denom in the denom bond pool */
+  bond_denoms: string;
   /** Unbonding blocks */
   bond_blocks: string;
 }
@@ -28,6 +30,7 @@ const baseDenom: object = {
   debt_shares: "",
   bond_interest_rate: "",
   bond_shares: "",
+  bond_denoms: "",
   bond_blocks: "",
 };
 
@@ -54,8 +57,11 @@ export const Denom = {
     if (message.bond_shares !== "") {
       writer.uint32(66).string(message.bond_shares);
     }
+    if (message.bond_denoms !== "") {
+      writer.uint32(74).string(message.bond_denoms);
+    }
     if (message.bond_blocks !== "") {
-      writer.uint32(74).string(message.bond_blocks);
+      writer.uint32(82).string(message.bond_blocks);
     }
     return writer;
   },
@@ -89,6 +95,9 @@ export const Denom = {
           message.bond_shares = reader.string();
           break;
         case 9:
+          message.bond_denoms = reader.string();
+          break;
+        case 10:
           message.bond_blocks = reader.string();
           break;
         default:
@@ -142,6 +151,11 @@ export const Denom = {
     } else {
       message.bond_shares = "";
     }
+    if (object.bond_denoms !== undefined && object.bond_denoms !== null) {
+      message.bond_denoms = String(object.bond_denoms);
+    } else {
+      message.bond_denoms = "";
+    }
     if (object.bond_blocks !== undefined && object.bond_blocks !== null) {
       message.bond_blocks = String(object.bond_blocks);
     } else {
@@ -163,6 +177,8 @@ export const Denom = {
       (obj.bond_interest_rate = message.bond_interest_rate);
     message.bond_shares !== undefined &&
       (obj.bond_shares = message.bond_shares);
+    message.bond_denoms !== undefined &&
+      (obj.bond_denoms = message.bond_denoms);
     message.bond_blocks !== undefined &&
       (obj.bond_blocks = message.bond_blocks);
     return obj;
@@ -210,6 +226,11 @@ export const Denom = {
       message.bond_shares = object.bond_shares;
     } else {
       message.bond_shares = "";
+    }
+    if (object.bond_denoms !== undefined && object.bond_denoms !== null) {
+      message.bond_denoms = object.bond_denoms;
+    } else {
+      message.bond_denoms = "";
     }
     if (object.bond_blocks !== undefined && object.bond_blocks !== null) {
       message.bond_blocks = object.bond_blocks;
