@@ -21,6 +21,7 @@ type BankKeeper interface {
 	SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
 	MintCoins(ctx sdk.Context, moduleName string, amt sdk.Coins) error
 	SetDenomMetaData(ctx sdk.Context, denomMetaData types.Metadata)
+	GetSupply(ctx sdk.Context, denom string) sdk.Coin
 	// Methods imported from bank should be defined here
 }
 
