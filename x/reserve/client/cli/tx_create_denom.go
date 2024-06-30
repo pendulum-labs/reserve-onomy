@@ -66,9 +66,17 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-r
 				return err
 			}
 
+			if debtInterestRate.GT(sdk.NewUint(100000)) {
+				return types.ErrInterestGtLimit
+			}
+
 			bondInterestRate, err := sdk.ParseUint(args[3])
 			if err != nil {
 				return err
+			}
+
+			if bondInterestRate.GT(sdk.NewUint(100000)) {
+				return types.ErrInterestGtLimit
 			}
 
 			proposalFlags, err := parseProposalFlags(cmd.Flags())

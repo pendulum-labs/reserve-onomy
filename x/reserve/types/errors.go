@@ -16,4 +16,6 @@ var (
 	ErrVaultNotFound = sdkerrors.Register(ModuleName, 3, "vault not found") // nolint: gomnd
 	// ErrBondGtDebt - bond interest greater than debt interest
 	ErrBondGtDebt = sdkerrors.Register(ModuleName, 4, "bond interest greater than debt interest") // nolint: gomnd
+	// ErrInterestGtLimit - bond interest greater than debt interest
+	ErrInterestGtLimit = sdkerrors.Register(ModuleName, 5, "interest rate greater than limit") // nolint: gomnd
 )
