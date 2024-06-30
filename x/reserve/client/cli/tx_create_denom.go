@@ -26,12 +26,12 @@ import (
 func CmdCreateDenomProposal() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-denom rate metadata-path",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(4),
 		Short: "Submit a create denom proposal",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-rate bond-interest-rate --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
@@ -57,6 +57,16 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test P
 			rate := []sdk.Uint{rateNumerator, rateDenominator}
 
 			collateralDeposit, err := sdk.ParseCoinNormalized(args[1])
+			if err != nil {
+				return err
+			}
+
+			debtInterestRate, err := sdk.ParseUint(args[2])
+			if err != nil {
+				return err
+			}
+
+			bondInterestRate, err := sdk.ParseUint(args[3])
 			if err != nil {
 				return err
 			}
@@ -91,7 +101,15 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test P
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, rate, collateralDeposit)
+
+			content := types.NewCreateDenomProposal(
+				from,
+				proposalFlags.Title,
+				proposalFlags.Description,
+				metadata, rate, collateralDeposit,
+				debtInterestRate,
+				bondInterestRate,
+			)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {

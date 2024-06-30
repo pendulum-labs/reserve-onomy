@@ -15,14 +15,23 @@ func (k Keeper) CreateDenomProposal(ctx sdk.Context, request *types.CreateDenomP
 		return sdkerrors.Wrapf(types.ErrMetadataExists, "Metadata already exists for %s", request.Metadata.Base)
 	}
 
-	// Need to store initial amount of NOM or other collateral
+	if request.BondInterestRate.GT(request.DebtInterestRate) {
+		return sdkerrors.Wrapf(types.ErrBondGtDebt, "Bond Interest Rate %s greater than Debt Interest Rate %s", request.BondInterestRate, request.DebtInterestRate)
+	}
+
+	err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(request.Sender), types.ModuleName, sdk.NewCoins(request.CollateralDeposit))
+	if err != nil {
+		return err
+	}
 
 	k.bankKeeper.SetDenomMetaData(ctx, *request.Metadata)
 
 	k.SetDenom(ctx, types.Denom{
-		Base:     request.Metadata.Base,
-		Display:  request.Metadata.Display,
-		InitTime: ctx.BlockHeader().Time.Unix(),
+		Base:             request.Metadata.Base,
+		Display:          request.Metadata.Display,
+		InitTime:         ctx.BlockHeader().Time.Unix(),
+		DebtInterestRate: request.DebtInterestRate,
+		BondInterestRate: request.BondInterestRate,
 	})
 
 	return nil
