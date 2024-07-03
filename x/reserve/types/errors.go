@@ -20,4 +20,6 @@ var (
 	ErrInterestGtLimit = sdkerrors.Register(ModuleName, 5, "interest rate greater than limit") // nolint: gomnd
 	// ErrDenomNotFound - vault not found
 	ErrDenomNotFound = sdkerrors.Register(ModuleName, 6, "denom not found") // nolint: gomnd
+	// ErrInvalidInput - input not valid
+	ErrInvalidInput = sdkerrors.Register(ModuleName, 7, "input not valid") // nolint: gomnd
 )

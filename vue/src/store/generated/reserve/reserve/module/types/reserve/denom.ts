@@ -9,13 +9,13 @@ export interface Denom {
   display: string;
   init_time: number;
   /** Positive Interest rate on denom debt pool */
-  debt_interest_rate: string;
+  debt_interest_rate: number;
   /** Total shares of the denom debt pool */
   debt_shares: string;
   /** Total amount of denom in the denom debt pool */
   debt_denoms: string;
   /** Negative Interest rate on Denoms Bonded */
-  bond_interest_rate: string;
+  bond_interest_rate: number;
   /** Total shares of the denom bond pool */
   bond_shares: string;
   /** Total amount of denom in the denom bond pool */
@@ -28,10 +28,10 @@ const baseDenom: object = {
   base: "",
   display: "",
   init_time: 0,
-  debt_interest_rate: "",
+  debt_interest_rate: 0,
   debt_shares: "",
   debt_denoms: "",
-  bond_interest_rate: "",
+  bond_interest_rate: 0,
   bond_shares: "",
   bond_denoms: "",
   bond_blocks: "",
@@ -48,8 +48,8 @@ export const Denom = {
     if (message.init_time !== 0) {
       writer.uint32(24).int64(message.init_time);
     }
-    if (message.debt_interest_rate !== "") {
-      writer.uint32(42).string(message.debt_interest_rate);
+    if (message.debt_interest_rate !== 0) {
+      writer.uint32(40).uint64(message.debt_interest_rate);
     }
     if (message.debt_shares !== "") {
       writer.uint32(50).string(message.debt_shares);
@@ -57,8 +57,8 @@ export const Denom = {
     if (message.debt_denoms !== "") {
       writer.uint32(58).string(message.debt_denoms);
     }
-    if (message.bond_interest_rate !== "") {
-      writer.uint32(66).string(message.bond_interest_rate);
+    if (message.bond_interest_rate !== 0) {
+      writer.uint32(64).uint64(message.bond_interest_rate);
     }
     if (message.bond_shares !== "") {
       writer.uint32(74).string(message.bond_shares);
@@ -89,7 +89,7 @@ export const Denom = {
           message.init_time = longToNumber(reader.int64() as Long);
           break;
         case 5:
-          message.debt_interest_rate = reader.string();
+          message.debt_interest_rate = longToNumber(reader.uint64() as Long);
           break;
         case 6:
           message.debt_shares = reader.string();
@@ -98,7 +98,7 @@ export const Denom = {
           message.debt_denoms = reader.string();
           break;
         case 8:
-          message.bond_interest_rate = reader.string();
+          message.bond_interest_rate = longToNumber(reader.uint64() as Long);
           break;
         case 9:
           message.bond_shares = reader.string();
@@ -138,9 +138,9 @@ export const Denom = {
       object.debt_interest_rate !== undefined &&
       object.debt_interest_rate !== null
     ) {
-      message.debt_interest_rate = String(object.debt_interest_rate);
+      message.debt_interest_rate = Number(object.debt_interest_rate);
     } else {
-      message.debt_interest_rate = "";
+      message.debt_interest_rate = 0;
     }
     if (object.debt_shares !== undefined && object.debt_shares !== null) {
       message.debt_shares = String(object.debt_shares);
@@ -156,9 +156,9 @@ export const Denom = {
       object.bond_interest_rate !== undefined &&
       object.bond_interest_rate !== null
     ) {
-      message.bond_interest_rate = String(object.bond_interest_rate);
+      message.bond_interest_rate = Number(object.bond_interest_rate);
     } else {
-      message.bond_interest_rate = "";
+      message.bond_interest_rate = 0;
     }
     if (object.bond_shares !== undefined && object.bond_shares !== null) {
       message.bond_shares = String(object.bond_shares);
@@ -223,7 +223,7 @@ export const Denom = {
     ) {
       message.debt_interest_rate = object.debt_interest_rate;
     } else {
-      message.debt_interest_rate = "";
+      message.debt_interest_rate = 0;
     }
     if (object.debt_shares !== undefined && object.debt_shares !== null) {
       message.debt_shares = object.debt_shares;
@@ -241,7 +241,7 @@ export const Denom = {
     ) {
       message.bond_interest_rate = object.bond_interest_rate;
     } else {
-      message.bond_interest_rate = "";
+      message.bond_interest_rate = 0;
     }
     if (object.bond_shares !== undefined && object.bond_shares !== null) {
       message.bond_shares = object.bond_shares;
