@@ -109,6 +109,7 @@ export interface ReserveVault {
    * signatures required by gogoproto.
    */
   collateral?: V1Beta1Coin;
+  debt_denom?: string;
 
   /**
    * Coin defines a token with a denomination and an amount.
@@ -116,7 +117,8 @@ export interface ReserveVault {
    * NOTE: The amount field is an Int which implements the custom method
    * signatures required by gogoproto.
    */
-  denom?: V1Beta1Coin;
+  debt_principal?: V1Beta1Coin;
+  debt_shares?: string;
 }
 
 export interface RpcStatus {

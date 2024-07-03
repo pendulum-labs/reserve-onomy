@@ -31032,7 +31032,10 @@ paths:
                       custom method
 
                       signatures required by gogoproto.
-                  denom:
+                  debt_denom:
+                    type: string
+                    title: Debt denom is the denom being minted
+                  debt_principal:
                     type: object
                     properties:
                       denom:
@@ -31047,6 +31050,14 @@ paths:
                       custom method
 
                       signatures required by gogoproto.
+                    title: >-
+                      Debt principal is the amount of denoms considered
+                      principal
+                  debt_shares:
+                    type: string
+                    title: >-
+                      Debt shares of the denom debt pool which value constitutes
+                      principal + interest
         default:
           description: An unexpected error response.
           schema:
@@ -31112,7 +31123,10 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
-                    denom:
+                    debt_denom:
+                      type: string
+                      title: Debt denom is the denom being minted
+                    debt_principal:
                       type: object
                       properties:
                         denom:
@@ -31127,6 +31141,14 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                      title: >-
+                        Debt principal is the amount of denoms considered
+                        principal
+                    debt_shares:
+                      type: string
+                      title: >-
+                        Debt shares of the denom debt pool which value
+                        constitutes principal + interest
               pagination:
                 type: object
                 properties:
@@ -31260,7 +31282,10 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
-                    denom:
+                    debt_denom:
+                      type: string
+                      title: Debt denom is the denom being minted
+                    debt_principal:
                       type: object
                       properties:
                         denom:
@@ -31275,6 +31300,14 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                      title: >-
+                        Debt principal is the amount of denoms considered
+                        principal
+                    debt_shares:
+                      type: string
+                      title: >-
+                        Debt shares of the denom debt pool which value
+                        constitutes principal + interest
               pagination:
                 type: object
                 properties:
@@ -31408,7 +31441,10 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
-                    denom:
+                    debt_denom:
+                      type: string
+                      title: Debt denom is the denom being minted
+                    debt_principal:
                       type: object
                       properties:
                         denom:
@@ -31423,6 +31459,14 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                      title: >-
+                        Debt principal is the amount of denoms considered
+                        principal
+                    debt_shares:
+                      type: string
+                      title: >-
+                        Debt shares of the denom debt pool which value
+                        constitutes principal + interest
               pagination:
                 type: object
                 properties:
@@ -51711,7 +51755,10 @@ definitions:
                 method
 
                 signatures required by gogoproto.
-            denom:
+            debt_denom:
+              type: string
+              title: Debt denom is the denom being minted
+            debt_principal:
               type: object
               properties:
                 denom:
@@ -51726,6 +51773,12 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+              title: Debt principal is the amount of denoms considered principal
+            debt_shares:
+              type: string
+              title: >-
+                Debt shares of the denom debt pool which value constitutes
+                principal + interest
       pagination:
         type: object
         properties:
@@ -51783,7 +51836,10 @@ definitions:
                 method
 
                 signatures required by gogoproto.
-            denom:
+            debt_denom:
+              type: string
+              title: Debt denom is the denom being minted
+            debt_principal:
               type: object
               properties:
                 denom:
@@ -51798,6 +51854,12 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+              title: Debt principal is the amount of denoms considered principal
+            debt_shares:
+              type: string
+              title: >-
+                Debt shares of the denom debt pool which value constitutes
+                principal + interest
       pagination:
         type: object
         properties:
@@ -51855,7 +51917,10 @@ definitions:
                 method
 
                 signatures required by gogoproto.
-            denom:
+            debt_denom:
+              type: string
+              title: Debt denom is the denom being minted
+            debt_principal:
               type: object
               properties:
                 denom:
@@ -51870,6 +51935,12 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+              title: Debt principal is the amount of denoms considered principal
+            debt_shares:
+              type: string
+              title: >-
+                Debt shares of the denom debt pool which value constitutes
+                principal + interest
       pagination:
         type: object
         properties:
@@ -51925,7 +51996,10 @@ definitions:
               method
 
               signatures required by gogoproto.
-          denom:
+          debt_denom:
+            type: string
+            title: Debt denom is the denom being minted
+          debt_principal:
             type: object
             properties:
               denom:
@@ -51940,6 +52014,12 @@ definitions:
               method
 
               signatures required by gogoproto.
+            title: Debt principal is the amount of denoms considered principal
+          debt_shares:
+            type: string
+            title: >-
+              Debt shares of the denom debt pool which value constitutes
+              principal + interest
   reserve.QueryParamsResponse:
     type: object
     properties:
@@ -51996,7 +52076,10 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
-      denom:
+      debt_denom:
+        type: string
+        title: Debt denom is the denom being minted
+      debt_principal:
         type: object
         properties:
           denom:
@@ -52008,3 +52091,9 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
+        title: Debt principal is the amount of denoms considered principal
+      debt_shares:
+        type: string
+        title: >-
+          Debt shares of the denom debt pool which value constitutes principal +
+          interest

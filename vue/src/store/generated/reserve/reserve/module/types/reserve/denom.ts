@@ -12,6 +12,8 @@ export interface Denom {
   debt_interest_rate: string;
   /** Total shares of the denom debt pool */
   debt_shares: string;
+  /** Total amount of denom in the denom debt pool */
+  debt_denoms: string;
   /** Negative Interest rate on Denoms Bonded */
   bond_interest_rate: string;
   /** Total shares of the denom bond pool */
@@ -28,6 +30,7 @@ const baseDenom: object = {
   init_time: 0,
   debt_interest_rate: "",
   debt_shares: "",
+  debt_denoms: "",
   bond_interest_rate: "",
   bond_shares: "",
   bond_denoms: "",
@@ -51,17 +54,20 @@ export const Denom = {
     if (message.debt_shares !== "") {
       writer.uint32(50).string(message.debt_shares);
     }
+    if (message.debt_denoms !== "") {
+      writer.uint32(58).string(message.debt_denoms);
+    }
     if (message.bond_interest_rate !== "") {
-      writer.uint32(58).string(message.bond_interest_rate);
+      writer.uint32(66).string(message.bond_interest_rate);
     }
     if (message.bond_shares !== "") {
-      writer.uint32(66).string(message.bond_shares);
+      writer.uint32(74).string(message.bond_shares);
     }
     if (message.bond_denoms !== "") {
-      writer.uint32(74).string(message.bond_denoms);
+      writer.uint32(82).string(message.bond_denoms);
     }
     if (message.bond_blocks !== "") {
-      writer.uint32(82).string(message.bond_blocks);
+      writer.uint32(90).string(message.bond_blocks);
     }
     return writer;
   },
@@ -89,15 +95,18 @@ export const Denom = {
           message.debt_shares = reader.string();
           break;
         case 7:
-          message.bond_interest_rate = reader.string();
+          message.debt_denoms = reader.string();
           break;
         case 8:
-          message.bond_shares = reader.string();
+          message.bond_interest_rate = reader.string();
           break;
         case 9:
-          message.bond_denoms = reader.string();
+          message.bond_shares = reader.string();
           break;
         case 10:
+          message.bond_denoms = reader.string();
+          break;
+        case 11:
           message.bond_blocks = reader.string();
           break;
         default:
@@ -138,6 +147,11 @@ export const Denom = {
     } else {
       message.debt_shares = "";
     }
+    if (object.debt_denoms !== undefined && object.debt_denoms !== null) {
+      message.debt_denoms = String(object.debt_denoms);
+    } else {
+      message.debt_denoms = "";
+    }
     if (
       object.bond_interest_rate !== undefined &&
       object.bond_interest_rate !== null
@@ -173,6 +187,8 @@ export const Denom = {
       (obj.debt_interest_rate = message.debt_interest_rate);
     message.debt_shares !== undefined &&
       (obj.debt_shares = message.debt_shares);
+    message.debt_denoms !== undefined &&
+      (obj.debt_denoms = message.debt_denoms);
     message.bond_interest_rate !== undefined &&
       (obj.bond_interest_rate = message.bond_interest_rate);
     message.bond_shares !== undefined &&
@@ -213,6 +229,11 @@ export const Denom = {
       message.debt_shares = object.debt_shares;
     } else {
       message.debt_shares = "";
+    }
+    if (object.debt_denoms !== undefined && object.debt_denoms !== null) {
+      message.debt_denoms = object.debt_denoms;
+    } else {
+      message.debt_denoms = "";
     }
     if (
       object.bond_interest_rate !== undefined &&

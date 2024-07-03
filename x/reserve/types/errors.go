@@ -18,4 +18,6 @@ var (
 	ErrBondGtDebt = sdkerrors.Register(ModuleName, 4, "bond interest greater than debt interest") // nolint: gomnd
 	// ErrInterestGtLimit - bond interest greater than debt interest
 	ErrInterestGtLimit = sdkerrors.Register(ModuleName, 5, "interest rate greater than limit") // nolint: gomnd
+	// ErrDenomNotFound - vault not found
+	ErrDenomNotFound = sdkerrors.Register(ModuleName, 6, "denom not found") // nolint: gomnd
 )

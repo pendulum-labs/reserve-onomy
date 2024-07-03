@@ -20,23 +20,28 @@ message Denom {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
+  // Total amount of denom in the denom debt pool
+  string debt_denoms = 7 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
   // Negative Interest rate on Denoms Bonded
-  string bond_interest_rate = 7 [
+  string bond_interest_rate = 8 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
   // Total shares of the denom bond pool
-  string bond_shares = 8 [
+  string bond_shares = 9 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
   // Total amount of denom in the denom bond pool
-  string bond_denoms = 9 [
+  string bond_denoms = 10 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
   // Unbonding blocks
-  string bond_blocks = 10 [
+  string bond_blocks = 11 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];

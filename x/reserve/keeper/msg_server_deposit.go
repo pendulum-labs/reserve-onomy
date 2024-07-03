@@ -24,14 +24,25 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 	}
 
 	vault, found := k.GetVault(ctx, uid)
+
 	if found {
 		switch {
 		case vault.Status == "ready" && vault.Collateral.Denom == coin.Denom:
 			vault.Collateral = vault.Collateral.Add(coin)
 		case vault.Status == "active" && vault.Collateral.Denom == coin.Denom:
 			vault.Collateral = vault.Collateral.Add(coin)
-		case vault.Status == "active" && vault.Denom.Denom == coin.Denom:
-			vault.Denom = vault.Denom.Add(coin)
+		case vault.Status == "active" && vault.DebtDenom == coin.Denom:
+			denom, found := k.GetDenom(ctx, coin.Denom)
+			if !found {
+				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", coin.Denom)
+			}
+			debt_owed := (vault.DebtShares.Mul(denom.DebtDenoms)).Quo(denom.DebtShares)
+			deposit := coin.Amount
+			// Cannot deposit more denoms than owed
+			if coin.Amount.GT(sdk.Int(debt_owed)) {
+				deposit = sdk.Int(debt_owed)
+			}
+
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid deposit")
 		}
