@@ -11,8 +11,14 @@ message Vault {
   string owner = 2;
   string name = 3;
   string status = 4;
-  cosmos.base.v1beta1.Coin collateral = 5 [(gogoproto.nullable) = false]; 
-  cosmos.base.v1beta1.Coin denom = 6 [(gogoproto.nullable) = false]; 
+  cosmos.base.v1beta1.Coin collateral = 5 [(gogoproto.nullable) = false];
+  // Principal debt is the amount of Denoms issued
+  cosmos.base.v1beta1.Coin debt_principal = 6 [(gogoproto.nullable) = false];
+  // Debt shares of the denom debt pool
+  string debt_shares = 7 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
+    (gogoproto.nullable) = false
+  ];
 }
 
 message VaultMap {
