@@ -37,17 +37,41 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 			vault.Collateral = vault.Collateral.Add(coin)
 		case vault.Status == "active" && vault.DebtDenom == coin.Denom:
 			denom, found := k.GetDenom(ctx, coin.Denom)
+
 			if !found {
 				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", coin.Denom)
 			}
-			debt_owed_beg := (vault.DebtShares.Mul(denom.DebtDenoms)).Quo(denom.DebtShares)
-			deposit := coin.Amount
-			// Cannot deposit more denoms than owed
-			if coin.Amount.GT(sdk.Int(debt_owed_beg)) {
-				deposit = sdk.Int(debt_owed_beg)
-			}
-			debt_owed_final := sdk.Int(debt_owed_beg).Sub(sdk.Int(deposit))
 
+			debtBeg := (vault.DebtShares.Mul(denom.DebtDenoms)).Quo(denom.DebtShares)
+			debtSharesBeg := vault.DebtShares
+			deposit := coin.Amount
+
+			// Cannot deposit more denoms than owed
+			if coin.Amount.GT(debtBeg) {
+				deposit = debtBeg
+			}
+
+			debtFinal := SafeSub(debtBeg, deposit)
+
+			if debtFinal.LT(vault.DebtPrincipal) {
+				vault.DebtPrincipal = debtFinal
+			}
+
+			diffDebtShares := vault.DebtShares
+
+			if debtFinal.Equal(sdk.ZeroInt()) {
+				vault.DebtShares = sdk.ZeroInt()
+
+			} else {
+				vault.DebtShares = (debtFinal.Mul(denom.DebtShares)).Quo(denom.DebtDenoms)
+				diffDebtShares = SafeSub(debtSharesBeg, vault.DebtShares)
+			}
+
+			denom.DebtDenoms = SafeSub(denom.DebtDenoms, deposit)
+			denom.DebtShares = denom.DebtShares.Sub(diffDebtShares)
+
+			k.SetDenom(ctx, denom)
+			k.SetVault(ctx, vault)
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid deposit")
 		}

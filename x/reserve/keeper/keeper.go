@@ -74,3 +74,11 @@ func removeUid(s []uint64, r uint64) ([]uint64, bool) {
 	}
 	return s, false
 }
+
+func SafeSub(intA sdk.Int, intB sdk.Int) (diff sdk.Int) {
+	diff = intA.Sub(intB)
+	if diff.LT(sdk.ZeroInt()) {
+		panic("subtraction result negative")
+	}
+	return diff
+}
