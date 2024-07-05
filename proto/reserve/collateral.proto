@@ -13,13 +13,7 @@ message Collateral {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable) = false
   ];
-  string minting_ratio = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
-    (gogoproto.nullable) = false
-  ];
-  string liquidation_ratio = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
-    (gogoproto.nullable) = false
-  ];
+  uint64 minting_ratio = 4;
+  uint64 liquidation_ratio = 5;
   int64 init_time = 6;
 }

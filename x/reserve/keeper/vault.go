@@ -86,7 +86,7 @@ func (k Keeper) GetVaultsInDefault(ctx sdk.Context) (list []types.Vault) {
 			iterator.Next()
 		}
 
-		numerator, denominator, err := k.GetRate(ctx, vault.Denom.Denom, vault.Collateral.Denom)
+		numerator, denominator, err := k.GetRate(ctx, vault.DebtDenom, vault.Collateral.Denom)
 		if err != nil {
 			iterator.Next()
 		}

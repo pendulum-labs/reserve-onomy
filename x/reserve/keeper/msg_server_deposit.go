@@ -42,7 +42,7 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", coin.Denom)
 			}
 
-			debtBeg := (vault.DebtShares.Mul(denom.DebtDenoms)).Quo(denom.DebtShares)
+			debtBeg := DebtAmount(denom, vault)
 			debtSharesBeg := vault.DebtShares
 			deposit := coin.Amount
 

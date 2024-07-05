@@ -82,3 +82,7 @@ func SafeSub(intA sdk.Int, intB sdk.Int) (diff sdk.Int) {
 	}
 	return diff
 }
+
+func DebtAmount(denom types.Denom, vault types.Vault) sdk.Int {
+	return (vault.DebtShares.Mul(denom.DebtDenoms)).Quo(denom.DebtShares)
+}

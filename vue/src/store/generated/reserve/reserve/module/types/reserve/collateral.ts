@@ -8,8 +8,8 @@ export interface Collateral {
   base: string;
   display: string;
   minimum_deposit: string;
-  minting_ratio: string;
-  liquidation_ratio: string;
+  minting_ratio: number;
+  liquidation_ratio: number;
   init_time: number;
 }
 
@@ -17,8 +17,8 @@ const baseCollateral: object = {
   base: "",
   display: "",
   minimum_deposit: "",
-  minting_ratio: "",
-  liquidation_ratio: "",
+  minting_ratio: 0,
+  liquidation_ratio: 0,
   init_time: 0,
 };
 
@@ -33,11 +33,11 @@ export const Collateral = {
     if (message.minimum_deposit !== "") {
       writer.uint32(26).string(message.minimum_deposit);
     }
-    if (message.minting_ratio !== "") {
-      writer.uint32(34).string(message.minting_ratio);
+    if (message.minting_ratio !== 0) {
+      writer.uint32(32).uint64(message.minting_ratio);
     }
-    if (message.liquidation_ratio !== "") {
-      writer.uint32(42).string(message.liquidation_ratio);
+    if (message.liquidation_ratio !== 0) {
+      writer.uint32(40).uint64(message.liquidation_ratio);
     }
     if (message.init_time !== 0) {
       writer.uint32(48).int64(message.init_time);
@@ -62,10 +62,10 @@ export const Collateral = {
           message.minimum_deposit = reader.string();
           break;
         case 4:
-          message.minting_ratio = reader.string();
+          message.minting_ratio = longToNumber(reader.uint64() as Long);
           break;
         case 5:
-          message.liquidation_ratio = reader.string();
+          message.liquidation_ratio = longToNumber(reader.uint64() as Long);
           break;
         case 6:
           message.init_time = longToNumber(reader.int64() as Long);
@@ -99,17 +99,17 @@ export const Collateral = {
       message.minimum_deposit = "";
     }
     if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
-      message.minting_ratio = String(object.minting_ratio);
+      message.minting_ratio = Number(object.minting_ratio);
     } else {
-      message.minting_ratio = "";
+      message.minting_ratio = 0;
     }
     if (
       object.liquidation_ratio !== undefined &&
       object.liquidation_ratio !== null
     ) {
-      message.liquidation_ratio = String(object.liquidation_ratio);
+      message.liquidation_ratio = Number(object.liquidation_ratio);
     } else {
-      message.liquidation_ratio = "";
+      message.liquidation_ratio = 0;
     }
     if (object.init_time !== undefined && object.init_time !== null) {
       message.init_time = Number(object.init_time);
@@ -156,7 +156,7 @@ export const Collateral = {
     if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
       message.minting_ratio = object.minting_ratio;
     } else {
-      message.minting_ratio = "";
+      message.minting_ratio = 0;
     }
     if (
       object.liquidation_ratio !== undefined &&
@@ -164,7 +164,7 @@ export const Collateral = {
     ) {
       message.liquidation_ratio = object.liquidation_ratio;
     } else {
-      message.liquidation_ratio = "";
+      message.liquidation_ratio = 0;
     }
     if (object.init_time !== undefined && object.init_time !== null) {
       message.init_time = object.init_time;

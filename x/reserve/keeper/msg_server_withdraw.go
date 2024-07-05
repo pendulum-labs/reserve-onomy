@@ -40,32 +40,42 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "collateral not found")
 			}
 
+			denom, found := k.GetDenom(ctx, vault.DebtDenom)
+			if !found {
+				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", vault.DebtDenom)
+			}
+
 			// Remainder is the amount of Collateral left in vault after withdrawal
 			remainder := vault.Collateral.Sub(coin)
 
-			numerator, denominator, err := k.GetRate(ctx, vault.Denom.Denom, vault.Collateral.Denom)
+			numerator, denominator, err := k.GetRate(ctx, vault.DebtDenom, vault.Collateral.Denom)
 			if err != nil {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 			}
 
 			// Collateralization Ratio = (remainder_vault_collateral * numerator * 100) / (denominator * vault_denoms)
-			remainder_collateralization_ratio := (remainder.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(vault.Denom.Amount))
-			if remainder_collateralization_ratio.LT(sdk.Int(collateral.MintingRatio)) {
+			remainder_collateralization_ratio := (remainder.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(DebtAmount(denom, vault)))
+			if remainder_collateralization_ratio.LT(sdk.NewIntFromUint64(collateral.MintingRatio)) {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "remainder collateralization ratio less than minting ratio")
 			}
 
 			vault.Collateral = vault.Collateral.Sub(coin)
-		case vault.Status == "active" && vault.Denom.Denom == coin.Denom:
+		case vault.Status == "active" && vault.DebtDenom == coin.Denom:
 			// Need Minting Ratio from Collateral Record
 			collateral, found := k.GetCollateral(ctx, vault.Collateral.Denom)
 			if !found {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "collateral not found")
 			}
 
-			// Lien is amount of Denoms owed to vault after minting
-			lien := vault.Denom.Add(coin)
+			denom, found := k.GetDenom(ctx, vault.DebtDenom)
+			if !found {
+				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", vault.DebtDenom)
+			}
 
-			numerator, denominator, err := k.GetRate(ctx, vault.Denom.Denom, vault.Collateral.Denom)
+			// Lien is amount of Denoms owed to vault after minting
+			lien := DebtAmount(denom, vault).Add(coin.Amount)
+
+			numerator, denominator, err := k.GetRate(ctx, vault.DebtDenom, vault.Collateral.Denom)
 			if err != nil {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 			}
