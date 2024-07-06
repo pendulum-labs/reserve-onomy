@@ -86,14 +86,19 @@ func (k Keeper) GetVaultsInDefault(ctx sdk.Context) (list []types.Vault) {
 			iterator.Next()
 		}
 
+		denom, found := k.GetDenom(ctx, vault.DebtDenom)
+		if !found {
+			iterator.Next()
+		}
+
 		numerator, denominator, err := k.GetRate(ctx, vault.DebtDenom, vault.Collateral.Denom)
 		if err != nil {
 			iterator.Next()
 		}
 
 		// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * vault_denoms)
-		collateralization_ratio := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(vault.Denom.Amount))
-		if collateralization_ratio.LTE(sdk.Int(collateral.LiquidationRatio)) {
+		collateralization_ratio := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(DebtAmount(denom, vault)))
+		if collateralization_ratio.LTE(sdk.NewIntFromUint64(collateral.LiquidationRatio)) {
 			list = append(list, vault)
 		}
 	}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -61,21 +62,21 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-r
 				return err
 			}
 
-			debtInterestRate, err := sdk.ParseUint(args[2])
+			debtInterestRate, err := strconv.ParseUint(args[2], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			if debtInterestRate.GT(sdk.NewUint(100000)) {
+			if debtInterestRate > 100000 {
 				return types.ErrInterestGtLimit
 			}
 
-			bondInterestRate, err := sdk.ParseUint(args[3])
+			bondInterestRate, err := strconv.ParseUint(args[3], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			if bondInterestRate.GT(sdk.NewUint(100000)) {
+			if bondInterestRate > 100000 {
 				return types.ErrInterestGtLimit
 			}
 

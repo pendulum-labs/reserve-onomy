@@ -1,6 +1,7 @@
 /* eslint-disable */
+import * as Long from "long";
+import { util, configure, Writer, Reader } from "protobufjs/minimal";
 import { Metadata } from "../cosmos/bank/v1beta1/bank";
-import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "reserve";
 
@@ -12,9 +13,9 @@ export interface CreateDenomProposal {
   metadata: Metadata | undefined;
   exchange_rate: string[];
   collateral_deposit: string;
-  debt_interest_rate: string;
+  debt_interest_rate: number;
   /** Negative Interest rate on Denoms Bonded */
-  bond_interest_rate: string;
+  bond_interest_rate: number;
 }
 
 /** RegisterCollateralProposal details a register-collateral proposal. */
@@ -24,8 +25,8 @@ export interface RegisterCollateralProposal {
   description: string;
   metadata: Metadata | undefined;
   minimum_deposit: string;
-  minting_ratio: string;
-  liquidation_ratio: string;
+  minting_ratio: number;
+  liquidation_ratio: number;
 }
 
 const baseCreateDenomProposal: object = {
@@ -34,8 +35,8 @@ const baseCreateDenomProposal: object = {
   description: "",
   exchange_rate: "",
   collateral_deposit: "",
-  debt_interest_rate: "",
-  bond_interest_rate: "",
+  debt_interest_rate: 0,
+  bond_interest_rate: 0,
 };
 
 export const CreateDenomProposal = {
@@ -61,11 +62,11 @@ export const CreateDenomProposal = {
     if (message.collateral_deposit !== "") {
       writer.uint32(50).string(message.collateral_deposit);
     }
-    if (message.debt_interest_rate !== "") {
-      writer.uint32(58).string(message.debt_interest_rate);
+    if (message.debt_interest_rate !== 0) {
+      writer.uint32(56).uint64(message.debt_interest_rate);
     }
-    if (message.bond_interest_rate !== "") {
-      writer.uint32(66).string(message.bond_interest_rate);
+    if (message.bond_interest_rate !== 0) {
+      writer.uint32(64).uint64(message.bond_interest_rate);
     }
     return writer;
   },
@@ -97,10 +98,10 @@ export const CreateDenomProposal = {
           message.collateral_deposit = reader.string();
           break;
         case 7:
-          message.debt_interest_rate = reader.string();
+          message.debt_interest_rate = longToNumber(reader.uint64() as Long);
           break;
         case 8:
-          message.bond_interest_rate = reader.string();
+          message.bond_interest_rate = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -150,17 +151,17 @@ export const CreateDenomProposal = {
       object.debt_interest_rate !== undefined &&
       object.debt_interest_rate !== null
     ) {
-      message.debt_interest_rate = String(object.debt_interest_rate);
+      message.debt_interest_rate = Number(object.debt_interest_rate);
     } else {
-      message.debt_interest_rate = "";
+      message.debt_interest_rate = 0;
     }
     if (
       object.bond_interest_rate !== undefined &&
       object.bond_interest_rate !== null
     ) {
-      message.bond_interest_rate = String(object.bond_interest_rate);
+      message.bond_interest_rate = Number(object.bond_interest_rate);
     } else {
-      message.bond_interest_rate = "";
+      message.bond_interest_rate = 0;
     }
     return message;
   },
@@ -231,7 +232,7 @@ export const CreateDenomProposal = {
     ) {
       message.debt_interest_rate = object.debt_interest_rate;
     } else {
-      message.debt_interest_rate = "";
+      message.debt_interest_rate = 0;
     }
     if (
       object.bond_interest_rate !== undefined &&
@@ -239,7 +240,7 @@ export const CreateDenomProposal = {
     ) {
       message.bond_interest_rate = object.bond_interest_rate;
     } else {
-      message.bond_interest_rate = "";
+      message.bond_interest_rate = 0;
     }
     return message;
   },
@@ -250,8 +251,8 @@ const baseRegisterCollateralProposal: object = {
   title: "",
   description: "",
   minimum_deposit: "",
-  minting_ratio: "",
-  liquidation_ratio: "",
+  minting_ratio: 0,
+  liquidation_ratio: 0,
 };
 
 export const RegisterCollateralProposal = {
@@ -274,11 +275,11 @@ export const RegisterCollateralProposal = {
     if (message.minimum_deposit !== "") {
       writer.uint32(42).string(message.minimum_deposit);
     }
-    if (message.minting_ratio !== "") {
-      writer.uint32(50).string(message.minting_ratio);
+    if (message.minting_ratio !== 0) {
+      writer.uint32(48).uint64(message.minting_ratio);
     }
-    if (message.liquidation_ratio !== "") {
-      writer.uint32(58).string(message.liquidation_ratio);
+    if (message.liquidation_ratio !== 0) {
+      writer.uint32(56).uint64(message.liquidation_ratio);
     }
     return writer;
   },
@@ -311,10 +312,10 @@ export const RegisterCollateralProposal = {
           message.minimum_deposit = reader.string();
           break;
         case 6:
-          message.minting_ratio = reader.string();
+          message.minting_ratio = longToNumber(reader.uint64() as Long);
           break;
         case 7:
-          message.liquidation_ratio = reader.string();
+          message.liquidation_ratio = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -357,17 +358,17 @@ export const RegisterCollateralProposal = {
       message.minimum_deposit = "";
     }
     if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
-      message.minting_ratio = String(object.minting_ratio);
+      message.minting_ratio = Number(object.minting_ratio);
     } else {
-      message.minting_ratio = "";
+      message.minting_ratio = 0;
     }
     if (
       object.liquidation_ratio !== undefined &&
       object.liquidation_ratio !== null
     ) {
-      message.liquidation_ratio = String(object.liquidation_ratio);
+      message.liquidation_ratio = Number(object.liquidation_ratio);
     } else {
-      message.liquidation_ratio = "";
+      message.liquidation_ratio = 0;
     }
     return message;
   },
@@ -428,7 +429,7 @@ export const RegisterCollateralProposal = {
     if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
       message.minting_ratio = object.minting_ratio;
     } else {
-      message.minting_ratio = "";
+      message.minting_ratio = 0;
     }
     if (
       object.liquidation_ratio !== undefined &&
@@ -436,11 +437,21 @@ export const RegisterCollateralProposal = {
     ) {
       message.liquidation_ratio = object.liquidation_ratio;
     } else {
-      message.liquidation_ratio = "";
+      message.liquidation_ratio = 0;
     }
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -452,3 +463,15 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

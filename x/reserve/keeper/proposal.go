@@ -15,7 +15,7 @@ func (k Keeper) CreateDenomProposal(ctx sdk.Context, request *types.CreateDenomP
 		return sdkerrors.Wrapf(types.ErrMetadataExists, "Metadata already exists for %s", request.Metadata.Base)
 	}
 
-	if request.BondInterestRate.GT(request.DebtInterestRate) {
+	if request.BondInterestRate > request.DebtInterestRate {
 		return sdkerrors.Wrapf(types.ErrBondGtDebt, "Bond Interest Rate %s greater than Debt Interest Rate %s", request.BondInterestRate, request.DebtInterestRate)
 	}
 

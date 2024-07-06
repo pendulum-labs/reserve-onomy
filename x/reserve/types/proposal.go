@@ -27,7 +27,7 @@ func init() { // nolint:gochecknoinits // cosmos sdk style
 }
 
 // NewCreateDenomProposal creates a new create-denom proposal.
-func NewCreateDenomProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, rate []sdk.Uint, collateralDeposit sdk.Coin, debtInterestRate sdk.Uint, bondInterestRate sdk.Uint) *CreateDenomProposal {
+func NewCreateDenomProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, rate []sdk.Uint, collateralDeposit sdk.Coin, debtInterestRate uint64, bondInterestRate uint64) *CreateDenomProposal {
 	return &CreateDenomProposal{sender.String(), title, description, &metadata, rate, collateralDeposit, debtInterestRate, bondInterestRate}
 }
 
@@ -64,7 +64,7 @@ func (m *CreateDenomProposal) ValidateBasic() error {
 }
 
 // NewRegisterCollateralProposal creates a new create-denom proposal.
-func NewRegisterCollateralProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, minCollateralDeposit sdk.Coin, mintingRatio sdk.Uint, liquidationRatio sdk.Uint) *RegisterCollateralProposal {
+func NewRegisterCollateralProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, minCollateralDeposit sdk.Coin, mintingRatio uint64, liquidationRatio uint64) *RegisterCollateralProposal {
 	return &RegisterCollateralProposal{sender.String(), title, description, &metadata, minCollateralDeposit, mintingRatio, liquidationRatio}
 }
 
