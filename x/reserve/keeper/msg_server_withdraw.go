@@ -72,8 +72,11 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", vault.DebtDenom)
 			}
 
-			// Lien is amount of Denoms owed to vault after minting
-			lien := DebtAmount(denom, vault).Add(coin.Amount)
+			// Debt final is amount of Denoms owed to vault after minting
+			debtBeg := DebtAmount(denom, vault)
+			debtFinal := debtBeg.Add(coin.Amount)
+
+			debtSharesBeg := vault.DebtShares
 
 			numerator, denominator, err := k.GetRate(ctx, vault.DebtDenom, vault.Collateral.Denom)
 			if err != nil {
@@ -86,7 +89,14 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "lien collateralization ratio less than minting ratio")
 			}
 
-			vault.Denom = vault.Denom.Add(coin)
+			debtSharesEnd := (debtFinal.Mul(denom.DebtShares)).Quo(denom.DebtDenoms)
+			debtSharesDiff := SafeSub(debtSharesEnd, debtSharesBeg)
+
+			vault.DebtShares = debtSharesEnd
+			vault.DebtPrincipal = vault.DebtPrincipal.Add(coin.Amount)
+			denom.DebtShares = denom.DebtShares.Add(debtSharesDiff)
+			denom.DebtDenoms = denom.DebtDenoms.Add(coin.Amount)
+
 			k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(coin))
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid withdraw")

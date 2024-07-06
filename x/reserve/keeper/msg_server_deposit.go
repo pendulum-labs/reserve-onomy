@@ -37,7 +37,6 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 			vault.Collateral = vault.Collateral.Add(coin)
 		case vault.Status == "active" && vault.DebtDenom == coin.Denom:
 			denom, found := k.GetDenom(ctx, coin.Denom)
-
 			if !found {
 				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", coin.Denom)
 			}
@@ -47,7 +46,7 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 			deposit := coin.Amount
 
 			// Cannot deposit more denoms than owed
-			if coin.Amount.GT(debtBeg) {
+			if deposit.GT(debtBeg) {
 				deposit = debtBeg
 			}
 
@@ -61,7 +60,7 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 
 			if debtFinal.Equal(sdk.ZeroInt()) {
 				vault.DebtShares = sdk.ZeroInt()
-
+				// Since diffDebtShares are already set to total vault shares no need to update
 			} else {
 				vault.DebtShares = (debtFinal.Mul(denom.DebtShares)).Quo(denom.DebtDenoms)
 				diffDebtShares = SafeSub(debtSharesBeg, vault.DebtShares)
