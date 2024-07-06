@@ -74,7 +74,7 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 
 			// Debt final is amount of Denoms owed to vault after minting
 			debtBeg := DebtAmount(denom, vault)
-			debtFinal := debtBeg.Add(coin.Amount)
+			debtEnd := debtBeg.Add(coin.Amount)
 
 			debtSharesBeg := vault.DebtShares
 
@@ -84,12 +84,12 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 			}
 
 			// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * lien)
-			lien_collateralization_ratio := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(lien.Amount))
-			if lien_collateralization_ratio.LT(sdk.Int(collateral.MintingRatio)) {
-				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "lien collateralization ratio less than minting ratio")
+			collateralizationRatioEnd := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(debtEnd))
+			if collateralizationRatioEnd.LT(sdk.NewIntFromUint64(collateral.MintingRatio)) {
+				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "end collateralization ratio less than minting ratio")
 			}
 
-			debtSharesEnd := (debtFinal.Mul(denom.DebtShares)).Quo(denom.DebtDenoms)
+			debtSharesEnd := (debtEnd.Mul(denom.DebtShares)).Quo(denom.DebtDenoms)
 			debtSharesDiff := SafeSub(debtSharesEnd, debtSharesBeg)
 
 			vault.DebtShares = debtSharesEnd
