@@ -70,15 +70,15 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 			// 100 would be 100%
 			// 125 would be 125%
 			// 999 would be 999%
-			// 9999 would 9999%
+			// 99999 would 99999%
 			// minting ratio numerator / 100 = minting ratio
-			mintingRatio, err := strconv.ParseUint(args[2], 10, 64)
+			LendingRatio, err := strconv.ParseUint(args[2], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			if mintingRatio > 100000 {
-				return fmt.Errorf("minting ratio numerator must be less than 100000: %d", mintingRatio)
+			if LendingRatio >= 100000 {
+				return fmt.Errorf("minting ratio numerator must be less than 100000: %d", LendingRatio)
 			}
 
 			liquidationRatio, err := strconv.ParseUint(args[3], 10, 64)
@@ -87,7 +87,7 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 			}
 
 			if liquidationRatio >= 100000 {
-				return fmt.Errorf("liquidation ratio numerator must be less than 10000: %d", liquidationRatio)
+				return fmt.Errorf("liquidation ratio numerator must be less than 100000: %d", liquidationRatio)
 			}
 
 			proposalFlags, err := parseProposalFlags(cmd.Flags())
@@ -107,7 +107,7 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 				proposalFlags.Description,
 				metadata,
 				minCollateralDeposit,
-				mintingRatio,
+				LendingRatio,
 				liquidationRatio,
 			)
 

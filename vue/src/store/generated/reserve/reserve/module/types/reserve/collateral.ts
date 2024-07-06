@@ -8,7 +8,7 @@ export interface Collateral {
   base: string;
   display: string;
   minimum_deposit: string;
-  minting_ratio: number;
+  lending_ratio: number;
   liquidation_ratio: number;
   init_time: number;
 }
@@ -17,7 +17,7 @@ const baseCollateral: object = {
   base: "",
   display: "",
   minimum_deposit: "",
-  minting_ratio: 0,
+  lending_ratio: 0,
   liquidation_ratio: 0,
   init_time: 0,
 };
@@ -33,8 +33,8 @@ export const Collateral = {
     if (message.minimum_deposit !== "") {
       writer.uint32(26).string(message.minimum_deposit);
     }
-    if (message.minting_ratio !== 0) {
-      writer.uint32(32).uint64(message.minting_ratio);
+    if (message.lending_ratio !== 0) {
+      writer.uint32(32).uint64(message.lending_ratio);
     }
     if (message.liquidation_ratio !== 0) {
       writer.uint32(40).uint64(message.liquidation_ratio);
@@ -62,7 +62,7 @@ export const Collateral = {
           message.minimum_deposit = reader.string();
           break;
         case 4:
-          message.minting_ratio = longToNumber(reader.uint64() as Long);
+          message.lending_ratio = longToNumber(reader.uint64() as Long);
           break;
         case 5:
           message.liquidation_ratio = longToNumber(reader.uint64() as Long);
@@ -98,10 +98,10 @@ export const Collateral = {
     } else {
       message.minimum_deposit = "";
     }
-    if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
-      message.minting_ratio = Number(object.minting_ratio);
+    if (object.lending_ratio !== undefined && object.lending_ratio !== null) {
+      message.lending_ratio = Number(object.lending_ratio);
     } else {
-      message.minting_ratio = 0;
+      message.lending_ratio = 0;
     }
     if (
       object.liquidation_ratio !== undefined &&
@@ -125,8 +125,8 @@ export const Collateral = {
     message.display !== undefined && (obj.display = message.display);
     message.minimum_deposit !== undefined &&
       (obj.minimum_deposit = message.minimum_deposit);
-    message.minting_ratio !== undefined &&
-      (obj.minting_ratio = message.minting_ratio);
+    message.lending_ratio !== undefined &&
+      (obj.lending_ratio = message.lending_ratio);
     message.liquidation_ratio !== undefined &&
       (obj.liquidation_ratio = message.liquidation_ratio);
     message.init_time !== undefined && (obj.init_time = message.init_time);
@@ -153,10 +153,10 @@ export const Collateral = {
     } else {
       message.minimum_deposit = "";
     }
-    if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
-      message.minting_ratio = object.minting_ratio;
+    if (object.lending_ratio !== undefined && object.lending_ratio !== null) {
+      message.lending_ratio = object.lending_ratio;
     } else {
-      message.minting_ratio = 0;
+      message.lending_ratio = 0;
     }
     if (
       object.liquidation_ratio !== undefined &&

@@ -55,7 +55,7 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 
 			// Collateralization Ratio = (remainder_vault_collateral * numerator * 100) / (denominator * vault_denoms)
 			remainder_collateralization_ratio := (remainder.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(DebtAmount(denom, vault)))
-			if remainder_collateralization_ratio.LT(sdk.NewIntFromUint64(collateral.MintingRatio)) {
+			if remainder_collateralization_ratio.LT(sdk.NewIntFromUint64(collateral.LendingRatio)) {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "remainder collateralization ratio less than minting ratio")
 			}
 
@@ -85,7 +85,7 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 
 			// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * lien)
 			collateralizationRatioEnd := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(debtEnd))
-			if collateralizationRatioEnd.LT(sdk.NewIntFromUint64(collateral.MintingRatio)) {
+			if collateralizationRatioEnd.LT(sdk.NewIntFromUint64(collateral.LendingRatio)) {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "end collateralization ratio less than minting ratio")
 			}
 

@@ -51,7 +51,7 @@ func (k Keeper) RegisterCollateralProposal(ctx sdk.Context, request *types.Regis
 		Base:             request.Metadata.Base,
 		Display:          request.Metadata.Display,
 		MinimumDeposit:   request.MinimumDeposit,
-		MintingRatio:     request.MintingRatio,
+		LendingRatio:     request.LendingRatio,
 		LiquidationRatio: request.LiquidationRatio,
 		InitTime:         ctx.BlockHeader().Time.Unix(),
 	})
