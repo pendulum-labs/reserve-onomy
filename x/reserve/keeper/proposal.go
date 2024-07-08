@@ -42,6 +42,11 @@ func (k Keeper) CreateDenomProposal(ctx sdk.Context, request *types.CreateDenomP
 		BondInterestRate: request.BondInterestRate,
 	})
 
+	k.SetBonded(ctx, types.Bonded{
+		DenomBase: request.DenomMetadata.Base,
+		BondBase:  request.BondMetadata.Base,
+	})
+
 	return nil
 }
 
