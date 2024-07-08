@@ -27,12 +27,23 @@ func (k msgServer) Unbond(goCtx context.Context, msg *types.MsgUnbond) (*types.M
 		return nil, err
 	}
 
+	err = k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(bonds))
+	if err != nil {
+		return nil, err
+	}
+
 	denom, found := k.GetDenom(ctx, bonded.DenomBase)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "denom not found")
 	}
 
 	denoms := (denom.BondDenoms.Mul(bonds.Amount)).Quo(denom.BondShares)
+	denomsCoin := sdk.NewCoin(denom.DenomBase, denoms)
+
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sdk.AccAddress(msg.Creator), sdk.NewCoins(denomsCoin))
+	if err != nil {
+		return nil, err
+	}
 
 	denom.BondDenoms = denom.BondDenoms.Sub(denoms)
 	denom.BondShares = denom.BondShares.Sub(bonds.Amount)
