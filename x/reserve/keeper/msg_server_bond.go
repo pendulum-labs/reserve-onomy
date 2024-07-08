@@ -41,5 +41,9 @@ func (k msgServer) Bond(goCtx context.Context, msg *types.MsgBond) (*types.MsgBo
 		return nil, err
 	}
 
+	denom.BondDenoms = denom.BondDenoms.Add(denoms.Amount)
+	denom.BondShares = denom.BondShares.Add(bondShares)
+	k.SetDenom(ctx, denom)
+
 	return &types.MsgBondResponse{}, nil
 }
