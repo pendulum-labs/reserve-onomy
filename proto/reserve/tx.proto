@@ -12,6 +12,7 @@ service Msg {
   rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
   rpc Liquidate(MsgLiquidate) returns (MsgLiquidateResponse);
   rpc Bond(MsgBond) returns (MsgBondResponse);
+  rpc Unbond(MsgUnbond) returns (MsgUnbondResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -58,6 +59,14 @@ message MsgBond {
 }
 
 message MsgBondResponse {
+}
+
+message MsgUnbond {
+  string creator = 1;
+  string bonds = 2;
+}
+
+message MsgUnbondResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

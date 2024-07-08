@@ -46,6 +46,13 @@ export interface MsgBond {
 
 export interface MsgBondResponse {}
 
+export interface MsgUnbond {
+  creator: string;
+  bonds: string;
+}
+
+export interface MsgUnbondResponse {}
+
 const baseMsgCreateVault: object = { creator: "", collateral: "" };
 
 export const MsgCreateVault = {
@@ -689,14 +696,125 @@ export const MsgBondResponse = {
   },
 };
 
+const baseMsgUnbond: object = { creator: "", bonds: "" };
+
+export const MsgUnbond = {
+  encode(message: MsgUnbond, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.bonds !== "") {
+      writer.uint32(18).string(message.bonds);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgUnbond {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgUnbond } as MsgUnbond;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.bonds = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgUnbond {
+    const message = { ...baseMsgUnbond } as MsgUnbond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.bonds !== undefined && object.bonds !== null) {
+      message.bonds = String(object.bonds);
+    } else {
+      message.bonds = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgUnbond): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.bonds !== undefined && (obj.bonds = message.bonds);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgUnbond>): MsgUnbond {
+    const message = { ...baseMsgUnbond } as MsgUnbond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.bonds !== undefined && object.bonds !== null) {
+      message.bonds = object.bonds;
+    } else {
+      message.bonds = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgUnbondResponse: object = {};
+
+export const MsgUnbondResponse = {
+  encode(_: MsgUnbondResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgUnbondResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgUnbondResponse } as MsgUnbondResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgUnbondResponse {
+    const message = { ...baseMsgUnbondResponse } as MsgUnbondResponse;
+    return message;
+  },
+
+  toJSON(_: MsgUnbondResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgUnbondResponse>): MsgUnbondResponse {
+    const message = { ...baseMsgUnbondResponse } as MsgUnbondResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateVault(request: MsgCreateVault): Promise<MsgCreateVaultResponse>;
   Deposit(request: MsgDeposit): Promise<MsgDepositResponse>;
   Withdraw(request: MsgWithdraw): Promise<MsgWithdrawResponse>;
   Liquidate(request: MsgLiquidate): Promise<MsgLiquidateResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Bond(request: MsgBond): Promise<MsgBondResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Unbond(request: MsgUnbond): Promise<MsgUnbondResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -736,6 +854,12 @@ export class MsgClientImpl implements Msg {
     const data = MsgBond.encode(request).finish();
     const promise = this.rpc.request("reserve.Msg", "Bond", data);
     return promise.then((data) => MsgBondResponse.decode(new Reader(data)));
+  }
+
+  Unbond(request: MsgUnbond): Promise<MsgUnbondResponse> {
+    const data = MsgUnbond.encode(request).finish();
+    const promise = this.rpc.request("reserve.Msg", "Unbond", data);
+    return promise.then((data) => MsgUnbondResponse.decode(new Reader(data)));
   }
 }
 
