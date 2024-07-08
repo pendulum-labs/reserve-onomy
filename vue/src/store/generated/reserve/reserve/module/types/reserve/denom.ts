@@ -26,6 +26,11 @@ export interface Denom {
   bond_blocks: string;
 }
 
+export interface Bonded {
+  denom_base: string;
+  bond_base: string;
+}
+
 const baseDenom: object = {
   denom_base: "",
   denom_display: "",
@@ -297,6 +302,78 @@ export const Denom = {
       message.bond_blocks = object.bond_blocks;
     } else {
       message.bond_blocks = "";
+    }
+    return message;
+  },
+};
+
+const baseBonded: object = { denom_base: "", bond_base: "" };
+
+export const Bonded = {
+  encode(message: Bonded, writer: Writer = Writer.create()): Writer {
+    if (message.denom_base !== "") {
+      writer.uint32(10).string(message.denom_base);
+    }
+    if (message.bond_base !== "") {
+      writer.uint32(18).string(message.bond_base);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): Bonded {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseBonded } as Bonded;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.denom_base = reader.string();
+          break;
+        case 2:
+          message.bond_base = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Bonded {
+    const message = { ...baseBonded } as Bonded;
+    if (object.denom_base !== undefined && object.denom_base !== null) {
+      message.denom_base = String(object.denom_base);
+    } else {
+      message.denom_base = "";
+    }
+    if (object.bond_base !== undefined && object.bond_base !== null) {
+      message.bond_base = String(object.bond_base);
+    } else {
+      message.bond_base = "";
+    }
+    return message;
+  },
+
+  toJSON(message: Bonded): unknown {
+    const obj: any = {};
+    message.denom_base !== undefined && (obj.denom_base = message.denom_base);
+    message.bond_base !== undefined && (obj.bond_base = message.bond_base);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<Bonded>): Bonded {
+    const message = { ...baseBonded } as Bonded;
+    if (object.denom_base !== undefined && object.denom_base !== null) {
+      message.denom_base = object.denom_base;
+    } else {
+      message.denom_base = "";
+    }
+    if (object.bond_base !== undefined && object.bond_base !== null) {
+      message.bond_base = object.bond_base;
+    } else {
+      message.bond_base = "";
     }
     return message;
   },

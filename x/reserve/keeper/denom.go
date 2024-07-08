@@ -53,3 +53,30 @@ func (k Keeper) RemoveDenom(
 		base,
 	))
 }
+
+// SetDenom set a specific denom in the store from its index
+func (k Keeper) SetBonded(ctx sdk.Context, bonded types.Bonded) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DenomKeyPrefix))
+	a := k.cdc.MustMarshal(&bonded)
+	store.Set(types.DenomKey(
+		bonded.BondBase,
+	), a)
+}
+
+// GetDenom returns a denom from its index
+func (k Keeper) GetBonded(
+	ctx sdk.Context,
+	bondBase string,
+) (bonded types.Bonded, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DenomKeyPrefix))
+
+	b := store.Get(types.DenomKey(
+		bondBase,
+	))
+	if b == nil {
+		return bonded, false
+	}
+
+	k.cdc.MustUnmarshal(b, &bonded)
+	return bonded, true
+}

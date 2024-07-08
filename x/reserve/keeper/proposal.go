@@ -12,16 +12,16 @@ func (k Keeper) CreateDenomProposal(ctx sdk.Context, request *types.CreateDenomP
 
 	_, found := k.bankKeeper.GetDenomMetaData(ctx, request.DenomMetadata.Base)
 	if found {
-		return sdkerrors.Wrapf(types.ErrMetadataExists, "Metadata already exists for %s", request.DenomMetadata.Base)
+		return sdkerrors.Wrapf(types.ErrMetadataExists, "Denom Metadata already exists for %s", request.DenomMetadata.Base)
 	}
 
 	_, found = k.bankKeeper.GetDenomMetaData(ctx, request.BondMetadata.Base)
 	if found {
-		return sdkerrors.Wrapf(types.ErrMetadataExists, "Metadata already exists for %s", request.BondMetadata.Base)
+		return sdkerrors.Wrapf(types.ErrMetadataExists, "Bond Metadata already exists for %s", request.BondMetadata.Base)
 	}
 
 	if request.BondInterestRate > request.DebtInterestRate {
-		return sdkerrors.Wrapf(types.ErrBondGtDebt, "Bond Interest Rate %s greater than Debt Interest Rate %s", request.BondInterestRate, request.DebtInterestRate)
+		return sdkerrors.Wrapf(types.ErrBondGtDebt, "Bond Interest Rate greater than Debt Interest Rate")
 	}
 
 	err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(request.Sender), types.ModuleName, sdk.NewCoins(request.CollateralDeposit))
