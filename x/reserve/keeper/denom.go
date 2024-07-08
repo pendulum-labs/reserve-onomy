@@ -12,7 +12,7 @@ func (k Keeper) SetDenom(ctx sdk.Context, denom types.Denom) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DenomKeyPrefix))
 	a := k.cdc.MustMarshal(&denom)
 	store.Set(types.DenomKey(
-		denom.Base,
+		denom.DenomBase,
 	), a)
 }
 

@@ -10,7 +10,8 @@ export interface CreateDenomProposal {
   sender: string;
   title: string;
   description: string;
-  metadata: Metadata | undefined;
+  denom_metadata: Metadata | undefined;
+  bond_metadata: Metadata | undefined;
   exchange_rate: string[];
   collateral_deposit: string;
   debt_interest_rate: number;
@@ -53,20 +54,26 @@ export const CreateDenomProposal = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.metadata !== undefined) {
-      Metadata.encode(message.metadata, writer.uint32(34).fork()).ldelim();
+    if (message.denom_metadata !== undefined) {
+      Metadata.encode(
+        message.denom_metadata,
+        writer.uint32(34).fork()
+      ).ldelim();
+    }
+    if (message.bond_metadata !== undefined) {
+      Metadata.encode(message.bond_metadata, writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.exchange_rate) {
-      writer.uint32(42).string(v!);
+      writer.uint32(50).string(v!);
     }
     if (message.collateral_deposit !== "") {
-      writer.uint32(50).string(message.collateral_deposit);
+      writer.uint32(58).string(message.collateral_deposit);
     }
     if (message.debt_interest_rate !== 0) {
-      writer.uint32(56).uint64(message.debt_interest_rate);
+      writer.uint32(64).uint64(message.debt_interest_rate);
     }
     if (message.bond_interest_rate !== 0) {
-      writer.uint32(64).uint64(message.bond_interest_rate);
+      writer.uint32(72).uint64(message.bond_interest_rate);
     }
     return writer;
   },
@@ -89,18 +96,21 @@ export const CreateDenomProposal = {
           message.description = reader.string();
           break;
         case 4:
-          message.metadata = Metadata.decode(reader, reader.uint32());
+          message.denom_metadata = Metadata.decode(reader, reader.uint32());
           break;
         case 5:
-          message.exchange_rate.push(reader.string());
+          message.bond_metadata = Metadata.decode(reader, reader.uint32());
           break;
         case 6:
-          message.collateral_deposit = reader.string();
+          message.exchange_rate.push(reader.string());
           break;
         case 7:
-          message.debt_interest_rate = longToNumber(reader.uint64() as Long);
+          message.collateral_deposit = reader.string();
           break;
         case 8:
+          message.debt_interest_rate = longToNumber(reader.uint64() as Long);
+          break;
+        case 9:
           message.bond_interest_rate = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -129,10 +139,15 @@ export const CreateDenomProposal = {
     } else {
       message.description = "";
     }
-    if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = Metadata.fromJSON(object.metadata);
+    if (object.denom_metadata !== undefined && object.denom_metadata !== null) {
+      message.denom_metadata = Metadata.fromJSON(object.denom_metadata);
     } else {
-      message.metadata = undefined;
+      message.denom_metadata = undefined;
+    }
+    if (object.bond_metadata !== undefined && object.bond_metadata !== null) {
+      message.bond_metadata = Metadata.fromJSON(object.bond_metadata);
+    } else {
+      message.bond_metadata = undefined;
     }
     if (object.exchange_rate !== undefined && object.exchange_rate !== null) {
       for (const e of object.exchange_rate) {
@@ -172,9 +187,13 @@ export const CreateDenomProposal = {
     message.title !== undefined && (obj.title = message.title);
     message.description !== undefined &&
       (obj.description = message.description);
-    message.metadata !== undefined &&
-      (obj.metadata = message.metadata
-        ? Metadata.toJSON(message.metadata)
+    message.denom_metadata !== undefined &&
+      (obj.denom_metadata = message.denom_metadata
+        ? Metadata.toJSON(message.denom_metadata)
+        : undefined);
+    message.bond_metadata !== undefined &&
+      (obj.bond_metadata = message.bond_metadata
+        ? Metadata.toJSON(message.bond_metadata)
         : undefined);
     if (message.exchange_rate) {
       obj.exchange_rate = message.exchange_rate.map((e) => e);
@@ -208,10 +227,15 @@ export const CreateDenomProposal = {
     } else {
       message.description = "";
     }
-    if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = Metadata.fromPartial(object.metadata);
+    if (object.denom_metadata !== undefined && object.denom_metadata !== null) {
+      message.denom_metadata = Metadata.fromPartial(object.denom_metadata);
     } else {
-      message.metadata = undefined;
+      message.denom_metadata = undefined;
+    }
+    if (object.bond_metadata !== undefined && object.bond_metadata !== null) {
+      message.bond_metadata = Metadata.fromPartial(object.bond_metadata);
+    } else {
+      message.bond_metadata = undefined;
     }
     if (object.exchange_rate !== undefined && object.exchange_rate !== null) {
       for (const e of object.exchange_rate) {

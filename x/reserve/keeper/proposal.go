@@ -10,9 +10,14 @@ import (
 // CreateDenomProposal executes the create-denom proposal.
 func (k Keeper) CreateDenomProposal(ctx sdk.Context, request *types.CreateDenomProposal) error {
 
-	_, found := k.bankKeeper.GetDenomMetaData(ctx, request.Metadata.Base)
+	_, found := k.bankKeeper.GetDenomMetaData(ctx, request.DenomMetadata.Base)
 	if found {
-		return sdkerrors.Wrapf(types.ErrMetadataExists, "Metadata already exists for %s", request.Metadata.Base)
+		return sdkerrors.Wrapf(types.ErrMetadataExists, "Metadata already exists for %s", request.DenomMetadata.Base)
+	}
+
+	_, found = k.bankKeeper.GetDenomMetaData(ctx, request.BondMetadata.Base)
+	if found {
+		return sdkerrors.Wrapf(types.ErrMetadataExists, "Metadata already exists for %s", request.BondMetadata.Base)
 	}
 
 	if request.BondInterestRate > request.DebtInterestRate {
@@ -24,11 +29,14 @@ func (k Keeper) CreateDenomProposal(ctx sdk.Context, request *types.CreateDenomP
 		return err
 	}
 
-	k.bankKeeper.SetDenomMetaData(ctx, *request.Metadata)
+	k.bankKeeper.SetDenomMetaData(ctx, *request.DenomMetadata)
+	k.bankKeeper.SetDenomMetaData(ctx, *request.BondMetadata)
 
 	k.SetDenom(ctx, types.Denom{
-		Base:             request.Metadata.Base,
-		Display:          request.Metadata.Display,
+		DenomBase:        request.DenomMetadata.Base,
+		DenomDisplay:     request.DenomMetadata.Display,
+		BondBase:         request.BondMetadata.Base,
+		BondDisplay:      request.BondMetadata.Display,
 		InitTime:         ctx.BlockHeader().Time.Unix(),
 		DebtInterestRate: request.DebtInterestRate,
 		BondInterestRate: request.BondInterestRate,

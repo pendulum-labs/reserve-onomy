@@ -27,12 +27,12 @@ import (
 func CmdCreateDenomProposal() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-denom rate metadata-path",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(6),
 		Short: "Submit a create denom proposal",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-rate bond-interest-rate --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-rate bond-interest-rate denom-metadata bond-metadata --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
@@ -80,12 +80,7 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-r
 				return types.ErrInterestGtLimit
 			}
 
-			proposalFlags, err := parseProposalFlags(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			path := args[1]
+			path := args[4]
 
 			metadataFile, err := os.Open(path)
 			if err != nil {
@@ -97,9 +92,33 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-r
 				return err
 			}
 
-			var metadata banktypes.Metadata
+			var denomMetadata banktypes.Metadata
 
-			err = json.Unmarshal(byteMetadata, &metadata)
+			err = json.Unmarshal(byteMetadata, &denomMetadata)
+			if err != nil {
+				return err
+			}
+
+			path = args[5]
+
+			metadataFile, err = os.Open(path)
+			if err != nil {
+				return err
+			}
+
+			byteMetadata, err = io.ReadAll(metadataFile)
+			if err != nil {
+				return err
+			}
+
+			var bondMetadata banktypes.Metadata
+
+			err = json.Unmarshal(byteMetadata, &bondMetadata)
+			if err != nil {
+				return err
+			}
+
+			proposalFlags, err := parseProposalFlags(cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -115,7 +134,10 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-r
 				from,
 				proposalFlags.Title,
 				proposalFlags.Description,
-				metadata, rate, collateralDeposit,
+				denomMetadata,
+				bondMetadata,
+				rate,
+				collateralDeposit,
 				debtInterestRate,
 				bondInterestRate,
 			)

@@ -12,12 +12,12 @@ import (
 func (k msgServer) Bond(goCtx context.Context, msg *types.MsgBond) (*types.MsgBondResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	denom, err := sdk.ParseCoinNormalized(msg.Denom)
+	denoms, err := sdk.ParseCoinNormalized(msg.Denom)
 	if err != nil {
 		return nil, err
 	}
 
-	_, found := k.GetDenom(ctx, denom.Denom)
+	denom, found := k.GetDenom(ctx, denoms.Denom)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "denom not found")
 	}
@@ -27,9 +27,20 @@ func (k msgServer) Bond(goCtx context.Context, msg *types.MsgBond) (*types.MsgBo
 		return nil, err
 	}
 
-	totalSupply := k.bankKeeper.GetSupply(ctx, denom.Denom)
-	if totalSupply.Equal(sdk.ZeroInt()) {
-		k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins())
+	bondShares := (denom.BondShares.Mul(denoms.Amount)).Quo(denom.BondDenoms)
+
+	bondName := denoms.Denom + "_bond"
+
+	bondCoin := sdk.NewCoin(bondName, bondShares)
+
+	err = k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(bondCoin))
+	if err != nil {
+		return nil, err
+	}
+
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(msg.Creator), types.ModuleName, sdk.NewCoins(bondCoin))
+	if err != nil {
+		return nil, err
 	}
 
 	return &types.MsgBondResponse{}, nil

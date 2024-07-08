@@ -25,23 +25,25 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Denom struct {
-	Base     string `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Display  string `protobuf:"bytes,2,opt,name=display,proto3" json:"display,omitempty"`
-	InitTime int64  `protobuf:"varint,3,opt,name=init_time,json=initTime,proto3" json:"init_time,omitempty"`
+	DenomBase    string `protobuf:"bytes,1,opt,name=denom_base,json=denomBase,proto3" json:"denom_base,omitempty"`
+	DenomDisplay string `protobuf:"bytes,2,opt,name=denom_display,json=denomDisplay,proto3" json:"denom_display,omitempty"`
+	BondBase     string `protobuf:"bytes,3,opt,name=bond_base,json=bondBase,proto3" json:"bond_base,omitempty"`
+	BondDisplay  string `protobuf:"bytes,4,opt,name=bond_display,json=bondDisplay,proto3" json:"bond_display,omitempty"`
+	InitTime     int64  `protobuf:"varint,5,opt,name=init_time,json=initTime,proto3" json:"init_time,omitempty"`
 	// Positive Interest rate on denom debt pool
-	DebtInterestRate uint64 `protobuf:"varint,5,opt,name=debt_interest_rate,json=debtInterestRate,proto3" json:"debt_interest_rate,omitempty"`
+	DebtInterestRate uint64 `protobuf:"varint,6,opt,name=debt_interest_rate,json=debtInterestRate,proto3" json:"debt_interest_rate,omitempty"`
 	// Total shares of the denom debt pool
-	DebtShares github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=debt_shares,json=debtShares,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"debt_shares"`
+	DebtShares github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,7,opt,name=debt_shares,json=debtShares,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"debt_shares"`
 	// Total amount of denom in the denom debt pool
-	DebtDenoms github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,7,opt,name=debt_denoms,json=debtDenoms,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"debt_denoms"`
+	DebtDenoms github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=debt_denoms,json=debtDenoms,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"debt_denoms"`
 	// Negative Interest rate on Denoms Bonded
-	BondInterestRate uint64 `protobuf:"varint,8,opt,name=bond_interest_rate,json=bondInterestRate,proto3" json:"bond_interest_rate,omitempty"`
+	BondInterestRate uint64 `protobuf:"varint,9,opt,name=bond_interest_rate,json=bondInterestRate,proto3" json:"bond_interest_rate,omitempty"`
 	// Total shares of the denom bond pool
-	BondShares github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,9,opt,name=bond_shares,json=bondShares,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bond_shares"`
+	BondShares github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,10,opt,name=bond_shares,json=bondShares,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bond_shares"`
 	// Total amount of denom in the denom bond pool
-	BondDenoms github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,10,opt,name=bond_denoms,json=bondDenoms,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bond_denoms"`
+	BondDenoms github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,11,opt,name=bond_denoms,json=bondDenoms,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bond_denoms"`
 	// Unbonding blocks
-	BondBlocks github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,11,opt,name=bond_blocks,json=bondBlocks,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bond_blocks"`
+	BondBlocks github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,12,opt,name=bond_blocks,json=bondBlocks,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bond_blocks"`
 }
 
 func (m *Denom) Reset()         { *m = Denom{} }
@@ -77,16 +79,30 @@ func (m *Denom) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Denom proto.InternalMessageInfo
 
-func (m *Denom) GetBase() string {
+func (m *Denom) GetDenomBase() string {
 	if m != nil {
-		return m.Base
+		return m.DenomBase
 	}
 	return ""
 }
 
-func (m *Denom) GetDisplay() string {
+func (m *Denom) GetDenomDisplay() string {
 	if m != nil {
-		return m.Display
+		return m.DenomDisplay
+	}
+	return ""
+}
+
+func (m *Denom) GetBondBase() string {
+	if m != nil {
+		return m.BondBase
+	}
+	return ""
+}
+
+func (m *Denom) GetBondDisplay() string {
+	if m != nil {
+		return m.BondDisplay
 	}
 	return ""
 }
@@ -119,29 +135,31 @@ func init() {
 func init() { proto.RegisterFile("reserve/denom.proto", fileDescriptor_26550448cb73c9b3) }
 
 var fileDescriptor_26550448cb73c9b3 = []byte{
-	// 339 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0x3f, 0x4e, 0xc3, 0x30,
-	0x14, 0xc6, 0x63, 0xfa, 0xdf, 0x5d, 0x90, 0x41, 0xc2, 0x02, 0xc9, 0xad, 0x18, 0x50, 0x07, 0x48,
-	0x06, 0xc4, 0x05, 0x2a, 0x96, 0x4e, 0x48, 0x81, 0x89, 0xa5, 0x4a, 0x9a, 0xa7, 0xd6, 0x6a, 0x13,
-	0x57, 0x79, 0x06, 0xd1, 0x5b, 0x70, 0x0c, 0xee, 0xc1, 0xd2, 0xb1, 0x23, 0x62, 0xa8, 0x50, 0x7a,
-	0x11, 0x64, 0xd7, 0x01, 0xa9, 0x63, 0xa6, 0xbc, 0x7c, 0xdf, 0xd3, 0xcf, 0xfa, 0x59, 0xa6, 0x27,
-	0x39, 0x20, 0xe4, 0xaf, 0x10, 0x24, 0x90, 0xa9, 0xd4, 0x5f, 0xe6, 0x4a, 0x2b, 0xd6, 0x72, 0xe1,
-	0xf9, 0xe9, 0x54, 0x4d, 0x95, 0xcd, 0x02, 0x33, 0xed, 0xeb, 0xcb, 0xcf, 0x3a, 0x6d, 0xdc, 0x9b,
-	0x75, 0xc6, 0x68, 0x3d, 0x8e, 0x10, 0x38, 0xe9, 0x93, 0x41, 0x27, 0xb4, 0x33, 0xe3, 0xb4, 0x95,
-	0x48, 0x5c, 0x2e, 0xa2, 0x15, 0x3f, 0xb2, 0x71, 0xf9, 0xcb, 0x2e, 0x68, 0x47, 0x66, 0x52, 0x8f,
-	0xb5, 0x4c, 0x81, 0xd7, 0xfa, 0x64, 0x50, 0x0b, 0xdb, 0x26, 0x78, 0x92, 0x29, 0xb0, 0x6b, 0xca,
-	0x12, 0x88, 0xf5, 0x58, 0x66, 0x1a, 0x72, 0x40, 0x3d, 0xce, 0x23, 0x0d, 0xbc, 0xd1, 0x27, 0x83,
-	0x7a, 0x78, 0x6c, 0x9a, 0x91, 0x2b, 0xc2, 0x48, 0x03, 0x7b, 0xa0, 0x5d, 0xbb, 0x8d, 0xb3, 0x28,
-	0x07, 0xe4, 0x4d, 0x73, 0xd0, 0xd0, 0x5f, 0x6f, 0x7b, 0xde, 0xf7, 0xb6, 0x77, 0x35, 0x95, 0x7a,
-	0xf6, 0x12, 0xfb, 0x13, 0x95, 0x06, 0x13, 0x85, 0xa9, 0x42, 0xf7, 0xb9, 0xc1, 0x64, 0x1e, 0xe8,
-	0xd5, 0x12, 0xd0, 0x1f, 0x65, 0x3a, 0xa4, 0x06, 0xf1, 0x68, 0x09, 0x7f, 0x40, 0x7b, 0x0d, 0xc8,
-	0x5b, 0xd5, 0x81, 0xf6, 0x66, 0xd0, 0xf8, 0xc4, 0x2a, 0x4b, 0x0e, 0x7c, 0xda, 0x7b, 0x1f, 0xd3,
-	0x1c, 0xfa, 0xd8, 0x6d, 0xe7, 0xd3, 0xa9, 0x76, 0xbc, 0x41, 0xfc, 0xfb, 0x58, 0xa0, 0xf3, 0xa1,
-	0xd5, 0x81, 0xce, 0xa7, 0x04, 0xc6, 0x0b, 0x35, 0x99, 0x23, 0xef, 0x56, 0x07, 0x0e, 0x2d, 0x61,
-	0x78, 0xf7, 0x51, 0x08, 0xb2, 0x2e, 0x04, 0xd9, 0x14, 0x82, 0xfc, 0x14, 0x82, 0xbc, 0xef, 0x84,
-	0xb7, 0xd9, 0x09, 0xef, 0x6b, 0x27, 0xbc, 0xe7, 0xb3, 0xf2, 0x5d, 0xbe, 0x05, 0xe5, 0x64, 0x31,
-	0x71, 0xd3, 0xbe, 0xc1, 0xdb, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x66, 0x9e, 0xff, 0xe9, 0xb9,
-	0x02, 0x00, 0x00,
+	// 375 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0x4d, 0x4a, 0xc3, 0x40,
+	0x18, 0x86, 0x33, 0xf6, 0x37, 0xd3, 0x0a, 0x12, 0x05, 0x83, 0x62, 0x5a, 0x15, 0xa4, 0x0b, 0x4d,
+	0x16, 0xe2, 0x05, 0x42, 0x37, 0x5d, 0x09, 0xd1, 0x95, 0x9b, 0x90, 0x34, 0x1f, 0x6d, 0x68, 0x93,
+	0x29, 0x99, 0x51, 0xec, 0x2d, 0xdc, 0x7a, 0x03, 0x8f, 0xd2, 0x65, 0x97, 0xe2, 0xa2, 0x48, 0x7a,
+	0x11, 0x99, 0x6f, 0x12, 0xff, 0x96, 0x59, 0x65, 0x78, 0xdf, 0x6f, 0x9e, 0xe1, 0x99, 0x0c, 0xdd,
+	0xcf, 0x80, 0x43, 0xf6, 0x04, 0x4e, 0x04, 0x29, 0x4b, 0xec, 0x45, 0xc6, 0x04, 0x33, 0x5a, 0x45,
+	0x78, 0x74, 0x30, 0x61, 0x13, 0x86, 0x99, 0x23, 0x57, 0xaa, 0x3e, 0x7b, 0x6d, 0xd0, 0xc6, 0x50,
+	0x8e, 0x1b, 0x27, 0x94, 0xe2, 0x3e, 0x3f, 0x0c, 0x38, 0x98, 0xa4, 0x4f, 0x06, 0xba, 0xa7, 0x63,
+	0xe2, 0x06, 0x1c, 0x8c, 0x73, 0xba, 0xab, 0xea, 0x28, 0xe6, 0x8b, 0x79, 0xb0, 0x34, 0x77, 0x70,
+	0xa2, 0x8b, 0xe1, 0x50, 0x65, 0xc6, 0x31, 0xd5, 0x43, 0x96, 0x46, 0x0a, 0x51, 0xc3, 0x81, 0xb6,
+	0x0c, 0x90, 0x70, 0x4a, 0xbb, 0x58, 0x96, 0x80, 0x3a, 0xf6, 0x1d, 0x99, 0xfd, 0xda, 0x1f, 0xa7,
+	0xb1, 0xf0, 0x45, 0x9c, 0x80, 0xd9, 0xe8, 0x93, 0x41, 0xcd, 0x6b, 0xcb, 0xe0, 0x3e, 0x4e, 0xc0,
+	0xb8, 0xa4, 0x46, 0x04, 0xa1, 0xf0, 0xe3, 0x54, 0x40, 0x06, 0x5c, 0xf8, 0x59, 0x20, 0xc0, 0x6c,
+	0xf6, 0xc9, 0xa0, 0xee, 0xed, 0xc9, 0x66, 0x54, 0x14, 0x5e, 0x20, 0xc0, 0xb8, 0xa5, 0x1d, 0x9c,
+	0xe6, 0xd3, 0x20, 0x03, 0x6e, 0xb6, 0xe4, 0x61, 0xae, 0xbd, 0xda, 0xf4, 0xb4, 0x8f, 0x4d, 0xef,
+	0x62, 0x12, 0x8b, 0xe9, 0x63, 0x68, 0x8f, 0x59, 0xe2, 0x8c, 0x19, 0x4f, 0x18, 0x2f, 0x3e, 0x57,
+	0x3c, 0x9a, 0x39, 0x62, 0xb9, 0x00, 0x6e, 0x8f, 0x52, 0xe1, 0x51, 0x89, 0xb8, 0x43, 0xc2, 0x37,
+	0x10, 0x85, 0xb9, 0xd9, 0xae, 0x0e, 0xc4, 0xfb, 0xe6, 0xd2, 0x07, 0xef, 0xe3, 0xaf, 0x8f, 0xae,
+	0x7c, 0x64, 0xf3, 0xdf, 0x07, 0xa7, 0x0b, 0x1f, 0x5a, 0xed, 0x78, 0x89, 0xf8, 0xf1, 0x51, 0xbf,
+	0x43, 0xf9, 0x74, 0xaa, 0x03, 0x0b, 0x9f, 0x12, 0x18, 0xce, 0xd9, 0x78, 0xc6, 0xcd, 0x6e, 0x75,
+	0xa0, 0x8b, 0x04, 0xf7, 0xe6, 0x2d, 0xb7, 0xc8, 0x2a, 0xb7, 0xc8, 0x3a, 0xb7, 0xc8, 0x67, 0x6e,
+	0x91, 0x97, 0xad, 0xa5, 0xad, 0xb7, 0x96, 0xf6, 0xbe, 0xb5, 0xb4, 0x87, 0xc3, 0xf2, 0xb5, 0x3f,
+	0x3b, 0xe5, 0x0a, 0x31, 0x61, 0x13, 0x5f, 0xf6, 0xf5, 0x57, 0x00, 0x00, 0x00, 0xff, 0xff, 0x0d,
+	0x6f, 0x5d, 0xaf, 0x0f, 0x03, 0x00, 0x00,
 }
 
 func (this *Denom) Equal(that interface{}) bool {
@@ -163,10 +181,16 @@ func (this *Denom) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if this.Base != that1.Base {
+	if this.DenomBase != that1.DenomBase {
 		return false
 	}
-	if this.Display != that1.Display {
+	if this.DenomDisplay != that1.DenomDisplay {
+		return false
+	}
+	if this.BondBase != that1.BondBase {
+		return false
+	}
+	if this.BondDisplay != that1.BondDisplay {
 		return false
 	}
 	if this.InitTime != that1.InitTime {
@@ -224,7 +248,7 @@ func (m *Denom) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintDenom(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x5a
+	dAtA[i] = 0x62
 	{
 		size := m.BondDenoms.Size()
 		i -= size
@@ -234,7 +258,7 @@ func (m *Denom) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintDenom(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x52
+	dAtA[i] = 0x5a
 	{
 		size := m.BondShares.Size()
 		i -= size
@@ -244,11 +268,11 @@ func (m *Denom) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintDenom(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x4a
+	dAtA[i] = 0x52
 	if m.BondInterestRate != 0 {
 		i = encodeVarintDenom(dAtA, i, uint64(m.BondInterestRate))
 		i--
-		dAtA[i] = 0x40
+		dAtA[i] = 0x48
 	}
 	{
 		size := m.DebtDenoms.Size()
@@ -259,7 +283,7 @@ func (m *Denom) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintDenom(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x3a
+	dAtA[i] = 0x42
 	{
 		size := m.DebtShares.Size()
 		i -= size
@@ -269,28 +293,42 @@ func (m *Denom) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintDenom(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x32
+	dAtA[i] = 0x3a
 	if m.DebtInterestRate != 0 {
 		i = encodeVarintDenom(dAtA, i, uint64(m.DebtInterestRate))
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x30
 	}
 	if m.InitTime != 0 {
 		i = encodeVarintDenom(dAtA, i, uint64(m.InitTime))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x28
 	}
-	if len(m.Display) > 0 {
-		i -= len(m.Display)
-		copy(dAtA[i:], m.Display)
-		i = encodeVarintDenom(dAtA, i, uint64(len(m.Display)))
+	if len(m.BondDisplay) > 0 {
+		i -= len(m.BondDisplay)
+		copy(dAtA[i:], m.BondDisplay)
+		i = encodeVarintDenom(dAtA, i, uint64(len(m.BondDisplay)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.BondBase) > 0 {
+		i -= len(m.BondBase)
+		copy(dAtA[i:], m.BondBase)
+		i = encodeVarintDenom(dAtA, i, uint64(len(m.BondBase)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.DenomDisplay) > 0 {
+		i -= len(m.DenomDisplay)
+		copy(dAtA[i:], m.DenomDisplay)
+		i = encodeVarintDenom(dAtA, i, uint64(len(m.DenomDisplay)))
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.Base) > 0 {
-		i -= len(m.Base)
-		copy(dAtA[i:], m.Base)
-		i = encodeVarintDenom(dAtA, i, uint64(len(m.Base)))
+	if len(m.DenomBase) > 0 {
+		i -= len(m.DenomBase)
+		copy(dAtA[i:], m.DenomBase)
+		i = encodeVarintDenom(dAtA, i, uint64(len(m.DenomBase)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -314,11 +352,19 @@ func (m *Denom) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Base)
+	l = len(m.DenomBase)
 	if l > 0 {
 		n += 1 + l + sovDenom(uint64(l))
 	}
-	l = len(m.Display)
+	l = len(m.DenomDisplay)
+	if l > 0 {
+		n += 1 + l + sovDenom(uint64(l))
+	}
+	l = len(m.BondBase)
+	if l > 0 {
+		n += 1 + l + sovDenom(uint64(l))
+	}
+	l = len(m.BondDisplay)
 	if l > 0 {
 		n += 1 + l + sovDenom(uint64(l))
 	}
@@ -381,7 +427,7 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Base", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field DenomBase", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -409,11 +455,11 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Base = string(dAtA[iNdEx:postIndex])
+			m.DenomBase = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Display", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field DenomDisplay", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -441,9 +487,73 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Display = string(dAtA[iNdEx:postIndex])
+			m.DenomDisplay = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BondBase", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDenom
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDenom
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDenom
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BondBase = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BondDisplay", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDenom
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDenom
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDenom
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BondDisplay = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field InitTime", wireType)
 			}
@@ -462,7 +572,7 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 5:
+		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DebtInterestRate", wireType)
 			}
@@ -481,7 +591,7 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 6:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DebtShares", wireType)
 			}
@@ -515,7 +625,7 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 7:
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DebtDenoms", wireType)
 			}
@@ -549,7 +659,7 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 8:
+		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BondInterestRate", wireType)
 			}
@@ -568,7 +678,7 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 9:
+		case 10:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BondShares", wireType)
 			}
@@ -602,7 +712,7 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BondDenoms", wireType)
 			}
@@ -636,7 +746,7 @@ func (m *Denom) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BondBlocks", wireType)
 			}

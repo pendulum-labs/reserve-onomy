@@ -5,8 +5,10 @@ import { util, configure, Writer, Reader } from "protobufjs/minimal";
 export const protobufPackage = "reserve";
 
 export interface Denom {
-  base: string;
-  display: string;
+  denom_base: string;
+  denom_display: string;
+  bond_base: string;
+  bond_display: string;
   init_time: number;
   /** Positive Interest rate on denom debt pool */
   debt_interest_rate: number;
@@ -25,8 +27,10 @@ export interface Denom {
 }
 
 const baseDenom: object = {
-  base: "",
-  display: "",
+  denom_base: "",
+  denom_display: "",
+  bond_base: "",
+  bond_display: "",
   init_time: 0,
   debt_interest_rate: 0,
   debt_shares: "",
@@ -39,35 +43,41 @@ const baseDenom: object = {
 
 export const Denom = {
   encode(message: Denom, writer: Writer = Writer.create()): Writer {
-    if (message.base !== "") {
-      writer.uint32(10).string(message.base);
+    if (message.denom_base !== "") {
+      writer.uint32(10).string(message.denom_base);
     }
-    if (message.display !== "") {
-      writer.uint32(18).string(message.display);
+    if (message.denom_display !== "") {
+      writer.uint32(18).string(message.denom_display);
+    }
+    if (message.bond_base !== "") {
+      writer.uint32(26).string(message.bond_base);
+    }
+    if (message.bond_display !== "") {
+      writer.uint32(34).string(message.bond_display);
     }
     if (message.init_time !== 0) {
-      writer.uint32(24).int64(message.init_time);
+      writer.uint32(40).int64(message.init_time);
     }
     if (message.debt_interest_rate !== 0) {
-      writer.uint32(40).uint64(message.debt_interest_rate);
+      writer.uint32(48).uint64(message.debt_interest_rate);
     }
     if (message.debt_shares !== "") {
-      writer.uint32(50).string(message.debt_shares);
+      writer.uint32(58).string(message.debt_shares);
     }
     if (message.debt_denoms !== "") {
-      writer.uint32(58).string(message.debt_denoms);
+      writer.uint32(66).string(message.debt_denoms);
     }
     if (message.bond_interest_rate !== 0) {
-      writer.uint32(64).uint64(message.bond_interest_rate);
+      writer.uint32(72).uint64(message.bond_interest_rate);
     }
     if (message.bond_shares !== "") {
-      writer.uint32(74).string(message.bond_shares);
+      writer.uint32(82).string(message.bond_shares);
     }
     if (message.bond_denoms !== "") {
-      writer.uint32(82).string(message.bond_denoms);
+      writer.uint32(90).string(message.bond_denoms);
     }
     if (message.bond_blocks !== "") {
-      writer.uint32(90).string(message.bond_blocks);
+      writer.uint32(98).string(message.bond_blocks);
     }
     return writer;
   },
@@ -80,33 +90,39 @@ export const Denom = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.base = reader.string();
+          message.denom_base = reader.string();
           break;
         case 2:
-          message.display = reader.string();
+          message.denom_display = reader.string();
           break;
         case 3:
-          message.init_time = longToNumber(reader.int64() as Long);
+          message.bond_base = reader.string();
+          break;
+        case 4:
+          message.bond_display = reader.string();
           break;
         case 5:
-          message.debt_interest_rate = longToNumber(reader.uint64() as Long);
+          message.init_time = longToNumber(reader.int64() as Long);
           break;
         case 6:
-          message.debt_shares = reader.string();
+          message.debt_interest_rate = longToNumber(reader.uint64() as Long);
           break;
         case 7:
-          message.debt_denoms = reader.string();
+          message.debt_shares = reader.string();
           break;
         case 8:
-          message.bond_interest_rate = longToNumber(reader.uint64() as Long);
+          message.debt_denoms = reader.string();
           break;
         case 9:
-          message.bond_shares = reader.string();
+          message.bond_interest_rate = longToNumber(reader.uint64() as Long);
           break;
         case 10:
-          message.bond_denoms = reader.string();
+          message.bond_shares = reader.string();
           break;
         case 11:
+          message.bond_denoms = reader.string();
+          break;
+        case 12:
           message.bond_blocks = reader.string();
           break;
         default:
@@ -119,15 +135,25 @@ export const Denom = {
 
   fromJSON(object: any): Denom {
     const message = { ...baseDenom } as Denom;
-    if (object.base !== undefined && object.base !== null) {
-      message.base = String(object.base);
+    if (object.denom_base !== undefined && object.denom_base !== null) {
+      message.denom_base = String(object.denom_base);
     } else {
-      message.base = "";
+      message.denom_base = "";
     }
-    if (object.display !== undefined && object.display !== null) {
-      message.display = String(object.display);
+    if (object.denom_display !== undefined && object.denom_display !== null) {
+      message.denom_display = String(object.denom_display);
     } else {
-      message.display = "";
+      message.denom_display = "";
+    }
+    if (object.bond_base !== undefined && object.bond_base !== null) {
+      message.bond_base = String(object.bond_base);
+    } else {
+      message.bond_base = "";
+    }
+    if (object.bond_display !== undefined && object.bond_display !== null) {
+      message.bond_display = String(object.bond_display);
+    } else {
+      message.bond_display = "";
     }
     if (object.init_time !== undefined && object.init_time !== null) {
       message.init_time = Number(object.init_time);
@@ -180,8 +206,12 @@ export const Denom = {
 
   toJSON(message: Denom): unknown {
     const obj: any = {};
-    message.base !== undefined && (obj.base = message.base);
-    message.display !== undefined && (obj.display = message.display);
+    message.denom_base !== undefined && (obj.denom_base = message.denom_base);
+    message.denom_display !== undefined &&
+      (obj.denom_display = message.denom_display);
+    message.bond_base !== undefined && (obj.bond_base = message.bond_base);
+    message.bond_display !== undefined &&
+      (obj.bond_display = message.bond_display);
     message.init_time !== undefined && (obj.init_time = message.init_time);
     message.debt_interest_rate !== undefined &&
       (obj.debt_interest_rate = message.debt_interest_rate);
@@ -202,15 +232,25 @@ export const Denom = {
 
   fromPartial(object: DeepPartial<Denom>): Denom {
     const message = { ...baseDenom } as Denom;
-    if (object.base !== undefined && object.base !== null) {
-      message.base = object.base;
+    if (object.denom_base !== undefined && object.denom_base !== null) {
+      message.denom_base = object.denom_base;
     } else {
-      message.base = "";
+      message.denom_base = "";
     }
-    if (object.display !== undefined && object.display !== null) {
-      message.display = object.display;
+    if (object.denom_display !== undefined && object.denom_display !== null) {
+      message.denom_display = object.denom_display;
     } else {
-      message.display = "";
+      message.denom_display = "";
+    }
+    if (object.bond_base !== undefined && object.bond_base !== null) {
+      message.bond_base = object.bond_base;
+    } else {
+      message.bond_base = "";
+    }
+    if (object.bond_display !== undefined && object.bond_display !== null) {
+      message.bond_display = object.bond_display;
+    } else {
+      message.bond_display = "";
     }
     if (object.init_time !== undefined && object.init_time !== null) {
       message.init_time = object.init_time;
