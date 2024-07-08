@@ -22,23 +22,21 @@ func (k msgServer) Bond(goCtx context.Context, msg *types.MsgBond) (*types.MsgBo
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "denom not found")
 	}
 
-	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(msg.Creator), types.ModuleName, sdk.NewCoins(denom))
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(msg.Creator), types.ModuleName, sdk.NewCoins(denoms))
 	if err != nil {
 		return nil, err
 	}
 
 	bondShares := (denom.BondShares.Mul(denoms.Amount)).Quo(denom.BondDenoms)
 
-	bondName := denoms.Denom + "_bond"
-
-	bondCoin := sdk.NewCoin(bondName, bondShares)
+	bondCoin := sdk.NewCoin(denom.BondBase, bondShares)
 
 	err = k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(bondCoin))
 	if err != nil {
 		return nil, err
 	}
 
-	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(msg.Creator), types.ModuleName, sdk.NewCoins(bondCoin))
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sdk.AccAddress(msg.Creator), sdk.NewCoins(bondCoin))
 	if err != nil {
 		return nil, err
 	}
