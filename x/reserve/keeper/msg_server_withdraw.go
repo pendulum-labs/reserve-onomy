@@ -46,20 +46,17 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 			}
 
 			// Remainder is the amount of Collateral left in vault after withdrawal
-			remainder := vault.Collateral.Sub(coin)
+			vault.Collateral = vault.Collateral.Sub(coin)
 
-			numerator, denominator, err := k.GetRate(ctx, vault.Collateral.Denom, vault.DebtDenom)
+			rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegCoins)
 			if err != nil {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 			}
 
-			// Collateralization Ratio = (remainder_vault_collateral * numerator * 100) / (denominator * vault_denoms)
-			remainder_collateralization_ratio := (remainder.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(DebtAmount(denom, vault)))
-			if remainder_collateralization_ratio.LT(sdk.NewIntFromUint64(collateral.LendingRatio)) {
-				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "remainder collateralization ratio less than minting ratio")
+			if CollateralizationRatio(denom, vault, rate).LT(sdk.NewIntFromUint64(collateral.LendingRatio)) {
+				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "remainder collateralization ratio less than lending ratio")
 			}
 
-			vault.Collateral = vault.Collateral.Sub(coin)
 		case vault.Status == "active" && vault.DebtDenom == coin.Denom:
 			// Need Minting Ratio from Collateral Record
 			collateral, found := k.GetCollateral(ctx, vault.Collateral.Denom)
@@ -78,15 +75,13 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 
 			debtSharesBeg := vault.DebtShares
 
-			numerator, denominator, err := k.GetRate(ctx, vault.Collateral.Denom, vault.DebtDenom)
+			rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegCoins)
 			if err != nil {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 			}
 
-			// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * lien)
-			collateralizationRatioEnd := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(debtEnd))
-			if collateralizationRatioEnd.LT(sdk.NewIntFromUint64(collateral.LendingRatio)) {
-				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "end collateralization ratio less than minting ratio")
+			if CollateralizationRatio(denom, vault, rate).LT(sdk.NewIntFromUint64(collateral.LendingRatio)) {
+				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "remainder collateralization ratio less than lending ratio")
 			}
 
 			debtSharesEnd := (debtEnd.Mul(denom.DebtShares)).Quo(denom.DebtDenoms)

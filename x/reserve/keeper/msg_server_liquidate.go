@@ -35,14 +35,13 @@ func (k msgServer) Liquidate(goCtx context.Context, msg *types.MsgLiquidate) (*t
 		sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", vault.DebtDenom)
 	}
 
-	rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.Pegs)
+	rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegCoins)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 	}
 
-	// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * vault_denoms)
-	collateralization_ratio := (((vault.Collateral.Amount).Mul(sdk.NewInt(100))).ToDec().Mul(rate).Quo(DebtAmount(denom, vault).ToDec())).RoundInt()
-	if collateralization_ratio.GT(sdk.NewIntFromUint64((collateral.LiquidationRatio))) {
+	collateralizationRatio := CollateralizationRatio(denom, vault, rate)
+	if collateralizationRatio.GT(sdk.NewIntFromUint64((collateral.LiquidationRatio))) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "collateralization ratio not less than liquidation ratio")
 	}
 
