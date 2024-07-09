@@ -41,6 +41,14 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgLiquidate int = 100
 
+	opWeightMsgBond = "op_weight_msg_bond"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgBond int = 100
+
+	opWeightMsgUnbond = "op_weight_msg_unbond"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUnbond int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -117,6 +125,28 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgLiquidate,
 		reservesimulation.SimulateMsgLiquidate(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgBond int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgBond, &weightMsgBond, nil,
+		func(_ *rand.Rand) {
+			weightMsgBond = defaultWeightMsgBond
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgBond,
+		reservesimulation.SimulateMsgBond(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUnbond int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUnbond, &weightMsgUnbond, nil,
+		func(_ *rand.Rand) {
+			weightMsgUnbond = defaultWeightMsgUnbond
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUnbond,
+		reservesimulation.SimulateMsgUnbond(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

@@ -22,7 +22,7 @@ func commonWithdraw(t *testing.T) (vault types.Vault) {
 	testInput := keepertest.CreateTestEnvironment(t)
 
 	// TestData
-	testdata := testData{coinAStr: "20CoinA", coinBStr: "20CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}, name: "testvault"}
+	testdata := testData{coinAStr: "20CoinA", coinBStr: "20CoinB", name: "testvault"}
 	coinPair, _ := sample.SampleCoins(testdata.coinAStr, testdata.coinBStr)
 
 	// MintCoins
@@ -37,7 +37,7 @@ func commonWithdraw(t *testing.T) (vault types.Vault) {
 	beforecount := testInput.MarketKeeper.GetUidCount(testInput.Context)
 
 	// Create Vault
-	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr, Name: testdata.name}
+	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr}
 	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
 
 	// Validate CreateVault
@@ -52,19 +52,18 @@ func commonWithdraw(t *testing.T) (vault types.Vault) {
 	rst, found := testInput.ReserveKeeper.GetVault(testInput.Context, beforecount)
 	require.True(t, found)
 	require.Equal(t, rst.Uid, beforecount)
-	require.Equal(t, rst.Name, testdata.name)
 	require.Equal(t, rst.Collateral.String(), testdata.coinAStr)
 	return vault
 }
 
 func TestWithdraw(t *testing.T) {
-	commonDeposit(t)
+	commonWithdraw(t)
 }
 
 func TestWithdraw_Insufficient_Funds(t *testing.T) {
 	testInput := keepertest.CreateTestEnvironment(t)
 	//TestData
-	testdata := testData{coinAStr: "15CoinA", coinBStr: "15CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}}
+	testdata := testData{coinAStr: "15CoinA"}
 	coinPair, _ := sample.SampleCoins("10CoinA", "10CoinB")
 
 	require.NoError(t, testInput.BankKeeper.MintCoins(testInput.Context, markettypes.ModuleName, coinPair))
@@ -72,7 +71,7 @@ func TestWithdraw_Insufficient_Funds(t *testing.T) {
 	require.NoError(t, testInput.BankKeeper.SendCoinsFromModuleToAccount(testInput.Context, markettypes.ModuleName, requestAddress, coinPair))
 
 	// Create Vault
-	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr, Name: testdata.name}
+	var p = types.MsgCreateVault{Creator: addr, Collateral: testdata.coinAStr}
 	response, err := keeper.NewMsgServerImpl(*testInput.ReserveKeeper).CreateVault(sdk.WrapSDKContext(testInput.Context), &p)
 
 	require.Error(t, err)
@@ -83,7 +82,7 @@ func TestWithdraw_Insufficient_Funds(t *testing.T) {
 func TestWithdraw_With_New_Creator(t *testing.T) {
 	testInput := keepertest.CreateTestEnvironment(t)
 	//TestData
-	testdata := testData{coinAStr: "15CoinA", coinBStr: "15CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}}
+	testdata := testData{coinAStr: "15CoinA", coinBStr: "15CoinB"}
 	coinPair, _ := sample.SampleCoins("10CoinA", "10CoinB")
 
 	require.NoError(t, testInput.BankKeeper.MintCoins(testInput.Context, markettypes.ModuleName, coinPair))
@@ -100,7 +99,7 @@ func TestWithdraw_With_New_Creator(t *testing.T) {
 func TestWithdraw_With_Swap_Coins(t *testing.T) {
 	testInput := keepertest.CreateTestEnvironment(t)
 	//TestData
-	testdata := testData{coinAStr: "15CoinB", coinBStr: "15CoinA", RateAstrArray: []string{"0", "0"}, RateBstrArray: []string{"0", "0"}}
+	testdata := testData{coinAStr: "15CoinB", coinBStr: "15CoinA"}
 	coinPair, _ := sample.SampleCoins("20CoinA", "20CoinB")
 	denomA, denomB := sample.SampleDenoms(coinPair)
 	pair := strings.Join([]string{denomA, denomB}, ",")
@@ -113,7 +112,7 @@ func TestWithdraw_With_Swap_Coins(t *testing.T) {
 	var p = markettypes.MsgCreatePool{CoinA: testdata.coinAStr, CoinB: testdata.coinBStr, Creator: addr}
 	response, err := marketkeeper.NewMsgServerImpl(testInput.MarketKeeper).CreatePool(sdk.WrapSDKContext(testInput.Context), &p)
 	require.NoError(t, err)
-	require.Contains(t, p.GetCreator(), response.String())
+	require.Contains(t, response.String(), p.GetCreator())
 	//validate SetUidCount function.
 	aftercount := testInput.MarketKeeper.GetUidCount(testInput.Context)
 	require.Equal(t, beforecount+1, aftercount)
@@ -145,9 +144,9 @@ func TestWithdraw_Invalid_Coin(t *testing.T) {
 		RateAstrArray []string
 		RateBstrArray []string
 	}{
-		{coinAStr: "20Coin", coinBStr: "20CoinB", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}},
-		{coinAStr: "20CoinA", coinBStr: "20Coin", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}},
-		//{coinAStr: "20CoinA", coinBStr: "20", RateAstrArray: []string{"10", "20"}, RateBstrArray: []string{"20", "30"}},
+		{coinAStr: "20Coin", coinBStr: "20CoinB"},
+		{coinAStr: "20CoinA", coinBStr: "20Coin"},
+		//{coinAStr: "20CoinA", coinBStr: "20",},
 	}
 	for _, s := range scenarios {
 		coinPair, _ := sample.SampleCoins("20CoinA", "20CoinB")

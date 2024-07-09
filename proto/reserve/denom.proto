@@ -7,7 +7,54 @@ option go_package = "reserve/x/reserve/types";
 option (gogoproto.equal_all) = true;
 
 message Denom {
-  string base = 1;
-  string display = 2;
-  int64 init_time = 3;
+  string denom_base = 1;
+  string denom_display = 2;
+  string bond_base = 3;
+  string bond_display = 4;
+
+  // Peg pairs are {peg coin, collateral coin} pairs
+  repeated string peg_pairs = 5;
+  
+  int64 init_time = 6;
+  
+  // Positive Interest rate on denom debt pool
+  uint64 debt_interest_rate = 7;
+  
+  // Total shares of the denom debt pool
+  string debt_shares = 8 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // Total amount of denom in the denom debt pool
+  string debt_denoms = 9 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // Negative Interest rate on Denoms Bonded
+  uint64 bond_interest_rate = 10;
+  
+  // Total shares of the denom bond pool
+  string bond_shares = 11 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // Total amount of denom in the denom bond pool
+  string bond_denoms = 12 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // Unbonding blocks
+  string bond_blocks = 13 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message Bonded {
+  string denom_base = 1;
+  string bond_base = 2;
 }

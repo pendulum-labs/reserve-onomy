@@ -3,29 +3,27 @@ package types
 import (
 	"testing"
 
-	"reserve/testutil/sample"
-
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+	"reserve/testutil/sample"
 )
 
-func TestMsgCreateVault_ValidateBasic(t *testing.T) {
+func TestMsgBond_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgCreateVault
+		msg  MsgBond
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgCreateVault{
+			msg: MsgBond{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgCreateVault{
-				Creator:    sample.AccAddress(),
-				Collateral: "20coin",
+			msg: MsgBond{
+				Creator: sample.AccAddress(),
 			},
 		},
 	}

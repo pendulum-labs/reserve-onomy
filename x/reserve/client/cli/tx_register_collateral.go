@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -69,28 +70,24 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 			// 100 would be 100%
 			// 125 would be 125%
 			// 999 would be 999%
-			// 9999 would 9999%
+			// 99999 would 99999%
 			// minting ratio numerator / 100 = minting ratio
-			mintingRatio, ok := sdk.NewIntFromString(args[2])
-			if !ok {
-				return fmt.Errorf("invalid string number format: %q", mintingRatio)
-			}
-			if mintingRatio.LTE(sdk.ZeroInt()) {
-				return fmt.Errorf("minting ratio numerator must be positive and greater than zero: %d", mintingRatio)
-			}
-			if mintingRatio.GTE(sdk.NewInt(10000)) {
-				return fmt.Errorf("minting ratio numerator must be less than 10000: %d", mintingRatio)
+			LendingRatio, err := strconv.ParseUint(args[2], 10, 64)
+			if err != nil {
+				return err
 			}
 
-			liquidationRatio, ok := sdk.NewIntFromString(args[3])
-			if !ok {
-				return fmt.Errorf("invalid string number format: %q", liquidationRatio)
+			if LendingRatio >= 100000 {
+				return fmt.Errorf("minting ratio numerator must be less than 100000: %d", LendingRatio)
 			}
-			if liquidationRatio.LTE(sdk.ZeroInt()) {
-				return fmt.Errorf("liquidation ratio numerator must be positive and greater than zero: %d", liquidationRatio)
+
+			liquidationRatio, err := strconv.ParseUint(args[3], 10, 64)
+			if err != nil {
+				return err
 			}
-			if liquidationRatio.GTE(sdk.NewInt(10000)) {
-				return fmt.Errorf("liquidation ratio numerator must be less than 10000: %d", liquidationRatio)
+
+			if liquidationRatio >= 100000 {
+				return fmt.Errorf("liquidation ratio numerator must be less than 100000: %d", liquidationRatio)
 			}
 
 			proposalFlags, err := parseProposalFlags(cmd.Flags())
@@ -110,8 +107,8 @@ $ %s tx gov submit-proposal register-collateral metadata-path minimum-collateral
 				proposalFlags.Description,
 				metadata,
 				minCollateralDeposit,
-				sdk.NewUintFromBigInt(mintingRatio.BigInt()),
-				sdk.NewUintFromBigInt(liquidationRatio.BigInt()),
+				LendingRatio,
+				liquidationRatio,
 			)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)

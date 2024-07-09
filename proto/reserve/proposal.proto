@@ -16,15 +16,15 @@ message CreateDenomProposal {
   string sender = 1;
   string title = 2;
   string description = 3;
-  cosmos.bank.v1beta1.Metadata metadata = 4;
-  repeated string rate = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
-    (gogoproto.nullable) = false
-  ];
-  string collateral_deposit = 6 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.nullable) = false
-  ];
+  cosmos.bank.v1beta1.Metadata denom_metadata = 4;
+  cosmos.bank.v1beta1.Metadata bond_metadata = 5;
+  
+  string peg_pair = 6;
+  
+  uint64 debt_interest_rate = 7;
+  
+  // Negative Interest rate on Denoms Bonded
+  uint64 bond_interest_rate = 8;
 }
 
 // RegisterCollateralProposal details a register-collateral proposal.
@@ -41,12 +41,6 @@ message RegisterCollateralProposal {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable) = false
   ];
-  string minting_ratio = 6 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
-    (gogoproto.nullable) = false
-  ];
-  string liquidation_ratio = 7 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
-    (gogoproto.nullable) = false
-  ];
+  uint64 lending_ratio = 6;
+  uint64 liquidation_ratio = 7;
 }

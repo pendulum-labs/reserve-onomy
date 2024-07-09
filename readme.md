@@ -5,32 +5,62 @@ The Onomy Reserve
 ## Reserve Concepts
 
 `denom` is a minted representation of a real-world asset
+
 `collateral` is a coin that is deposited in a vault to mint denoms
+
 `vault` is storage of collateral that is being or will be used for minting of denoms
+
 `collateralization ratio` is the ratio of value of denoms minted to the collateral stored within a vault
+
+`vault ratio` is the collateralization ratio of a vault at a given moment
+
+`minter` is a user that mints stablecoins
+
+`saver` is a user that bonds stablecoins for interest
+
 `liquidator` is a user that liquidates a vault that is in default because of too low of collateralization ratio
 
 ## Reserve Parameters
 
-`vault ratio` is the collateralization ratio that of a vault at a given moment
-`minting ratio` is the minimum vault ratio at which a specific denom may be minted.  Collateralization ratio must be greater than minting ratio to withdraw collateral.  Collateral is locked in vault if collateralization ratio of the vault goes below the minting ratio.
+`lending ratio` is the minimum vault ratio at which denom lent or collateral withdrawn
+
 `liquidation ratio` is the vault ratio at which the vault for a specific denom may be liquidated by a liquidator
+
 `burn ratio` is parameter that defines the ratio of burned vs stored NOM at liquidation of a vault
+
 `liquidity deposit` is the minimum amount of liquidity for a specific collateral that must be provided to create a denom
+
+`minting interest rate` is the interest rate on denoms loaned to minters.  This is meant to aide in stabilization of the stablecoin.
+
+`savings interest rate` is the interest rate paid on denoms that have been bonded to the reserve.
 
 ## Reserve Transactions
 
 `create-vault` by depositing collateral.  Each vault has a unique name per user as well as UID
+
 `deposit` collateral or denoms into vault
+
 `withdraw` collateral or denoms from vault.  Withdrawal of collateral or denoms dependent on collateralization ratio.
+
 `liquidate` vaults whose collateral ratios drop below the liquidation ratio
+
+`bond` denoms to the reserve to earn savings interest
+
+`unbond` denoms that have been bonded to the reserve
 
 ## Reserve Governance
 
 `register-collateral` is a governance proposal that must be submitted to register a collateral for minting denoms
+
 `create-denom` is a governance proposal that must be submitted to initialize a new denom
+
 `update-minting-ratio` is a governance proposal that updates the minting ratio for a denom
+
 `update-liquidation-ratio` is a governance proposal that updates the liquidation ratio for a denom
+
+`update-minting-interest-rate` is a governance proposal that updates the minting interest rate for a denom
+
+`update-savings-interest-rate` is a governance proposal that updates the savings interest rate for a denom
 
 ## Development
 

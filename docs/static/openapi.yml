@@ -28918,16 +28918,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/bookends/{coinA}/{coinB}/{orderType}/{rate}':
@@ -29142,16 +29132,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/burnings/{denom}':
@@ -29316,16 +29296,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/drop/amounts/{uid}':
@@ -29419,7 +29389,7 @@ paths:
           type: string
       tags:
         - Query
-  '/pendulum-labs/market/market/drop/coins/{pair}/{drops}':
+  '/pendulum-labs/market/market/drop/coins/{denom1}/{denom2}/{drops}':
     get:
       summary: Converts drops to coin amounts
       operationId: PendulumlabsMarketMarketDropsToCoins
@@ -29431,9 +29401,9 @@ paths:
             properties:
               denom1:
                 type: string
-              denom2:
-                type: string
               amount1:
+                type: string
+              denom2:
                 type: string
               amount2:
                 type: string
@@ -29456,7 +29426,11 @@ paths:
                       type: string
                   additionalProperties: {}
       parameters:
-        - name: pair
+        - name: denom1
+          in: path
+          required: true
+          type: string
+        - name: denom2
           in: path
           required: true
           type: string
@@ -29630,16 +29604,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -29843,16 +29807,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   /pendulum-labs/market/market/member:
@@ -29975,16 +29929,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -30186,16 +30130,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/order/uids/{address}':
@@ -30309,16 +30243,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -30463,16 +30387,6 @@ paths:
             when key
 
             is set.
-          in: query
-          required: false
-          type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
           in: query
           required: false
           type: boolean
@@ -30742,16 +30656,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/pool/{pair}':
@@ -30988,16 +30892,6 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
-          description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
-
-
-            Since: cosmos-sdk 0.43
-          in: query
-          required: false
-          type: boolean
       tags:
         - Query
   '/pendulum-labs/market/market/volume/{denom}':
@@ -31138,7 +31032,10 @@ paths:
                       custom method
 
                       signatures required by gogoproto.
-                  denom:
+                  debt_denom:
+                    type: string
+                    title: Debt denom is the denom being minted
+                  debt_principal:
                     type: object
                     properties:
                       denom:
@@ -31153,6 +31050,14 @@ paths:
                       custom method
 
                       signatures required by gogoproto.
+                    title: >-
+                      Debt principal is the amount of denoms considered
+                      principal
+                  debt_shares:
+                    type: string
+                    title: >-
+                      Debt shares of the denom debt pool which value constitutes
+                      principal + interest
         default:
           description: An unexpected error response.
           schema:
@@ -31218,7 +31123,10 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
-                    denom:
+                    debt_denom:
+                      type: string
+                      title: Debt denom is the denom being minted
+                    debt_principal:
                       type: object
                       properties:
                         denom:
@@ -31233,6 +31141,14 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                      title: >-
+                        Debt principal is the amount of denoms considered
+                        principal
+                    debt_shares:
+                      type: string
+                      title: >-
+                        Debt shares of the denom debt pool which value
+                        constitutes principal + interest
               pagination:
                 type: object
                 properties:
@@ -31376,7 +31292,10 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
-                    denom:
+                    debt_denom:
+                      type: string
+                      title: Debt denom is the denom being minted
+                    debt_principal:
                       type: object
                       properties:
                         denom:
@@ -31391,6 +31310,14 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                      title: >-
+                        Debt principal is the amount of denoms considered
+                        principal
+                    debt_shares:
+                      type: string
+                      title: >-
+                        Debt shares of the denom debt pool which value
+                        constitutes principal + interest
               pagination:
                 type: object
                 properties:
@@ -31534,7 +31461,10 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
-                    denom:
+                    debt_denom:
+                      type: string
+                      title: Debt denom is the denom being minted
+                    debt_principal:
                       type: object
                       properties:
                         denom:
@@ -31549,6 +31479,14 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                      title: >-
+                        Debt principal is the amount of denoms considered
+                        principal
+                    debt_shares:
+                      type: string
+                      title: >-
+                        Debt shares of the denom debt pool which value
+                        constitutes principal + interest
               pagination:
                 type: object
                 properties:
@@ -50880,6 +50818,20 @@ definitions:
     type: object
   pendulumlabs.market.market.MsgCreateDropResponse:
     type: object
+    properties:
+      creator:
+        type: string
+      uid:
+        type: string
+        format: uint64
+      pair:
+        type: string
+      drops:
+        type: string
+      coin1:
+        type: string
+      coin2:
+        type: string
   pendulumlabs.market.market.MsgCreateOrderResponse:
     type: object
     properties:
@@ -50888,9 +50840,25 @@ definitions:
         format: uint64
   pendulumlabs.market.market.MsgCreatePoolResponse:
     type: object
+    properties:
+      creator:
+        type: string
+      drop_uid:
+        type: string
+        format: uint64
+      pair:
+        type: string
+      drops:
+        type: string
+      coin1:
+        type: string
+      coin2:
+        type: string
   pendulumlabs.market.market.MsgMarketOrderResponse:
     type: object
     properties:
+      uid:
+        type: string
       amountBid:
         type: string
       amountAsk:
@@ -50899,6 +50867,20 @@ definitions:
         type: string
   pendulumlabs.market.market.MsgRedeemDropResponse:
     type: object
+    properties:
+      creator:
+        type: string
+      uid:
+        type: string
+        format: uint64
+      pair:
+        type: string
+      drops:
+        type: string
+      coin1:
+        type: string
+      coin2:
+        type: string
   pendulumlabs.market.market.Order:
     type: object
     properties:
@@ -51400,6 +51382,17 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
+  pendulumlabs.market.market.QueryDropsToCoinsResponse:
+    type: object
+    properties:
+      denom1:
+        type: string
+      amount1:
+        type: string
+      denom2:
+        type: string
+      amount2:
+        type: string
   pendulumlabs.market.market.QueryGetBurningsResponse:
     type: object
     properties:
@@ -51714,6 +51707,8 @@ definitions:
         type: string
       amount:
         type: string
+  reserve.MsgBondResponse:
+    type: object
   reserve.MsgCreateVaultResponse:
     type: object
     properties:
@@ -51728,6 +51723,8 @@ definitions:
       coin:
         type: string
   reserve.MsgLiquidateResponse:
+    type: object
+  reserve.MsgUnbondResponse:
     type: object
   reserve.MsgWithdrawResponse:
     type: object
@@ -51790,7 +51787,10 @@ definitions:
                 method
 
                 signatures required by gogoproto.
-            denom:
+            debt_denom:
+              type: string
+              title: Debt denom is the denom being minted
+            debt_principal:
               type: object
               properties:
                 denom:
@@ -51805,6 +51805,12 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+              title: Debt principal is the amount of denoms considered principal
+            debt_shares:
+              type: string
+              title: >-
+                Debt shares of the denom debt pool which value constitutes
+                principal + interest
       pagination:
         type: object
         properties:
@@ -51862,7 +51868,10 @@ definitions:
                 method
 
                 signatures required by gogoproto.
-            denom:
+            debt_denom:
+              type: string
+              title: Debt denom is the denom being minted
+            debt_principal:
               type: object
               properties:
                 denom:
@@ -51877,6 +51886,12 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+              title: Debt principal is the amount of denoms considered principal
+            debt_shares:
+              type: string
+              title: >-
+                Debt shares of the denom debt pool which value constitutes
+                principal + interest
       pagination:
         type: object
         properties:
@@ -51934,7 +51949,10 @@ definitions:
                 method
 
                 signatures required by gogoproto.
-            denom:
+            debt_denom:
+              type: string
+              title: Debt denom is the denom being minted
+            debt_principal:
               type: object
               properties:
                 denom:
@@ -51949,6 +51967,12 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+              title: Debt principal is the amount of denoms considered principal
+            debt_shares:
+              type: string
+              title: >-
+                Debt shares of the denom debt pool which value constitutes
+                principal + interest
       pagination:
         type: object
         properties:
@@ -52004,7 +52028,10 @@ definitions:
               method
 
               signatures required by gogoproto.
-          denom:
+          debt_denom:
+            type: string
+            title: Debt denom is the denom being minted
+          debt_principal:
             type: object
             properties:
               denom:
@@ -52019,6 +52046,12 @@ definitions:
               method
 
               signatures required by gogoproto.
+            title: Debt principal is the amount of denoms considered principal
+          debt_shares:
+            type: string
+            title: >-
+              Debt shares of the denom debt pool which value constitutes
+              principal + interest
   reserve.QueryParamsResponse:
     type: object
     properties:
@@ -52075,7 +52108,10 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
-      denom:
+      debt_denom:
+        type: string
+        title: Debt denom is the denom being minted
+      debt_principal:
         type: object
         properties:
           denom:
@@ -52087,3 +52123,9 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
+        title: Debt principal is the amount of denoms considered principal
+      debt_shares:
+        type: string
+        title: >-
+          Debt shares of the denom debt pool which value constitutes principal +
+          interest

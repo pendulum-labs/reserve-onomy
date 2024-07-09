@@ -40,43 +40,58 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "collateral not found")
 			}
 
-			// Remainder is the amount of Collateral left in vault after withdrawal
-			remainder := vault.Collateral.Sub(coin)
+			denom, found := k.GetDenom(ctx, vault.DebtDenom)
+			if !found {
+				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", vault.DebtDenom)
+			}
 
-			numerator, denominator, err := k.GetRate(ctx, vault.Denom.Denom, vault.Collateral.Denom)
+			// Remainder is the amount of Collateral left in vault after withdrawal
+			vault.Collateral = vault.Collateral.Sub(coin)
+
+			rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegPairs)
 			if err != nil {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 			}
 
-			// Collateralization Ratio = (remainder_vault_collateral * numerator * 100) / (denominator * vault_denoms)
-			remainder_collateralization_ratio := (remainder.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(vault.Denom.Amount))
-			if remainder_collateralization_ratio.LT(sdk.Int(collateral.MintingRatio)) {
-				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "remainder collateralization ratio less than minting ratio")
+			if CollateralizationRatio(denom, vault, rate).LT(sdk.NewIntFromUint64(collateral.LendingRatio)) {
+				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "remainder collateralization ratio less than lending ratio")
 			}
 
-			vault.Collateral = vault.Collateral.Sub(coin)
-		case vault.Status == "active" && vault.Denom.Denom == coin.Denom:
+		case vault.Status == "active" && vault.DebtDenom == coin.Denom:
 			// Need Minting Ratio from Collateral Record
 			collateral, found := k.GetCollateral(ctx, vault.Collateral.Denom)
 			if !found {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "collateral not found")
 			}
 
-			// Lien is amount of Denoms owed to vault after minting
-			lien := vault.Denom.Add(coin)
+			denom, found := k.GetDenom(ctx, vault.DebtDenom)
+			if !found {
+				sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", vault.DebtDenom)
+			}
 
-			numerator, denominator, err := k.GetRate(ctx, vault.Denom.Denom, vault.Collateral.Denom)
+			// Debt final is amount of Denoms owed to vault after minting
+			debtBeg := DebtAmount(denom, vault)
+			debtEnd := debtBeg.Add(coin.Amount)
+
+			debtSharesBeg := vault.DebtShares
+
+			rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegPairs)
 			if err != nil {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 			}
 
-			// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * lien)
-			lien_collateralization_ratio := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(lien.Amount))
-			if lien_collateralization_ratio.LT(sdk.Int(collateral.MintingRatio)) {
-				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "lien collateralization ratio less than minting ratio")
+			if CollateralizationRatio(denom, vault, rate).LT(sdk.NewIntFromUint64(collateral.LendingRatio)) {
+				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "remainder collateralization ratio less than lending ratio")
 			}
 
-			vault.Denom = vault.Denom.Add(coin)
+			debtSharesEnd := (debtEnd.Mul(denom.DebtShares)).Quo(denom.DebtDenoms)
+			debtSharesDiff := SafeSub(debtSharesEnd, debtSharesBeg)
+
+			vault.DebtShares = debtSharesEnd
+			vault.DebtPrincipal = vault.DebtPrincipal.Add(coin.Amount)
+			denom.DebtShares = denom.DebtShares.Add(debtSharesDiff)
+			denom.DebtDenoms = denom.DebtDenoms.Add(coin.Amount)
+
 			k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(coin))
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid withdraw")

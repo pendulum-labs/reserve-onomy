@@ -86,14 +86,17 @@ func (k Keeper) GetVaultsInDefault(ctx sdk.Context) (list []types.Vault) {
 			iterator.Next()
 		}
 
-		numerator, denominator, err := k.GetRate(ctx, vault.Denom.Denom, vault.Collateral.Denom)
+		denom, found := k.GetDenom(ctx, vault.DebtDenom)
+		if !found {
+			iterator.Next()
+		}
+
+		rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegPairs)
 		if err != nil {
 			iterator.Next()
 		}
 
-		// Collateralization Ratio = (vault_collateral * numerator * 100) / (denominator * vault_denoms)
-		collateralization_ratio := (vault.Collateral.Amount.Mul(numerator).Mul(sdk.NewIntFromUint64(100))).Quo(denominator.Mul(vault.Denom.Amount))
-		if collateralization_ratio.LTE(sdk.Int(collateral.LiquidationRatio)) {
+		if CollateralizationRatio(denom, vault, rate).LTE(sdk.NewIntFromUint64(collateral.LiquidationRatio)) {
 			list = append(list, vault)
 		}
 	}
@@ -118,37 +121,4 @@ func (k Keeper) RemoveVault(
 	store.Delete(types.VaultKey(
 		uid,
 	))
-}
-
-// SetVault set a specific vault in the store from its index
-func (k Keeper) SetVaultUid(ctx sdk.Context, owner string, name string, uid uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultMapKeyPrefix))
-	vaultMapEntry := types.VaultMap{
-		Uid: uid,
-	}
-	a := k.cdc.MustMarshal(&vaultMapEntry)
-	store.Set(types.VaultMapKey(
-		owner,
-		name,
-	), a)
-}
-
-func (k Keeper) GetVaultUid(
-	ctx sdk.Context,
-	owner string,
-	name string,
-) (uid uint64, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VaultMapKeyPrefix))
-
-	b := store.Get(types.VaultMapKey(
-		owner,
-		name,
-	))
-	if b == nil {
-		return uid, false
-	}
-
-	var vaultMapEntry types.VaultMap
-	k.cdc.MustUnmarshal(b, &vaultMapEntry)
-	return vaultMapEntry.Uid, true
 }

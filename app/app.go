@@ -362,6 +362,7 @@ func New(
 		app.AccountKeeper,
 		app.BankKeeper,
 		app.MarketKeeper,
+		app.MintKeeper,
 	)
 	reserveModule := reserve.NewAppModule(appCodec, app.ReserveKeeper, app.AccountKeeper, app.BankKeeper, app.MarketKeeper)
 

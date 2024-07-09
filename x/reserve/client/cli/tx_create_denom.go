@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -26,12 +27,12 @@ import (
 func CmdCreateDenomProposal() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-denom rate metadata-path",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(6),
 		Short: "Submit a create denom proposal",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal create-denom peg-pair debt-interest-rate bond-interest-rate denom-metadata bond-metadata --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
@@ -41,32 +42,27 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test P
 				return err
 			}
 
-			rateString := args[0]
-			rateStringSplit := strings.Split(rateString, ",")
+			pegPair := args[0]
 
-			rateNumerator, err := sdk.ParseUint(rateStringSplit[0])
+			debtInterestRate, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			rateDenominator, err := sdk.ParseUint(rateStringSplit[1])
+			if debtInterestRate > 100000 {
+				return types.ErrInterestGtLimit
+			}
+
+			bondInterestRate, err := strconv.ParseUint(args[2], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			rate := []sdk.Uint{rateNumerator, rateDenominator}
-
-			collateralDeposit, err := sdk.ParseCoinNormalized(args[1])
-			if err != nil {
-				return err
+			if bondInterestRate > 100000 {
+				return types.ErrInterestGtLimit
 			}
 
-			proposalFlags, err := parseProposalFlags(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			path := args[1]
+			path := args[3]
 
 			metadataFile, err := os.Open(path)
 			if err != nil {
@@ -78,9 +74,33 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test P
 				return err
 			}
 
-			var metadata banktypes.Metadata
+			var denomMetadata banktypes.Metadata
 
-			err = json.Unmarshal(byteMetadata, &metadata)
+			err = json.Unmarshal(byteMetadata, &denomMetadata)
+			if err != nil {
+				return err
+			}
+
+			path = args[4]
+
+			metadataFile, err = os.Open(path)
+			if err != nil {
+				return err
+			}
+
+			byteMetadata, err = io.ReadAll(metadataFile)
+			if err != nil {
+				return err
+			}
+
+			var bondMetadata banktypes.Metadata
+
+			err = json.Unmarshal(byteMetadata, &bondMetadata)
+			if err != nil {
+				return err
+			}
+
+			proposalFlags, err := parseProposalFlags(cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -91,7 +111,17 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit --title="Test P
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalFlags.Title, proposalFlags.Description, metadata, rate, collateralDeposit)
+
+			content := types.NewCreateDenomProposal(
+				from,
+				proposalFlags.Title,
+				proposalFlags.Description,
+				denomMetadata,
+				bondMetadata,
+				pegPair,
+				debtInterestRate,
+				bondInterestRate,
+			)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {

@@ -7,7 +7,6 @@ export const protobufPackage = "reserve";
 export interface MsgCreateVault {
   creator: string;
   collateral: string;
-  name: string;
 }
 
 export interface MsgCreateVaultResponse {
@@ -40,7 +39,21 @@ export interface MsgLiquidate {
 
 export interface MsgLiquidateResponse {}
 
-const baseMsgCreateVault: object = { creator: "", collateral: "", name: "" };
+export interface MsgBond {
+  creator: string;
+  denom: string;
+}
+
+export interface MsgBondResponse {}
+
+export interface MsgUnbond {
+  creator: string;
+  bonds: string;
+}
+
+export interface MsgUnbondResponse {}
+
+const baseMsgCreateVault: object = { creator: "", collateral: "" };
 
 export const MsgCreateVault = {
   encode(message: MsgCreateVault, writer: Writer = Writer.create()): Writer {
@@ -49,9 +62,6 @@ export const MsgCreateVault = {
     }
     if (message.collateral !== "") {
       writer.uint32(18).string(message.collateral);
-    }
-    if (message.name !== "") {
-      writer.uint32(26).string(message.name);
     }
     return writer;
   },
@@ -68,9 +78,6 @@ export const MsgCreateVault = {
           break;
         case 2:
           message.collateral = reader.string();
-          break;
-        case 3:
-          message.name = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -92,11 +99,6 @@ export const MsgCreateVault = {
     } else {
       message.collateral = "";
     }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = "";
-    }
     return message;
   },
 
@@ -104,7 +106,6 @@ export const MsgCreateVault = {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.collateral !== undefined && (obj.collateral = message.collateral);
-    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 
@@ -119,11 +120,6 @@ export const MsgCreateVault = {
       message.collateral = object.collateral;
     } else {
       message.collateral = "";
-    }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = "";
     }
     return message;
   },
@@ -590,13 +586,235 @@ export const MsgLiquidateResponse = {
   },
 };
 
+const baseMsgBond: object = { creator: "", denom: "" };
+
+export const MsgBond = {
+  encode(message: MsgBond, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.denom !== "") {
+      writer.uint32(18).string(message.denom);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgBond {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgBond } as MsgBond;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.denom = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgBond {
+    const message = { ...baseMsgBond } as MsgBond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.denom !== undefined && object.denom !== null) {
+      message.denom = String(object.denom);
+    } else {
+      message.denom = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgBond): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.denom !== undefined && (obj.denom = message.denom);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgBond>): MsgBond {
+    const message = { ...baseMsgBond } as MsgBond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.denom !== undefined && object.denom !== null) {
+      message.denom = object.denom;
+    } else {
+      message.denom = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgBondResponse: object = {};
+
+export const MsgBondResponse = {
+  encode(_: MsgBondResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgBondResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgBondResponse {
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    return message;
+  },
+
+  toJSON(_: MsgBondResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgBondResponse>): MsgBondResponse {
+    const message = { ...baseMsgBondResponse } as MsgBondResponse;
+    return message;
+  },
+};
+
+const baseMsgUnbond: object = { creator: "", bonds: "" };
+
+export const MsgUnbond = {
+  encode(message: MsgUnbond, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.bonds !== "") {
+      writer.uint32(18).string(message.bonds);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgUnbond {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgUnbond } as MsgUnbond;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.bonds = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgUnbond {
+    const message = { ...baseMsgUnbond } as MsgUnbond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.bonds !== undefined && object.bonds !== null) {
+      message.bonds = String(object.bonds);
+    } else {
+      message.bonds = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgUnbond): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.bonds !== undefined && (obj.bonds = message.bonds);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgUnbond>): MsgUnbond {
+    const message = { ...baseMsgUnbond } as MsgUnbond;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.bonds !== undefined && object.bonds !== null) {
+      message.bonds = object.bonds;
+    } else {
+      message.bonds = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgUnbondResponse: object = {};
+
+export const MsgUnbondResponse = {
+  encode(_: MsgUnbondResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgUnbondResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgUnbondResponse } as MsgUnbondResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgUnbondResponse {
+    const message = { ...baseMsgUnbondResponse } as MsgUnbondResponse;
+    return message;
+  },
+
+  toJSON(_: MsgUnbondResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgUnbondResponse>): MsgUnbondResponse {
+    const message = { ...baseMsgUnbondResponse } as MsgUnbondResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateVault(request: MsgCreateVault): Promise<MsgCreateVaultResponse>;
   Deposit(request: MsgDeposit): Promise<MsgDepositResponse>;
   Withdraw(request: MsgWithdraw): Promise<MsgWithdrawResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Liquidate(request: MsgLiquidate): Promise<MsgLiquidateResponse>;
+  Bond(request: MsgBond): Promise<MsgBondResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Unbond(request: MsgUnbond): Promise<MsgUnbondResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -630,6 +848,18 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) =>
       MsgLiquidateResponse.decode(new Reader(data))
     );
+  }
+
+  Bond(request: MsgBond): Promise<MsgBondResponse> {
+    const data = MsgBond.encode(request).finish();
+    const promise = this.rpc.request("reserve.Msg", "Bond", data);
+    return promise.then((data) => MsgBondResponse.decode(new Reader(data)));
+  }
+
+  Unbond(request: MsgUnbond): Promise<MsgUnbondResponse> {
+    const data = MsgUnbond.encode(request).finish();
+    const promise = this.rpc.request("reserve.Msg", "Unbond", data);
+    return promise.then((data) => MsgUnbondResponse.decode(new Reader(data)));
   }
 }
 
