@@ -22,6 +22,7 @@ type (
 		accountKeeper types.AccountKeeper
 		bankKeeper    types.BankKeeper
 		marketKeeper  types.MarketKeeper
+		mintKeeper    types.MintKeeper
 	}
 )
 
@@ -34,6 +35,7 @@ func NewKeeper(
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	marketKeeper types.MarketKeeper,
+	mintKeeper types.MintKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -49,6 +51,7 @@ func NewKeeper(
 		accountKeeper: accountKeeper,
 		bankKeeper:    bankKeeper,
 		marketKeeper:  marketKeeper,
+		mintKeeper:    mintKeeper,
 	}
 }
 
