@@ -33,6 +33,13 @@
       "accounts": [
         {
           "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "onomy1u07n5qnqmp5ausn9es30yrz7rja5ctp7rku7j2",
+          "pub_key": null,
+          "account_number": "0",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
           "address": "onomy15d2ltjk9knex7llg25y5uwa0ulst06pghzv4ln",
           "pub_key": null,
           "account_number": "0",
@@ -311,6 +318,31 @@
             {
               "denom": "stake",
               "amount": "20000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "onomy1u07n5qnqmp5ausn9es30yrz7rja5ctp7rku7j2",
+          "coins": [
+            {
+              "denom": "abtc",
+              "amount": "10000000000000000000000"
+            },
+            {
+              "denom": "anom",
+              "amount": "100000000000000000000000000"
+            },
+            {
+              "denom": "ausdt",
+              "amount": "1000000000000000000000000000"
+            },
+            {
+              "denom": "stake",
+              "amount": "100000000000000000000000000"
+            },
+            {
+              "denom": "wei",
+              "amount": "100000000000000000000000"
             }
           ]
         },
