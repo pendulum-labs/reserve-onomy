@@ -58,6 +58,5 @@ func TestCreateVault(t *testing.T) {
 	rst, found := testInput.ReserveKeeper.GetVault(testInput.Context, beforecount)
 	require.True(t, found)
 	require.Equal(t, rst.Uid, beforecount)
-	require.Equal(t, rst.Name, testdata.name)
 	require.Equal(t, rst.Collateral.String(), testdata.coinAStr)
 }

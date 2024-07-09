@@ -30,7 +30,7 @@ func createNPoolWithMembers(keeper marketkeeper.Keeper, ctx sdk.Context, n int) 
 				Drops:   sdk.NewInt(int64(i)),
 			},
 		}
-		poolItems[i].Drops = sdk.NewIntFromUint64(uint64(0))
+		poolItems[i].Drops = sdk.NewIntFromUint64(uint64(1))
 
 		pairArray := []string{poolItems[i].Denom1, poolItems[i].Denom2}
 
@@ -47,7 +47,7 @@ func createNPoolWithMembers(keeper marketkeeper.Keeper, ctx sdk.Context, n int) 
 		memberItems[i].Pair = strconv.Itoa(i)
 		memberItems[i].DenomA = poolItems[i].Denom1
 		memberItems[i].DenomB = poolItems[i].Denom2
-		memberItems[i].Balance = sdk.NewIntFromUint64(uint64(0))
+		memberItems[i].Balance = sdk.NewIntFromUint64(uint64(1))
 		memberItems[i].Previous = sdk.NewIntFromUint64(uint64(0))
 
 		keeper.SetMember(ctx, memberItems[i])
@@ -68,18 +68,10 @@ func TestGetRate(t *testing.T) {
 
 	for _, item := range items {
 
-		_, _, error := keeper.ReserveKeeper.GetRate(
-			keeper.Context,
-			item.Denom1,
-			item.Denom2,
-		)
-
-		require.Nil(t, error)
-
-		_, _, error = keeper.ReserveKeeper.GetRate(
+		_, error := keeper.ReserveKeeper.GetRate(
 			keeper.Context,
 			item.Denom2,
-			item.Denom1,
+			[]string{item.Pair},
 		)
 
 		require.Nil(t, error)

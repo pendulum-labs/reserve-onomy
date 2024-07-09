@@ -24,4 +24,6 @@ var (
 	ErrInvalidInput = sdkerrors.Register(ModuleName, 7, "input not valid") // nolint: gomnd
 	// ErrCollateralNotFound - collateral not found
 	ErrCollateralNotFound = sdkerrors.Register(ModuleName, 8, "collateral not found") // nolint: gomnd
+	// ErrZero - collateral not found
+	ErrZero = sdkerrors.Register(ModuleName, 9, "zero found when non zero integer expected") // nolint: gomnd
 )

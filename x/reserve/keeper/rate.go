@@ -4,6 +4,8 @@ import (
 	"sort"
 	"strings"
 
+	"reserve/x/reserve/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	markettypes "github.com/pendulum-labs/market/x/market/types"
@@ -17,7 +19,7 @@ func (k Keeper) GetRate(
 	collateral string,
 	pegPairs []string,
 ) (rate sdk.Dec, err error) {
-	var rateSum sdk.Dec
+	rateSum := sdk.NewDec(0)
 	var i uint64
 
 	for _, pegPair := range pegPairs {
@@ -43,6 +45,9 @@ func (k Keeper) GetRate(
 				return rate, sdkerrors.Wrapf(markettypes.ErrMemberNotFound, "%s", strings.Join([]string{peg, collateral}, ", "))
 			}
 
+			if memberCollateral.Balance.LTE(sdk.ZeroInt()) {
+				return rate, sdkerrors.Wrapf(types.ErrZero, "collateral %s balance is zero in pool %s", collateral, pair)
+			}
 			rateSum = (memberPeg.Balance.ToDec().Quo(memberCollateral.Balance.ToDec())).Add(rateSum)
 			i++
 		}

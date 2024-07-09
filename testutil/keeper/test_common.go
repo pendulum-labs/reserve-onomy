@@ -210,6 +210,7 @@ func CreateTestEnvironment(t testing.TB) TestInput {
 		accountKeeper,
 		bankKeeper,
 		marketKeeper,
+		mintKeeper,
 	)
 	// Initialize params
 	//marketKeeper.setID
