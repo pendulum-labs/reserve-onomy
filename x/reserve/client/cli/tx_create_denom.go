@@ -32,7 +32,7 @@ func CmdCreateDenomProposal() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-rate bond-interest-rate denom-metadata bond-metadata --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal create-denom peg-coins collateral-deposit debt-interest-rate bond-interest-rate denom-metadata bond-metadata --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
@@ -42,20 +42,8 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-r
 				return err
 			}
 
-			rateString := args[0]
-			rateStringSplit := strings.Split(rateString, ",")
-
-			rateNumerator, err := sdk.ParseUint(rateStringSplit[0])
-			if err != nil {
-				return err
-			}
-
-			rateDenominator, err := sdk.ParseUint(rateStringSplit[1])
-			if err != nil {
-				return err
-			}
-
-			rate := []sdk.Uint{rateNumerator, rateDenominator}
+			pegsString := args[0]
+			pegs := strings.Split(pegsString, ",")
 
 			collateralDeposit, err := sdk.ParseCoinNormalized(args[1])
 			if err != nil {
@@ -136,7 +124,7 @@ $ %s tx gov submit-proposal create-denom rate collateral-deposit debt-interest-r
 				proposalFlags.Description,
 				denomMetadata,
 				bondMetadata,
-				rate,
+				pegs,
 				collateralDeposit,
 				debtInterestRate,
 				bondInterestRate,

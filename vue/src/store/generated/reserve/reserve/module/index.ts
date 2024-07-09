@@ -4,21 +4,21 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgCreateVault } from "./types/reserve/tx";
-import { MsgLiquidate } from "./types/reserve/tx";
-import { MsgUnbond } from "./types/reserve/tx";
-import { MsgWithdraw } from "./types/reserve/tx";
 import { MsgBond } from "./types/reserve/tx";
 import { MsgDeposit } from "./types/reserve/tx";
+import { MsgUnbond } from "./types/reserve/tx";
+import { MsgLiquidate } from "./types/reserve/tx";
+import { MsgWithdraw } from "./types/reserve/tx";
+import { MsgCreateVault } from "./types/reserve/tx";
 
 
 const types = [
-  ["/reserve.MsgCreateVault", MsgCreateVault],
-  ["/reserve.MsgLiquidate", MsgLiquidate],
-  ["/reserve.MsgUnbond", MsgUnbond],
-  ["/reserve.MsgWithdraw", MsgWithdraw],
   ["/reserve.MsgBond", MsgBond],
   ["/reserve.MsgDeposit", MsgDeposit],
+  ["/reserve.MsgUnbond", MsgUnbond],
+  ["/reserve.MsgLiquidate", MsgLiquidate],
+  ["/reserve.MsgWithdraw", MsgWithdraw],
+  ["/reserve.MsgCreateVault", MsgCreateVault],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -51,12 +51,12 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgCreateVault: (data: MsgCreateVault): EncodeObject => ({ typeUrl: "/reserve.MsgCreateVault", value: MsgCreateVault.fromPartial( data ) }),
-    msgLiquidate: (data: MsgLiquidate): EncodeObject => ({ typeUrl: "/reserve.MsgLiquidate", value: MsgLiquidate.fromPartial( data ) }),
-    msgUnbond: (data: MsgUnbond): EncodeObject => ({ typeUrl: "/reserve.MsgUnbond", value: MsgUnbond.fromPartial( data ) }),
-    msgWithdraw: (data: MsgWithdraw): EncodeObject => ({ typeUrl: "/reserve.MsgWithdraw", value: MsgWithdraw.fromPartial( data ) }),
     msgBond: (data: MsgBond): EncodeObject => ({ typeUrl: "/reserve.MsgBond", value: MsgBond.fromPartial( data ) }),
     msgDeposit: (data: MsgDeposit): EncodeObject => ({ typeUrl: "/reserve.MsgDeposit", value: MsgDeposit.fromPartial( data ) }),
+    msgUnbond: (data: MsgUnbond): EncodeObject => ({ typeUrl: "/reserve.MsgUnbond", value: MsgUnbond.fromPartial( data ) }),
+    msgLiquidate: (data: MsgLiquidate): EncodeObject => ({ typeUrl: "/reserve.MsgLiquidate", value: MsgLiquidate.fromPartial( data ) }),
+    msgWithdraw: (data: MsgWithdraw): EncodeObject => ({ typeUrl: "/reserve.MsgWithdraw", value: MsgWithdraw.fromPartial( data ) }),
+    msgCreateVault: (data: MsgCreateVault): EncodeObject => ({ typeUrl: "/reserve.MsgCreateVault", value: MsgCreateVault.fromPartial( data ) }),
     
   };
 };

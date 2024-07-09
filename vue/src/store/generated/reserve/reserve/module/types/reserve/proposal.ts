@@ -12,7 +12,7 @@ export interface CreateDenomProposal {
   description: string;
   denom_metadata: Metadata | undefined;
   bond_metadata: Metadata | undefined;
-  exchange_rate: string[];
+  peg_coins: string[];
   collateral_deposit: string;
   debt_interest_rate: number;
   /** Negative Interest rate on Denoms Bonded */
@@ -34,7 +34,7 @@ const baseCreateDenomProposal: object = {
   sender: "",
   title: "",
   description: "",
-  exchange_rate: "",
+  peg_coins: "",
   collateral_deposit: "",
   debt_interest_rate: 0,
   bond_interest_rate: 0,
@@ -63,7 +63,7 @@ export const CreateDenomProposal = {
     if (message.bond_metadata !== undefined) {
       Metadata.encode(message.bond_metadata, writer.uint32(42).fork()).ldelim();
     }
-    for (const v of message.exchange_rate) {
+    for (const v of message.peg_coins) {
       writer.uint32(50).string(v!);
     }
     if (message.collateral_deposit !== "") {
@@ -82,7 +82,7 @@ export const CreateDenomProposal = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.exchange_rate = [];
+    message.peg_coins = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -102,7 +102,7 @@ export const CreateDenomProposal = {
           message.bond_metadata = Metadata.decode(reader, reader.uint32());
           break;
         case 6:
-          message.exchange_rate.push(reader.string());
+          message.peg_coins.push(reader.string());
           break;
         case 7:
           message.collateral_deposit = reader.string();
@@ -123,7 +123,7 @@ export const CreateDenomProposal = {
 
   fromJSON(object: any): CreateDenomProposal {
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.exchange_rate = [];
+    message.peg_coins = [];
     if (object.sender !== undefined && object.sender !== null) {
       message.sender = String(object.sender);
     } else {
@@ -149,9 +149,9 @@ export const CreateDenomProposal = {
     } else {
       message.bond_metadata = undefined;
     }
-    if (object.exchange_rate !== undefined && object.exchange_rate !== null) {
-      for (const e of object.exchange_rate) {
-        message.exchange_rate.push(String(e));
+    if (object.peg_coins !== undefined && object.peg_coins !== null) {
+      for (const e of object.peg_coins) {
+        message.peg_coins.push(String(e));
       }
     }
     if (
@@ -195,10 +195,10 @@ export const CreateDenomProposal = {
       (obj.bond_metadata = message.bond_metadata
         ? Metadata.toJSON(message.bond_metadata)
         : undefined);
-    if (message.exchange_rate) {
-      obj.exchange_rate = message.exchange_rate.map((e) => e);
+    if (message.peg_coins) {
+      obj.peg_coins = message.peg_coins.map((e) => e);
     } else {
-      obj.exchange_rate = [];
+      obj.peg_coins = [];
     }
     message.collateral_deposit !== undefined &&
       (obj.collateral_deposit = message.collateral_deposit);
@@ -211,7 +211,7 @@ export const CreateDenomProposal = {
 
   fromPartial(object: DeepPartial<CreateDenomProposal>): CreateDenomProposal {
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.exchange_rate = [];
+    message.peg_coins = [];
     if (object.sender !== undefined && object.sender !== null) {
       message.sender = object.sender;
     } else {
@@ -237,9 +237,9 @@ export const CreateDenomProposal = {
     } else {
       message.bond_metadata = undefined;
     }
-    if (object.exchange_rate !== undefined && object.exchange_rate !== null) {
-      for (const e of object.exchange_rate) {
-        message.exchange_rate.push(e);
+    if (object.peg_coins !== undefined && object.peg_coins !== null) {
+      for (const e of object.peg_coins) {
+        message.peg_coins.push(e);
       }
     }
     if (
