@@ -12,9 +12,8 @@ message Denom {
   string bond_base = 3;
   string bond_display = 4;
 
-  // Peg coin is the coin that Debt denom is pegged to
-  repeated string peg_coins = 5;
-  
+  // Peg pairs are {peg coin, collateral coin} pairs
+  repeated string peg_pairs = 5;
   
   int64 init_time = 6;
   

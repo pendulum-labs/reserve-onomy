@@ -27,8 +27,8 @@ func init() { // nolint:gochecknoinits // cosmos sdk style
 }
 
 // NewCreateDenomProposal creates a new create-denom proposal.
-func NewCreateDenomProposal(sender sdk.AccAddress, title string, description string, denomMetadata banktypes.Metadata, bondMetadata banktypes.Metadata, pegCoins []string, collateralDeposit sdk.Coin, debtInterestRate uint64, bondInterestRate uint64) *CreateDenomProposal {
-	return &CreateDenomProposal{sender.String(), title, description, &denomMetadata, &bondMetadata, pegCoins, collateralDeposit, debtInterestRate, bondInterestRate}
+func NewCreateDenomProposal(sender sdk.AccAddress, title string, description string, denomMetadata banktypes.Metadata, bondMetadata banktypes.Metadata, pegPair string, debtInterestRate uint64, bondInterestRate uint64) *CreateDenomProposal {
+	return &CreateDenomProposal{sender.String(), title, description, &denomMetadata, &bondMetadata, pegPair, debtInterestRate, bondInterestRate}
 }
 
 // GetTitle returns the title of a create-denom proposal.

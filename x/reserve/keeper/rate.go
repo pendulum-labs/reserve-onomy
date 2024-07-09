@@ -15,38 +15,40 @@ import (
 func (k Keeper) GetRate(
 	ctx sdk.Context,
 	collateral string,
-	pegs []string,
+	pegPairs []string,
 ) (rate sdk.Dec, err error) {
 	var rateSum sdk.Dec
+	var i uint64
 
-	for _, peg := range pegs {
+	for _, pegPair := range pegPairs {
+		pegPairArray := strings.Split(pegPair, ",")
+		peg := pegPairArray[0]
+		if pegPairArray[1] == collateral {
+			sort.Strings(pegPairArray)
+			pair := strings.Join(pegPairArray, ",")
 
-		pairArray := []string{collateral, peg}
+			// Check to see if Pool exists
+			_, found := k.marketKeeper.GetPool(ctx, pair)
+			if !found {
+				return rate, sdkerrors.Wrapf(markettypes.ErrPoolNotFound, "%s", pair)
+			}
 
-		sort.Strings(pairArray)
+			memberPeg, found := k.marketKeeper.GetMember(ctx, collateral, peg)
+			if !found {
+				return rate, sdkerrors.Wrapf(markettypes.ErrMemberNotFound, "%s", strings.Join([]string{collateral, peg}, ", "))
+			}
 
-		pair := strings.Join(pairArray, ",")
+			memberCollateral, found := k.marketKeeper.GetMember(ctx, peg, collateral)
+			if !found {
+				return rate, sdkerrors.Wrapf(markettypes.ErrMemberNotFound, "%s", strings.Join([]string{peg, collateral}, ", "))
+			}
 
-		// Check to see if Pool exists
-		_, found := k.marketKeeper.GetPool(ctx, pair)
-		if !found {
-			return rate, sdkerrors.Wrapf(markettypes.ErrPoolNotFound, "%s", pair)
+			rateSum = (memberPeg.Balance.ToDec().Quo(memberCollateral.Balance.ToDec())).Add(rateSum)
+			i++
 		}
-
-		memberPeg, found := k.marketKeeper.GetMember(ctx, collateral, peg)
-		if !found {
-			return rate, sdkerrors.Wrapf(markettypes.ErrMemberNotFound, "%s", strings.Join([]string{collateral, peg}, ", "))
-		}
-
-		memberCollateral, found := k.marketKeeper.GetMember(ctx, peg, collateral)
-		if !found {
-			return rate, sdkerrors.Wrapf(markettypes.ErrMemberNotFound, "%s", strings.Join([]string{peg, collateral}, ", "))
-		}
-
-		rateSum = (memberPeg.Balance.ToDec().Quo(memberCollateral.Balance.ToDec())).Add(rateSum)
 	}
 
-	rate = rateSum.Quo(sdk.NewDecFromInt(sdk.NewIntFromUint64(uint64(len(pegs)))))
+	rate = rateSum.Quo(sdk.NewDecFromInt(sdk.NewIntFromUint64(i)))
 
 	return rate, err
 }

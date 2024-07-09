@@ -35,7 +35,7 @@ func (k msgServer) Liquidate(goCtx context.Context, msg *types.MsgLiquidate) (*t
 		sdkerrors.Wrapf(types.ErrDenomNotFound, "Denom with name %s not found", vault.DebtDenom)
 	}
 
-	rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegCoins)
+	rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegPairs)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 	}

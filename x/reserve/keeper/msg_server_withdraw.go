@@ -48,7 +48,7 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 			// Remainder is the amount of Collateral left in vault after withdrawal
 			vault.Collateral = vault.Collateral.Sub(coin)
 
-			rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegCoins)
+			rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegPairs)
 			if err != nil {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 			}
@@ -75,7 +75,7 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 
 			debtSharesBeg := vault.DebtShares
 
-			rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegCoins)
+			rate, err := k.GetRate(ctx, vault.Collateral.Denom, denom.PegPairs)
 			if err != nil {
 				return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "rate not found")
 			}

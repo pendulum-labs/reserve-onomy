@@ -22,4 +22,6 @@ var (
 	ErrDenomNotFound = sdkerrors.Register(ModuleName, 6, "denom not found") // nolint: gomnd
 	// ErrInvalidInput - input not valid
 	ErrInvalidInput = sdkerrors.Register(ModuleName, 7, "input not valid") // nolint: gomnd
+	// ErrCollateralNotFound - collateral not found
+	ErrCollateralNotFound = sdkerrors.Register(ModuleName, 8, "collateral not found") // nolint: gomnd
 )

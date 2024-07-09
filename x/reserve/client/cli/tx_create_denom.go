@@ -32,7 +32,7 @@ func CmdCreateDenomProposal() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom peg-coins collateral-deposit debt-interest-rate bond-interest-rate denom-metadata bond-metadata --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
+$ %s tx gov submit-proposal create-denom peg-pair debt-interest-rate bond-interest-rate denom-metadata bond-metadata --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aonex"`,
 				version.AppName,
 			),
 		),
@@ -42,15 +42,9 @@ $ %s tx gov submit-proposal create-denom peg-coins collateral-deposit debt-inter
 				return err
 			}
 
-			pegsString := args[0]
-			pegs := strings.Split(pegsString, ",")
+			pegPair := args[0]
 
-			collateralDeposit, err := sdk.ParseCoinNormalized(args[1])
-			if err != nil {
-				return err
-			}
-
-			debtInterestRate, err := strconv.ParseUint(args[2], 10, 64)
+			debtInterestRate, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
@@ -59,7 +53,7 @@ $ %s tx gov submit-proposal create-denom peg-coins collateral-deposit debt-inter
 				return types.ErrInterestGtLimit
 			}
 
-			bondInterestRate, err := strconv.ParseUint(args[3], 10, 64)
+			bondInterestRate, err := strconv.ParseUint(args[2], 10, 64)
 			if err != nil {
 				return err
 			}
@@ -68,7 +62,7 @@ $ %s tx gov submit-proposal create-denom peg-coins collateral-deposit debt-inter
 				return types.ErrInterestGtLimit
 			}
 
-			path := args[4]
+			path := args[3]
 
 			metadataFile, err := os.Open(path)
 			if err != nil {
@@ -87,7 +81,7 @@ $ %s tx gov submit-proposal create-denom peg-coins collateral-deposit debt-inter
 				return err
 			}
 
-			path = args[5]
+			path = args[4]
 
 			metadataFile, err = os.Open(path)
 			if err != nil {
@@ -124,8 +118,7 @@ $ %s tx gov submit-proposal create-denom peg-coins collateral-deposit debt-inter
 				proposalFlags.Description,
 				denomMetadata,
 				bondMetadata,
-				pegs,
-				collateralDeposit,
+				pegPair,
 				debtInterestRate,
 				bondInterestRate,
 			)

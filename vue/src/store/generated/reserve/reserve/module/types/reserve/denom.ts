@@ -9,8 +9,8 @@ export interface Denom {
   denom_display: string;
   bond_base: string;
   bond_display: string;
-  /** Peg coin is the coin that Debt denom is pegged to */
-  peg_coins: string[];
+  /** Peg pairs are {peg coin, collateral coin} pairs */
+  peg_pairs: string[];
   init_time: number;
   /** Positive Interest rate on denom debt pool */
   debt_interest_rate: number;
@@ -38,7 +38,7 @@ const baseDenom: object = {
   denom_display: "",
   bond_base: "",
   bond_display: "",
-  peg_coins: "",
+  peg_pairs: "",
   init_time: 0,
   debt_interest_rate: 0,
   debt_shares: "",
@@ -63,7 +63,7 @@ export const Denom = {
     if (message.bond_display !== "") {
       writer.uint32(34).string(message.bond_display);
     }
-    for (const v of message.peg_coins) {
+    for (const v of message.peg_pairs) {
       writer.uint32(42).string(v!);
     }
     if (message.init_time !== 0) {
@@ -97,7 +97,7 @@ export const Denom = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDenom } as Denom;
-    message.peg_coins = [];
+    message.peg_pairs = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -114,7 +114,7 @@ export const Denom = {
           message.bond_display = reader.string();
           break;
         case 5:
-          message.peg_coins.push(reader.string());
+          message.peg_pairs.push(reader.string());
           break;
         case 6:
           message.init_time = longToNumber(reader.int64() as Long);
@@ -150,7 +150,7 @@ export const Denom = {
 
   fromJSON(object: any): Denom {
     const message = { ...baseDenom } as Denom;
-    message.peg_coins = [];
+    message.peg_pairs = [];
     if (object.denom_base !== undefined && object.denom_base !== null) {
       message.denom_base = String(object.denom_base);
     } else {
@@ -171,9 +171,9 @@ export const Denom = {
     } else {
       message.bond_display = "";
     }
-    if (object.peg_coins !== undefined && object.peg_coins !== null) {
-      for (const e of object.peg_coins) {
-        message.peg_coins.push(String(e));
+    if (object.peg_pairs !== undefined && object.peg_pairs !== null) {
+      for (const e of object.peg_pairs) {
+        message.peg_pairs.push(String(e));
       }
     }
     if (object.init_time !== undefined && object.init_time !== null) {
@@ -233,10 +233,10 @@ export const Denom = {
     message.bond_base !== undefined && (obj.bond_base = message.bond_base);
     message.bond_display !== undefined &&
       (obj.bond_display = message.bond_display);
-    if (message.peg_coins) {
-      obj.peg_coins = message.peg_coins.map((e) => e);
+    if (message.peg_pairs) {
+      obj.peg_pairs = message.peg_pairs.map((e) => e);
     } else {
-      obj.peg_coins = [];
+      obj.peg_pairs = [];
     }
     message.init_time !== undefined && (obj.init_time = message.init_time);
     message.debt_interest_rate !== undefined &&
@@ -258,7 +258,7 @@ export const Denom = {
 
   fromPartial(object: DeepPartial<Denom>): Denom {
     const message = { ...baseDenom } as Denom;
-    message.peg_coins = [];
+    message.peg_pairs = [];
     if (object.denom_base !== undefined && object.denom_base !== null) {
       message.denom_base = object.denom_base;
     } else {
@@ -279,9 +279,9 @@ export const Denom = {
     } else {
       message.bond_display = "";
     }
-    if (object.peg_coins !== undefined && object.peg_coins !== null) {
-      for (const e of object.peg_coins) {
-        message.peg_coins.push(e);
+    if (object.peg_pairs !== undefined && object.peg_pairs !== null) {
+      for (const e of object.peg_pairs) {
+        message.peg_pairs.push(e);
       }
     }
     if (object.init_time !== undefined && object.init_time !== null) {

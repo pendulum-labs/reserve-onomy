@@ -19,17 +19,12 @@ message CreateDenomProposal {
   cosmos.bank.v1beta1.Metadata denom_metadata = 4;
   cosmos.bank.v1beta1.Metadata bond_metadata = 5;
   
-  repeated string peg_coins = 6;
+  string peg_pair = 6;
   
-  string collateral_deposit = 7 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.nullable) = false
-  ];
-  
-  uint64 debt_interest_rate = 8;
+  uint64 debt_interest_rate = 7;
   
   // Negative Interest rate on Denoms Bonded
-  uint64 bond_interest_rate = 9;
+  uint64 bond_interest_rate = 8;
 }
 
 // RegisterCollateralProposal details a register-collateral proposal.
