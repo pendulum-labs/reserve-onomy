@@ -22,7 +22,7 @@ The Onomy Reserve
 
 ## Reserve Parameters
 
-`minting ratio` is the minimum vault ratio at which a specific denom may be minted or collateral withdrawn
+`lending ratio` is the minimum vault ratio at which denom lent or collateral withdrawn
 
 `liquidation ratio` is the vault ratio at which the vault for a specific denom may be liquidated by a liquidator
 

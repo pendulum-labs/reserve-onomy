@@ -11,14 +11,26 @@ export interface Vault {
   name: string;
   status: string;
   collateral: Coin | undefined;
-  denom: Coin | undefined;
+  /** Debt denom is the denom being minted */
+  debt_denom: string;
+  /** Debt principal is the amount of denoms considered principal */
+  debt_principal: Coin | undefined;
+  /** Debt shares of the denom debt pool which value constitutes principal + interest */
+  debt_shares: string;
 }
 
 export interface VaultMap {
   uid: number;
 }
 
-const baseVault: object = { uid: 0, owner: "", name: "", status: "" };
+const baseVault: object = {
+  uid: 0,
+  owner: "",
+  name: "",
+  status: "",
+  debt_denom: "",
+  debt_shares: "",
+};
 
 export const Vault = {
   encode(message: Vault, writer: Writer = Writer.create()): Writer {
@@ -37,8 +49,14 @@ export const Vault = {
     if (message.collateral !== undefined) {
       Coin.encode(message.collateral, writer.uint32(42).fork()).ldelim();
     }
-    if (message.denom !== undefined) {
-      Coin.encode(message.denom, writer.uint32(50).fork()).ldelim();
+    if (message.debt_denom !== "") {
+      writer.uint32(50).string(message.debt_denom);
+    }
+    if (message.debt_principal !== undefined) {
+      Coin.encode(message.debt_principal, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.debt_shares !== "") {
+      writer.uint32(66).string(message.debt_shares);
     }
     return writer;
   },
@@ -66,7 +84,13 @@ export const Vault = {
           message.collateral = Coin.decode(reader, reader.uint32());
           break;
         case 6:
-          message.denom = Coin.decode(reader, reader.uint32());
+          message.debt_denom = reader.string();
+          break;
+        case 7:
+          message.debt_principal = Coin.decode(reader, reader.uint32());
+          break;
+        case 8:
+          message.debt_shares = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -103,10 +127,20 @@ export const Vault = {
     } else {
       message.collateral = undefined;
     }
-    if (object.denom !== undefined && object.denom !== null) {
-      message.denom = Coin.fromJSON(object.denom);
+    if (object.debt_denom !== undefined && object.debt_denom !== null) {
+      message.debt_denom = String(object.debt_denom);
     } else {
-      message.denom = undefined;
+      message.debt_denom = "";
+    }
+    if (object.debt_principal !== undefined && object.debt_principal !== null) {
+      message.debt_principal = Coin.fromJSON(object.debt_principal);
+    } else {
+      message.debt_principal = undefined;
+    }
+    if (object.debt_shares !== undefined && object.debt_shares !== null) {
+      message.debt_shares = String(object.debt_shares);
+    } else {
+      message.debt_shares = "";
     }
     return message;
   },
@@ -121,8 +155,13 @@ export const Vault = {
       (obj.collateral = message.collateral
         ? Coin.toJSON(message.collateral)
         : undefined);
-    message.denom !== undefined &&
-      (obj.denom = message.denom ? Coin.toJSON(message.denom) : undefined);
+    message.debt_denom !== undefined && (obj.debt_denom = message.debt_denom);
+    message.debt_principal !== undefined &&
+      (obj.debt_principal = message.debt_principal
+        ? Coin.toJSON(message.debt_principal)
+        : undefined);
+    message.debt_shares !== undefined &&
+      (obj.debt_shares = message.debt_shares);
     return obj;
   },
 
@@ -153,10 +192,20 @@ export const Vault = {
     } else {
       message.collateral = undefined;
     }
-    if (object.denom !== undefined && object.denom !== null) {
-      message.denom = Coin.fromPartial(object.denom);
+    if (object.debt_denom !== undefined && object.debt_denom !== null) {
+      message.debt_denom = object.debt_denom;
     } else {
-      message.denom = undefined;
+      message.debt_denom = "";
+    }
+    if (object.debt_principal !== undefined && object.debt_principal !== null) {
+      message.debt_principal = Coin.fromPartial(object.debt_principal);
+    } else {
+      message.debt_principal = undefined;
+    }
+    if (object.debt_shares !== undefined && object.debt_shares !== null) {
+      message.debt_shares = object.debt_shares;
+    } else {
+      message.debt_shares = "";
     }
     return message;
   },

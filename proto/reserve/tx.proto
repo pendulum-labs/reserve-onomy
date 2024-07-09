@@ -7,10 +7,12 @@ option go_package = "reserve/x/reserve/types";
 
 // Msg defines the Msg service.
 service Msg {
-      rpc CreateVault(MsgCreateVault) returns (MsgCreateVaultResponse);
+  rpc CreateVault(MsgCreateVault) returns (MsgCreateVaultResponse);
   rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
   rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
   rpc Liquidate(MsgLiquidate) returns (MsgLiquidateResponse);
+  rpc Bond(MsgBond) returns (MsgBondResponse);
+  rpc Unbond(MsgUnbond) returns (MsgUnbondResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -49,6 +51,22 @@ message MsgLiquidate {
 }
 
 message MsgLiquidateResponse {
+}
+
+message MsgBond {
+  string creator = 1;
+  string denom = 2;
+}
+
+message MsgBondResponse {
+}
+
+message MsgUnbond {
+  string creator = 1;
+  string bonds = 2;
+}
+
+message MsgUnbondResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

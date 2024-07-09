@@ -22,6 +22,7 @@ type (
 		accountKeeper types.AccountKeeper
 		bankKeeper    types.BankKeeper
 		marketKeeper  types.MarketKeeper
+		mintKeeper    types.MintKeeper
 	}
 )
 
@@ -34,6 +35,7 @@ func NewKeeper(
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	marketKeeper types.MarketKeeper,
+	mintKeeper types.MintKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -49,6 +51,7 @@ func NewKeeper(
 		accountKeeper: accountKeeper,
 		bankKeeper:    bankKeeper,
 		marketKeeper:  marketKeeper,
+		mintKeeper:    mintKeeper,
 	}
 }
 
@@ -73,4 +76,21 @@ func removeUid(s []uint64, r uint64) ([]uint64, bool) {
 		}
 	}
 	return s, false
+}
+
+func SafeSub(intA sdk.Int, intB sdk.Int) (diff sdk.Int) {
+	diff = intA.Sub(intB)
+	if diff.LT(sdk.ZeroInt()) {
+		panic("subtraction result negative")
+	}
+	return diff
+}
+
+func DebtAmount(denom types.Denom, vault types.Vault) sdk.Int {
+	return (vault.DebtShares.Mul(denom.DebtDenoms)).Quo(denom.DebtShares)
+}
+
+// Collateralization Ratio = (vault_collateral * peg_rate * 100) / vault_denoms
+func CollateralizationRatio(denom types.Denom, vault types.Vault, rate sdk.Dec) sdk.Int {
+	return (((vault.Collateral.Amount).Mul(sdk.NewInt(100))).ToDec().Mul(rate).Quo(DebtAmount(denom, vault).ToDec())).RoundInt()
 }

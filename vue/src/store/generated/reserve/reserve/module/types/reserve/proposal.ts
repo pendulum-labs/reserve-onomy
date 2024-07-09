@@ -1,6 +1,7 @@
 /* eslint-disable */
+import * as Long from "long";
+import { util, configure, Writer, Reader } from "protobufjs/minimal";
 import { Metadata } from "../cosmos/bank/v1beta1/bank";
-import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "reserve";
 
@@ -9,9 +10,12 @@ export interface CreateDenomProposal {
   sender: string;
   title: string;
   description: string;
-  metadata: Metadata | undefined;
-  rate: string[];
-  collateral_deposit: string;
+  denom_metadata: Metadata | undefined;
+  bond_metadata: Metadata | undefined;
+  peg_pair: string;
+  debt_interest_rate: number;
+  /** Negative Interest rate on Denoms Bonded */
+  bond_interest_rate: number;
 }
 
 /** RegisterCollateralProposal details a register-collateral proposal. */
@@ -21,16 +25,17 @@ export interface RegisterCollateralProposal {
   description: string;
   metadata: Metadata | undefined;
   minimum_deposit: string;
-  minting_ratio: string;
-  liquidation_ratio: string;
+  lending_ratio: number;
+  liquidation_ratio: number;
 }
 
 const baseCreateDenomProposal: object = {
   sender: "",
   title: "",
   description: "",
-  rate: "",
-  collateral_deposit: "",
+  peg_pair: "",
+  debt_interest_rate: 0,
+  bond_interest_rate: 0,
 };
 
 export const CreateDenomProposal = {
@@ -47,14 +52,23 @@ export const CreateDenomProposal = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.metadata !== undefined) {
-      Metadata.encode(message.metadata, writer.uint32(34).fork()).ldelim();
+    if (message.denom_metadata !== undefined) {
+      Metadata.encode(
+        message.denom_metadata,
+        writer.uint32(34).fork()
+      ).ldelim();
     }
-    for (const v of message.rate) {
-      writer.uint32(42).string(v!);
+    if (message.bond_metadata !== undefined) {
+      Metadata.encode(message.bond_metadata, writer.uint32(42).fork()).ldelim();
     }
-    if (message.collateral_deposit !== "") {
-      writer.uint32(50).string(message.collateral_deposit);
+    if (message.peg_pair !== "") {
+      writer.uint32(50).string(message.peg_pair);
+    }
+    if (message.debt_interest_rate !== 0) {
+      writer.uint32(56).uint64(message.debt_interest_rate);
+    }
+    if (message.bond_interest_rate !== 0) {
+      writer.uint32(64).uint64(message.bond_interest_rate);
     }
     return writer;
   },
@@ -63,7 +77,6 @@ export const CreateDenomProposal = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -77,13 +90,19 @@ export const CreateDenomProposal = {
           message.description = reader.string();
           break;
         case 4:
-          message.metadata = Metadata.decode(reader, reader.uint32());
+          message.denom_metadata = Metadata.decode(reader, reader.uint32());
           break;
         case 5:
-          message.rate.push(reader.string());
+          message.bond_metadata = Metadata.decode(reader, reader.uint32());
           break;
         case 6:
-          message.collateral_deposit = reader.string();
+          message.peg_pair = reader.string();
+          break;
+        case 7:
+          message.debt_interest_rate = longToNumber(reader.uint64() as Long);
+          break;
+        case 8:
+          message.bond_interest_rate = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -95,7 +114,6 @@ export const CreateDenomProposal = {
 
   fromJSON(object: any): CreateDenomProposal {
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
     if (object.sender !== undefined && object.sender !== null) {
       message.sender = String(object.sender);
     } else {
@@ -111,23 +129,36 @@ export const CreateDenomProposal = {
     } else {
       message.description = "";
     }
-    if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = Metadata.fromJSON(object.metadata);
+    if (object.denom_metadata !== undefined && object.denom_metadata !== null) {
+      message.denom_metadata = Metadata.fromJSON(object.denom_metadata);
     } else {
-      message.metadata = undefined;
+      message.denom_metadata = undefined;
     }
-    if (object.rate !== undefined && object.rate !== null) {
-      for (const e of object.rate) {
-        message.rate.push(String(e));
-      }
+    if (object.bond_metadata !== undefined && object.bond_metadata !== null) {
+      message.bond_metadata = Metadata.fromJSON(object.bond_metadata);
+    } else {
+      message.bond_metadata = undefined;
+    }
+    if (object.peg_pair !== undefined && object.peg_pair !== null) {
+      message.peg_pair = String(object.peg_pair);
+    } else {
+      message.peg_pair = "";
     }
     if (
-      object.collateral_deposit !== undefined &&
-      object.collateral_deposit !== null
+      object.debt_interest_rate !== undefined &&
+      object.debt_interest_rate !== null
     ) {
-      message.collateral_deposit = String(object.collateral_deposit);
+      message.debt_interest_rate = Number(object.debt_interest_rate);
     } else {
-      message.collateral_deposit = "";
+      message.debt_interest_rate = 0;
+    }
+    if (
+      object.bond_interest_rate !== undefined &&
+      object.bond_interest_rate !== null
+    ) {
+      message.bond_interest_rate = Number(object.bond_interest_rate);
+    } else {
+      message.bond_interest_rate = 0;
     }
     return message;
   },
@@ -138,23 +169,24 @@ export const CreateDenomProposal = {
     message.title !== undefined && (obj.title = message.title);
     message.description !== undefined &&
       (obj.description = message.description);
-    message.metadata !== undefined &&
-      (obj.metadata = message.metadata
-        ? Metadata.toJSON(message.metadata)
+    message.denom_metadata !== undefined &&
+      (obj.denom_metadata = message.denom_metadata
+        ? Metadata.toJSON(message.denom_metadata)
         : undefined);
-    if (message.rate) {
-      obj.rate = message.rate.map((e) => e);
-    } else {
-      obj.rate = [];
-    }
-    message.collateral_deposit !== undefined &&
-      (obj.collateral_deposit = message.collateral_deposit);
+    message.bond_metadata !== undefined &&
+      (obj.bond_metadata = message.bond_metadata
+        ? Metadata.toJSON(message.bond_metadata)
+        : undefined);
+    message.peg_pair !== undefined && (obj.peg_pair = message.peg_pair);
+    message.debt_interest_rate !== undefined &&
+      (obj.debt_interest_rate = message.debt_interest_rate);
+    message.bond_interest_rate !== undefined &&
+      (obj.bond_interest_rate = message.bond_interest_rate);
     return obj;
   },
 
   fromPartial(object: DeepPartial<CreateDenomProposal>): CreateDenomProposal {
     const message = { ...baseCreateDenomProposal } as CreateDenomProposal;
-    message.rate = [];
     if (object.sender !== undefined && object.sender !== null) {
       message.sender = object.sender;
     } else {
@@ -170,23 +202,36 @@ export const CreateDenomProposal = {
     } else {
       message.description = "";
     }
-    if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = Metadata.fromPartial(object.metadata);
+    if (object.denom_metadata !== undefined && object.denom_metadata !== null) {
+      message.denom_metadata = Metadata.fromPartial(object.denom_metadata);
     } else {
-      message.metadata = undefined;
+      message.denom_metadata = undefined;
     }
-    if (object.rate !== undefined && object.rate !== null) {
-      for (const e of object.rate) {
-        message.rate.push(e);
-      }
+    if (object.bond_metadata !== undefined && object.bond_metadata !== null) {
+      message.bond_metadata = Metadata.fromPartial(object.bond_metadata);
+    } else {
+      message.bond_metadata = undefined;
+    }
+    if (object.peg_pair !== undefined && object.peg_pair !== null) {
+      message.peg_pair = object.peg_pair;
+    } else {
+      message.peg_pair = "";
     }
     if (
-      object.collateral_deposit !== undefined &&
-      object.collateral_deposit !== null
+      object.debt_interest_rate !== undefined &&
+      object.debt_interest_rate !== null
     ) {
-      message.collateral_deposit = object.collateral_deposit;
+      message.debt_interest_rate = object.debt_interest_rate;
     } else {
-      message.collateral_deposit = "";
+      message.debt_interest_rate = 0;
+    }
+    if (
+      object.bond_interest_rate !== undefined &&
+      object.bond_interest_rate !== null
+    ) {
+      message.bond_interest_rate = object.bond_interest_rate;
+    } else {
+      message.bond_interest_rate = 0;
     }
     return message;
   },
@@ -197,8 +242,8 @@ const baseRegisterCollateralProposal: object = {
   title: "",
   description: "",
   minimum_deposit: "",
-  minting_ratio: "",
-  liquidation_ratio: "",
+  lending_ratio: 0,
+  liquidation_ratio: 0,
 };
 
 export const RegisterCollateralProposal = {
@@ -221,11 +266,11 @@ export const RegisterCollateralProposal = {
     if (message.minimum_deposit !== "") {
       writer.uint32(42).string(message.minimum_deposit);
     }
-    if (message.minting_ratio !== "") {
-      writer.uint32(50).string(message.minting_ratio);
+    if (message.lending_ratio !== 0) {
+      writer.uint32(48).uint64(message.lending_ratio);
     }
-    if (message.liquidation_ratio !== "") {
-      writer.uint32(58).string(message.liquidation_ratio);
+    if (message.liquidation_ratio !== 0) {
+      writer.uint32(56).uint64(message.liquidation_ratio);
     }
     return writer;
   },
@@ -258,10 +303,10 @@ export const RegisterCollateralProposal = {
           message.minimum_deposit = reader.string();
           break;
         case 6:
-          message.minting_ratio = reader.string();
+          message.lending_ratio = longToNumber(reader.uint64() as Long);
           break;
         case 7:
-          message.liquidation_ratio = reader.string();
+          message.liquidation_ratio = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -303,18 +348,18 @@ export const RegisterCollateralProposal = {
     } else {
       message.minimum_deposit = "";
     }
-    if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
-      message.minting_ratio = String(object.minting_ratio);
+    if (object.lending_ratio !== undefined && object.lending_ratio !== null) {
+      message.lending_ratio = Number(object.lending_ratio);
     } else {
-      message.minting_ratio = "";
+      message.lending_ratio = 0;
     }
     if (
       object.liquidation_ratio !== undefined &&
       object.liquidation_ratio !== null
     ) {
-      message.liquidation_ratio = String(object.liquidation_ratio);
+      message.liquidation_ratio = Number(object.liquidation_ratio);
     } else {
-      message.liquidation_ratio = "";
+      message.liquidation_ratio = 0;
     }
     return message;
   },
@@ -331,8 +376,8 @@ export const RegisterCollateralProposal = {
         : undefined);
     message.minimum_deposit !== undefined &&
       (obj.minimum_deposit = message.minimum_deposit);
-    message.minting_ratio !== undefined &&
-      (obj.minting_ratio = message.minting_ratio);
+    message.lending_ratio !== undefined &&
+      (obj.lending_ratio = message.lending_ratio);
     message.liquidation_ratio !== undefined &&
       (obj.liquidation_ratio = message.liquidation_ratio);
     return obj;
@@ -372,10 +417,10 @@ export const RegisterCollateralProposal = {
     } else {
       message.minimum_deposit = "";
     }
-    if (object.minting_ratio !== undefined && object.minting_ratio !== null) {
-      message.minting_ratio = object.minting_ratio;
+    if (object.lending_ratio !== undefined && object.lending_ratio !== null) {
+      message.lending_ratio = object.lending_ratio;
     } else {
-      message.minting_ratio = "";
+      message.lending_ratio = 0;
     }
     if (
       object.liquidation_ratio !== undefined &&
@@ -383,11 +428,21 @@ export const RegisterCollateralProposal = {
     ) {
       message.liquidation_ratio = object.liquidation_ratio;
     } else {
-      message.liquidation_ratio = "";
+      message.liquidation_ratio = 0;
     }
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -399,3 +454,15 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

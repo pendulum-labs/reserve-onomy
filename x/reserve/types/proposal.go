@@ -27,8 +27,8 @@ func init() { // nolint:gochecknoinits // cosmos sdk style
 }
 
 // NewCreateDenomProposal creates a new create-denom proposal.
-func NewCreateDenomProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, rate []sdk.Uint, collateralDeposit sdk.Coin) *CreateDenomProposal {
-	return &CreateDenomProposal{sender.String(), title, description, &metadata, rate, collateralDeposit}
+func NewCreateDenomProposal(sender sdk.AccAddress, title string, description string, denomMetadata banktypes.Metadata, bondMetadata banktypes.Metadata, pegPair string, debtInterestRate uint64, bondInterestRate uint64) *CreateDenomProposal {
+	return &CreateDenomProposal{sender.String(), title, description, &denomMetadata, &bondMetadata, pegPair, debtInterestRate, bondInterestRate}
 }
 
 // GetTitle returns the title of a create-denom proposal.
@@ -64,8 +64,8 @@ func (m *CreateDenomProposal) ValidateBasic() error {
 }
 
 // NewRegisterCollateralProposal creates a new create-denom proposal.
-func NewRegisterCollateralProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, minCollateralDeposit sdk.Coin, mintingRatio sdk.Uint, liquidationRatio sdk.Uint) *RegisterCollateralProposal {
-	return &RegisterCollateralProposal{sender.String(), title, description, &metadata, minCollateralDeposit, mintingRatio, liquidationRatio}
+func NewRegisterCollateralProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, minCollateralDeposit sdk.Coin, LendingRatio uint64, liquidationRatio uint64) *RegisterCollateralProposal {
+	return &RegisterCollateralProposal{sender.String(), title, description, &metadata, minCollateralDeposit, LendingRatio, liquidationRatio}
 }
 
 // GetTitle returns the title of a register-collateral proposal.
