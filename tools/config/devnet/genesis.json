@@ -33,14 +33,14 @@
       "accounts": [
         {
           "@type": "/cosmos.auth.v1beta1.BaseAccount",
-          "address": "onomy1u07n5qnqmp5ausn9es30yrz7rja5ctp7rku7j2",
+          "address": "onomy15d2ltjk9knex7llg25y5uwa0ulst06pghzv4ln",
           "pub_key": null,
           "account_number": "0",
           "sequence": "0"
         },
         {
           "@type": "/cosmos.auth.v1beta1.BaseAccount",
-          "address": "onomy15d2ltjk9knex7llg25y5uwa0ulst06pghzv4ln",
+          "address": "onomy1u07n5qnqmp5ausn9es30yrz7rja5ctp7rku7j2",
           "pub_key": null,
           "account_number": "1",
           "sequence": "0"
